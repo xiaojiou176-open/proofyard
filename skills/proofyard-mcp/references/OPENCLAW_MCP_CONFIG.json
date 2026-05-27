@@ -1,0 +1,13 @@
+{
+  "mcp": {
+    "servers": {
+      "proofyard": {
+        "command": "pnpm",
+        "args": [
+          "mcp:start"
+        ],
+        "cwd": "/absolute/path/to/proofyard"
+      }
+    }
+  }
+}
