@@ -14,8 +14,8 @@ test("MCP README links the publish-facing distribution contract", () => {
   )
   assert.match(readme, /Current \/ usable today/)
   assert.match(readme, /Publish-ready but not yet published/)
-  assert.match(readme, /@prooftrail\/mcp-server/)
-  assert.match(readme, /ghcr\.io\/xiaojiou176-open\/prooftrail-mcp-server:0\.1\.1/)
+  assert.match(readme, /@proofyard\/mcp-server/)
+  assert.match(readme, /ghcr\.io\/xiaojiou176-open\/proofyard-mcp-server:0\.1\.1/)
 })
 
 test("quickstart and distribution contract stay aligned on protocol, auth, and install examples", () => {
@@ -31,8 +31,8 @@ test("quickstart and distribution contract stay aligned on protocol, auth, and i
     assert.match(text, /stdio/i)
     assert.match(text, /UIQ_MCP_API_BASE_URL/)
     assert.match(text, /UIQ_MCP_AUTOMATION_TOKEN/)
-    assert.match(text, /@prooftrail\/mcp-server/)
-    assert.match(text, /ghcr\.io\/xiaojiou176-open\/prooftrail-mcp-server:0\.1\.1/)
+    assert.match(text, /@proofyard\/mcp-server/)
+    assert.match(text, /ghcr\.io\/xiaojiou176-open\/proofyard-mcp-server:0\.1\.1/)
     assert.match(text, /not yet published/i)
   }
 

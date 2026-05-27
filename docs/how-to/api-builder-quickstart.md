@@ -125,9 +125,9 @@ bash scripts/docs-gate.sh
 
 ## Next Stop
 
-- read [ProofTrail for Coding Agents and Agent Ecosystems](prooftrail-for-coding-agents.md) if
+- read [ProofTrail for Coding Agents and Agent Ecosystems](proofyard-for-coding-agents.md) if
   your search intent started from a coding-agent shell
-- read [ProofTrail for AI Agents](prooftrail-for-ai-agents.md) if you want the
+- read [ProofTrail for AI Agents](proofyard-for-ai-agents.md) if you want the
   audience-fit page before you pick an integration road
 - stay on [Universal API Reference](../reference/universal-api.md) if you need
   endpoint families and lane semantics

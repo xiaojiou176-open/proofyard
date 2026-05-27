@@ -64,7 +64,7 @@ function writeRun(
 }
 
 test("mcp evidence registry helpers expose shared evidence run data", async () => {
-  const rootDir = mkdtempSync(join(tmpdir(), "prooftrail-mcp-evidence-"))
+  const rootDir = mkdtempSync(join(tmpdir(), "proofyard-mcp-evidence-"))
   writeRun(rootDir, "run-a", { gateStatus: "passed", durationMs: 300000 })
   writeRun(rootDir, "run-b", { gateStatus: "failed", durationMs: 301000 })
   const previousCwd = process.cwd()

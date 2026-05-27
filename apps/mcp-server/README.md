@@ -41,7 +41,7 @@ replaces those shells. The truthful pitch is that it gives them a governed
 browser-evidence and recovery layer.
 
 For the direct search-intent page, see
-[ProofTrail for Coding Agents and Agent Ecosystems](../../docs/how-to/prooftrail-for-coding-agents.md).
+[ProofTrail for Coding Agents and Agent Ecosystems](../../docs/how-to/proofyard-for-coding-agents.md).
 
 ## When to Use It
 
@@ -142,8 +142,8 @@ The checked-in generated client is a repo-local helper, not a published SDK.
   `UIQ_MCP_API_BASE_URL` and `UIQ_MCP_AUTOMATION_TOKEN` when the MCP process
   should talk to a live backend.
 - **Publish-ready but not yet published**:
-  `@prooftrail/mcp-server` and
-  `ghcr.io/xiaojiou176-open/prooftrail-mcp-server:0.1.1`.
+  `@proofyard/mcp-server` and
+  `ghcr.io/xiaojiou176-open/proofyard-mcp-server:0.1.1`.
 
 Registry submission artifact:
 

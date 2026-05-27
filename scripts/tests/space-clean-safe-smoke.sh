@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
-tmp_dir="$(mktemp -d "${TMPDIR:-/tmp}/prooftrail-space-clean-safe-XXXXXX")"
+tmp_dir="$(mktemp -d "${TMPDIR:-/tmp}/proofyard-space-clean-safe-XXXXXX")"
 trap 'rm -rf "$tmp_dir"' EXIT
 
 repo_root="$tmp_dir/repo"

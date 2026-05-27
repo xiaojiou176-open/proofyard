@@ -8,10 +8,10 @@ import path from "node:path"
 const scriptPath = path.resolve("scripts/ci/check-repo-high-signal-pii.mjs")
 
 test("allows placeholder and maintainer-safe email patterns", () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "prooftrail-pii-ok-"))
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "proofyard-pii-ok-"))
   try {
     initRepo(tmp)
-    fs.writeFileSync(path.join(tmp, "README.md"), "contact support@example.test\nsecurity@prooftrail.dev\n")
+    fs.writeFileSync(path.join(tmp, "README.md"), "contact support@example.test\nsecurity@proofyard.dev\n")
     git(tmp, ["add", "README.md"])
     git(tmp, ["commit", "-m", "test"])
     const result = spawnSync("node", [scriptPath], { cwd: tmp, encoding: "utf8" })
@@ -22,7 +22,7 @@ test("allows placeholder and maintainer-safe email patterns", () => {
 })
 
 test("fails on unexpected real-looking email addresses", () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "prooftrail-pii-fail-"))
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "proofyard-pii-fail-"))
   try {
     initRepo(tmp)
     fs.mkdirSync(path.join(tmp, "docs"), { recursive: true })
@@ -38,7 +38,7 @@ test("fails on unexpected real-looking email addresses", () => {
 })
 
 test("allows documented test credit card numbers and rejects unexpected ssn-like values", () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "prooftrail-pii-card-"))
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "proofyard-pii-card-"))
   try {
     initRepo(tmp)
     fs.mkdirSync(path.join(tmp, "docs"), { recursive: true })

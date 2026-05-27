@@ -7,7 +7,7 @@ import yaml from "yaml"
 const repoRoot = resolve(".")
 const rootPackage = JSON.parse(fs.readFileSync(resolve(repoRoot, "package.json"), "utf8"))
 
-const skillDir = resolve(repoRoot, "skills/prooftrail-mcp")
+const skillDir = resolve(repoRoot, "skills/proofyard-mcp")
 const skillPath = resolve(skillDir, "SKILL.md")
 const manifestPath = resolve(skillDir, "manifest.yaml")
 
@@ -33,8 +33,8 @@ if (manifest) {
     }
   }
 
-  if (manifest.name !== "prooftrail-mcp") {
-    failures.push(`manifest name must be prooftrail-mcp, got: ${JSON.stringify(manifest.name)}`)
+  if (manifest.name !== "proofyard-mcp") {
+    failures.push(`manifest name must be proofyard-mcp, got: ${JSON.stringify(manifest.name)}`)
   }
   if (manifest.version !== rootPackage.version) {
     failures.push(
@@ -65,7 +65,7 @@ if (skillText) {
     "local-with-optional-backend-token",
     "Current / usable today",
     "Publish-ready but not yet published",
-    "@prooftrail/mcp-server",
+    "@proofyard/mcp-server",
     "pnpm mcp:start",
     "not an official plugin",
     "not a hosted service",

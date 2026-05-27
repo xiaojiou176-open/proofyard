@@ -1,20 +1,20 @@
 {
-  "name": "@prooftrail/mcp-server",
+  "name": "@proofyard/mcp-server",
   "version": "0.1.1",
-  "mcpName": "io.github.xiaojiou176-open/prooftrail-mcp",
+  "mcpName": "io.github.xiaojiou176-open/proofyard-mcp",
   "description": "ProofTrail MCP adapter for governed AI-client access to runs, proof, and workflow operations",
-  "homepage": "https://xiaojiou176-open.github.io/prooftrail/",
+  "homepage": "https://xiaojiou176-open.github.io/proofyard/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xiaojiou176-open/prooftrail.git",
+    "url": "git+https://github.com/xiaojiou176-open/proofyard.git",
     "directory": "apps/mcp-server"
   },
   "bugs": {
-    "url": "https://github.com/xiaojiou176-open/prooftrail/issues"
+    "url": "https://github.com/xiaojiou176-open/proofyard/issues"
   },
   "license": "MIT",
   "keywords": [
-    "prooftrail",
+    "proofyard",
     "mcp",
     "browser-automation",
     "evidence",
@@ -30,7 +30,7 @@
     ".": "./dist/server.cjs"
   },
   "bin": {
-    "prooftrail-mcp": "./dist/server.cjs"
+    "proofyard-mcp": "./dist/server.cjs"
   },
   "files": [
     "dist",

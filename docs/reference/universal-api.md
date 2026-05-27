@@ -181,7 +181,7 @@ For named agent ecosystems, the split is simplest when you read it like this:
 - either road is still valid whenever your outer system changes shape
 
 For the dedicated search-intent landing page, see
-[ProofTrail for Coding Agents and Agent Ecosystems](../how-to/prooftrail-for-coding-agents.md).
+[ProofTrail for Coding Agents and Agent Ecosystems](../how-to/proofyard-for-coding-agents.md).
 
 ## Reading Order
 

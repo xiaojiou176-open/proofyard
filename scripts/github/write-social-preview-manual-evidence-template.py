@@ -11,7 +11,7 @@ from typing import Any
 ROOT_DIR = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = ROOT_DIR / ".runtime-cache" / "artifacts" / "ci" / "github-closure-manual-evidence.json"
 DEFAULT_SCREENSHOT = "screenshots/github-social-preview.png"
-DEFAULT_ASSET = "assets/storefront/prooftrail-social-preview.png"
+DEFAULT_ASSET = "assets/storefront/proofyard-social-preview.png"
 
 
 def parse_args() -> argparse.Namespace:

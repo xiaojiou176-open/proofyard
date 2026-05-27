@@ -16,7 +16,7 @@ Use [../DISTRIBUTION.md](../DISTRIBUTION.md) when you need the current
 distribution and publication truth.
 Use [../INTEGRATIONS.md](../INTEGRATIONS.md) when you need the current
 integration boundary and "not an official plugin" truth.
-Use [../skills/prooftrail-mcp/SKILL.md](../skills/prooftrail-mcp/SKILL.md)
+Use [../skills/proofyard-mcp/SKILL.md](../skills/proofyard-mcp/SKILL.md)
 when you need the repo-owned generic install skill for agent shells.
 Use [docs/archive/README.md](archive/README.md) to understand what stays
 outside the live public route.
@@ -63,11 +63,11 @@ current outward matrix:
 
 1. [README.md](../README.md)
 2. [docs/index.md](index.md)
-3. [docs/how-to/prooftrail-for-ai-agents.md](how-to/prooftrail-for-ai-agents.md)
-4. [docs/how-to/prooftrail-for-coding-agents.md](how-to/prooftrail-for-coding-agents.md)
+3. [docs/how-to/proofyard-for-ai-agents.md](how-to/proofyard-for-ai-agents.md)
+4. [docs/how-to/proofyard-for-coding-agents.md](how-to/proofyard-for-coding-agents.md)
 5. [docs/how-to/mcp-quickstart-1pager.md](how-to/mcp-quickstart-1pager.md)
 6. [docs/how-to/ai-reconstruction-side-road.md](how-to/ai-reconstruction-side-road.md)
-7. [docs/compare/prooftrail-vs-generic-browser-agents.md](compare/prooftrail-vs-generic-browser-agents.md)
+7. [docs/compare/proofyard-vs-generic-browser-agents.md](compare/proofyard-vs-generic-browser-agents.md)
 8. [docs/how-to/evidence-recovery-review-workspace.md](how-to/evidence-recovery-review-workspace.md)
 9. [docs/how-to/api-builder-quickstart.md](how-to/api-builder-quickstart.md)
 10. [docs/reference/universal-api.md](reference/universal-api.md)

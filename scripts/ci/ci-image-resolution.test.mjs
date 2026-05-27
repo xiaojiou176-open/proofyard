@@ -17,7 +17,7 @@ test("build-ci-image --print-ref uses runtime lock hash tag", () => {
     encoding: "utf8",
   })
   assert.equal(run.status, 0)
-  assert.match(run.stdout.trim(), /^ghcr\.io\/local\/prooftrail\/ci:[a-f0-9]{12}$/)
+  assert.match(run.stdout.trim(), /^ghcr\.io\/local\/proofyard\/ci:[a-f0-9]{12}$/)
 })
 
 test("build-ci-image --print-hash returns the runtime lock hash only", () => {

@@ -124,6 +124,6 @@ feeds back into a governed operator workflow, this side road is the right fit.
 ## Next pages
 
 - [docs/reference/run-evidence-example.md](../reference/run-evidence-example.md)
-- [ProofTrail for AI Agents](prooftrail-for-ai-agents.md)
+- [ProofTrail for AI Agents](proofyard-for-ai-agents.md)
 - [docs/how-to/mcp-quickstart-1pager.md](mcp-quickstart-1pager.md)
-- [docs/compare/prooftrail-vs-generic-browser-agents.md](../compare/prooftrail-vs-generic-browser-agents.md)
+- [docs/compare/proofyard-vs-generic-browser-agents.md](../compare/proofyard-vs-generic-browser-agents.md)

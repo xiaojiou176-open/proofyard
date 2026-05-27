@@ -25,7 +25,7 @@ Supporting truth surfaces that do not act as storefront claims:
 - `docs/release/publication-receipt-bundle.md` for live receipts vs review
   receipts vs contract-only later lanes
 - `docs/reference/mcp-distribution-contract.md` for the MCP package/install contract
-- `skills/prooftrail-mcp/SKILL.md` for the generic install skill
+- `skills/proofyard-mcp/SKILL.md` for the generic install skill
   consumed by agent shells
 
 If a document cannot help a first-time evaluator answer one of the visitor four
@@ -33,11 +33,11 @@ questions, it should not be treated as a storefront surface.
 
 The current outward growth matrix is:
 
-1. `docs/how-to/prooftrail-for-ai-agents.md`
-2. `docs/how-to/prooftrail-for-coding-agents.md`
+1. `docs/how-to/proofyard-for-ai-agents.md`
+2. `docs/how-to/proofyard-for-coding-agents.md`
 3. `docs/how-to/mcp-quickstart-1pager.md`
 4. `docs/how-to/ai-reconstruction-side-road.md`
-5. `docs/compare/prooftrail-vs-generic-browser-agents.md`
+5. `docs/compare/proofyard-vs-generic-browser-agents.md`
 6. `docs/how-to/evidence-recovery-review-workspace.md`
 
 Those six pages explain audience fit, coding-agent fit, side-road value,
@@ -51,14 +51,14 @@ The current storefront landing seeds include:
 - `docs/reference/hosted-review-workspace-mvp.md`
 - `docs/reference/final-closeout-wave5.md`
 - `docs/showcase/minimal-success-case.md`
-- `docs/how-to/prooftrail-for-ai-agents.md`
-- `docs/how-to/prooftrail-for-coding-agents.md`
+- `docs/how-to/proofyard-for-ai-agents.md`
+- `docs/how-to/proofyard-for-coding-agents.md`
 - `docs/how-to/mcp-quickstart-1pager.md`
 - `docs/how-to/api-builder-quickstart.md`
 - `docs/how-to/ai-reconstruction-side-road.md`
 - `docs/how-to/evidence-recovery-review-workspace.md`
 - `docs/how-to/template-exchange-mvp.md`
-- `docs/compare/prooftrail-vs-generic-browser-agents.md`
+- `docs/compare/proofyard-vs-generic-browser-agents.md`
 
 Those pages should stay cross-linked and truthful:
 

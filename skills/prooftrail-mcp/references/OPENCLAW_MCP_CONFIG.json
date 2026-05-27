@@ -1,12 +1,12 @@
 {
   "mcp": {
     "servers": {
-      "prooftrail": {
+      "proofyard": {
         "command": "pnpm",
         "args": [
           "mcp:start"
         ],
-        "cwd": "/absolute/path/to/prooftrail"
+        "cwd": "/absolute/path/to/proofyard"
       }
     }
   }

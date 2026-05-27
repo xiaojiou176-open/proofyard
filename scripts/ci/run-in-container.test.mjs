@@ -64,7 +64,7 @@ test("run-in-container exposes the canonical task list", () => {
 test("run-in-container dry-run resolves repo-owned CI image", () => {
   const run = runDry("lint")
   assert.equal(run.status, 0)
-  assert.match(run.stdout, /image=ghcr\.io\/local\/prooftrail\/ci:/)
+  assert.match(run.stdout, /image=ghcr\.io\/local\/proofyard\/ci:/)
   assert.doesNotMatch(run.stdout, /mcr\.microsoft\.com\/devcontainers/)
   assert.match(run.stdout, /runtime_lock=configs\/ci\/runtime\.lock\.json/)
 })

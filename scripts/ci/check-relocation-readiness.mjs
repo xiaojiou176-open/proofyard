@@ -6,7 +6,7 @@ import path from "node:path"
 import { spawnSync } from "node:child_process"
 
 const repoRoot = process.cwd()
-const tempBase = fs.mkdtempSync(path.join(os.tmpdir(), "prooftrail-relocation-"))
+const tempBase = fs.mkdtempSync(path.join(os.tmpdir(), "proofyard-relocation-"))
 const relocatedRoot = path.join(tempBase, "checkout")
 
 const excludeNames = new Set([

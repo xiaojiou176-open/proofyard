@@ -1,5 +1,5 @@
 ---
-name: prooftrail-mcp
+name: proofyard-mcp
 description: Teach an agent to install ProofTrail's governed stdio MCP server, use the safest read and proof tools first, and keep future package or listing claims honest.
 author: xiaojiou176
 version: "0.1.1"
@@ -7,11 +7,11 @@ tags:
   - mcp
   - browser-evidence
   - recovery
-  - prooftrail
+  - proofyard
   - local-first
 triggers:
-  - prooftrail
-  - prooftrail mcp
+  - proofyard
+  - proofyard mcp
   - browser evidence
   - governed recovery
   - uiq proof
@@ -91,7 +91,7 @@ Protocol and auth truth:
 
 ## Live public discovery lane
 
-- the ClawHub page at `https://clawhub.ai/skills/prooftrail-mcp` is live
+- the ClawHub page at `https://clawhub.ai/skills/proofyard-mcp` is live
 - that page is a public discovery page for this repo-owned skill packet
 - it does **not** turn ProofTrail into a hosted MCP endpoint, official plugin,
   or generic cross-host skill-registry publication
@@ -113,8 +113,8 @@ Protocol and auth truth:
 
 The following install surfaces are planned and not yet published:
 
-- npm package: `@prooftrail/mcp-server`
-- Docker image: `ghcr.io/xiaojiou176-open/prooftrail-mcp-server:0.1.1`
+- npm package: `@proofyard/mcp-server`
+- Docker image: `ghcr.io/xiaojiou176-open/proofyard-mcp-server:0.1.1`
 
 Do not describe either surface as live until the package or image is actually
 published.

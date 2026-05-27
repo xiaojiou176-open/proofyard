@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-IMAGE_TAG="${UIQ_MCP_CONTAINER_SMOKE_TAG:-prooftrail-mcp-smoke:local}"
-CONTAINER_NAME="prooftrail-mcp-smoke-$$"
+IMAGE_TAG="${UIQ_MCP_CONTAINER_SMOKE_TAG:-proofyard-mcp-smoke:local}"
+CONTAINER_NAME="proofyard-mcp-smoke-$$"
 
 cleanup() {
   docker rm -f "$CONTAINER_NAME" >/dev/null 2>&1 || true

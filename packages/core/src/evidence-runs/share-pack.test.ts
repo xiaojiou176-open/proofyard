@@ -49,7 +49,7 @@ function writeRun(rootDir: string, runId: string, gateStatus = "passed") {
 }
 
 test("buildEvidenceSharePack returns markdown and json summaries", () => {
-  const rootDir = mkdtempSync(join(tmpdir(), "prooftrail-share-pack-"))
+  const rootDir = mkdtempSync(join(tmpdir(), "proofyard-share-pack-"))
   writeRun(rootDir, "run-a", "failed")
   writeRun(rootDir, "run-b", "passed")
 

@@ -41,11 +41,11 @@ ticket, and some are still packed but have not left the warehouse.
 ### ClawHub skill page
 
 - strongest current receipt:
-  - `https://clawhub.ai/skills/prooftrail-mcp`
+  - `https://clawhub.ai/skills/proofyard-mcp`
 - current status:
   - `listed-live` for the packet discovery page
 - repo-owned source of truth:
-  - `skills/prooftrail-mcp/README.md`
+  - `skills/proofyard-mcp/README.md`
   - `docs/reference/mcp-distribution-contract.md`
 - what this receipt does not prove:
   - generic skill-registry publication
@@ -59,7 +59,7 @@ ticket, and some are still packed but have not left the warehouse.
 - current status:
   - `closed-not-accepted`
 - repo-owned source of truth:
-  - `skills/prooftrail-mcp/README.md`
+  - `skills/proofyard-mcp/README.md`
   - `docs/reference/mcp-distribution-contract.md`
 - what this receipt does not prove:
   - a live listing
@@ -72,8 +72,8 @@ ticket, and some are still packed but have not left the warehouse.
 - current status:
   - `review-pending`
 - repo-owned source of truth:
-  - `skills/prooftrail-mcp/README.md`
-  - `skills/prooftrail-mcp/SKILL.md`
+  - `skills/proofyard-mcp/README.md`
+  - `skills/proofyard-mcp/SKILL.md`
 - what this receipt does not prove:
   - a listed-live marketplace entry
 
@@ -84,8 +84,8 @@ ticket, and some are still packed but have not left the warehouse.
 - current status:
   - `review-pending`
 - repo-owned source of truth:
-  - `skills/prooftrail-mcp/README.md`
-  - `skills/prooftrail-mcp/SKILL.md`
+  - `skills/proofyard-mcp/README.md`
+  - `skills/proofyard-mcp/SKILL.md`
 - what this receipt does not prove:
   - a listed-live directory entry
 
@@ -101,7 +101,7 @@ ticket, and some are still packed but have not left the warehouse.
 - what this receipt does not prove:
   - an accepted or listed-live project entry
 
-### npm package `@prooftrail/mcp-server`
+### npm package `@proofyard/mcp-server`
 
 - strongest current receipt:
   - repo-owned package metadata only
@@ -125,7 +125,7 @@ ticket, and some are still packed but have not left the warehouse.
 - what this receipt does not prove:
   - registry acceptance or search read-back
 
-### GHCR image `ghcr.io/xiaojiou176-open/prooftrail-mcp-server:0.1.1`
+### GHCR image `ghcr.io/xiaojiou176-open/proofyard-mcp-server:0.1.1`
 
 - strongest current receipt:
   - repo-owned container contract, but public page read-back is absent
@@ -147,7 +147,7 @@ publication again, start with these files:
 3. `docs/reference/mcp-distribution-contract.md`
 4. `apps/mcp-server/package.json`
 5. `apps/mcp-server/server.json`
-6. `skills/prooftrail-mcp/README.md`
+6. `skills/proofyard-mcp/README.md`
 7. `docs/release/README.md`
 8. `docs/release/mcp-listings-cockpit.md`
 
@@ -165,7 +165,7 @@ The clean order is:
 1. keep the release/tag, Pages, and packet docs aligned
 2. treat ClawHub as packet-discovery truth only
 3. treat OpenHands as a review receipt only
-4. publish `@prooftrail/mcp-server` before claiming Official MCP Registry
+4. publish `@proofyard/mcp-server` before claiming Official MCP Registry
    progress
 5. keep GHCR in the contract-only bucket until public read-back stops saying
    `404 / 0 packages`
