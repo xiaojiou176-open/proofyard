@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$ROOT_DIR"
+
+tmp_dir="$(mktemp -d ".runtime-cache/test-matrix-defaults.XXXXXX")"
+cleanup() {
+  rm -rf "$tmp_dir"
+}
+trap cleanup EXIT
+
+unset UIQ_SUITE_WEB_E2E
+unset UIQ_SUITE_FRONTEND_E2E
+unset UIQ_SUITE_FRONTEND_UNIT
+unset UIQ_SUITE_BACKEND
+unset UIQ_SUITE_AUTOMATION_CHECK
+unset UIQ_SUITE_ORCHESTRATOR_MCP
+unset UIQ_WEB_PORT
+unset UIQ_E2E_PORT
+unset UIQ_FRONTEND_E2E_PORT
+
+export UIQ_TEST_LOG_DIR="$tmp_dir/logs"
+export UIQ_TEST_MATRIX_ALLOW_CMD_OVERRIDE=1
+export UIQ_TEST_MATRIX_ALLOW_UNSAFE_OVERRIDE=1
+export UIQ_TEST_MATRIX_CMD_APPS_WEB_E2E="true"
+export UIQ_TEST_MATRIX_CMD_FRONTEND_E2E="true"
+export UIQ_TEST_MATRIX_CMD_FRONTEND_UNIT="true"
+export UIQ_TEST_MATRIX_CMD_BACKEND_PYTEST="true"
+export UIQ_TEST_MATRIX_CMD_ORCHESTRATOR_MCP_GATE="true"
+export UIQ_TEST_MATRIX_CMD_AUTOMATION_CHECK="true"
+
+output="$(bash scripts/test-matrix.sh serial 2>&1)"
+
+if ! grep -Fq "ports: web_e2e=4173 frontend_e2e=43173" <<<"$output"; then
+  echo "expected default ports line with frontend_e2e=43173" >&2
+  printf '%s\n' "$output" >&2
+  exit 1
+fi
+
+for suite in apps-web-e2e frontend-e2e frontend-unit backend-pytest orchestrator-mcp-gate; do
+  if ! grep -Fq "[run] $suite" <<<"$output"; then
+    echo "expected default-enabled suite '$suite' to run" >&2
+    printf '%s\n' "$output" >&2
+    exit 1
+  fi
+done
+
+if grep -Fq "[run] automation-check" <<<"$output"; then
+  echo "did not expect automation-check to run by default" >&2
+  printf '%s\n' "$output" >&2
+  exit 1
+fi
+
+echo "test-matrix defaults passed"

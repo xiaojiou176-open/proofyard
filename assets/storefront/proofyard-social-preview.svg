@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" role="img" aria-labelledby="title desc">
+  <title id="title">Proofyard social preview</title>
+  <desc id="desc">Proofyard social preview with one command, one evidence trail, and one recovery story.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <rect x="78" y="74" width="1124" height="492" rx="34" fill="#ffffff" opacity="0.08" stroke="#bfdbfe" stroke-opacity="0.35"/>
+  <text x="114" y="168" fill="#93c5fd" font-size="24" font-family="Helvetica, Arial, sans-serif" letter-spacing="6">AUDITABLE BROWSER AUTOMATION</text>
+  <text x="114" y="252" fill="#ffffff" font-size="80" font-weight="700" font-family="Helvetica, Arial, sans-serif">Proofyard</text>
+  <text x="114" y="320" fill="#dbeafe" font-size="30" font-family="Helvetica, Arial, sans-serif">Run one public command, inspect the evidence bundle,</text>
+  <text x="114" y="358" fill="#dbeafe" font-size="30" font-family="Helvetica, Arial, sans-serif">and recover from the exact step that failed.</text>
+  <rect x="114" y="396" width="390" height="74" rx="20" fill="#ffffff"/>
+  <text x="146" y="443" fill="#0f172a" font-size="28" font-family="Menlo, Monaco, monospace">just run</text>
+  <text x="114" y="528" fill="#dbeafe" font-size="26" font-family="Helvetica, Arial, sans-serif">Evidence bundles, replay-ready flows, and operator-first recovery.</text>
+</svg>

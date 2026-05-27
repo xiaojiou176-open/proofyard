@@ -1,0 +1,33 @@
+<svg width="1280" height="420" viewBox="0 0 1280 420" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Proofyard preview</title>
+  <desc id="desc">Preview card for Proofyard showing canonical run, inspectable reports, and evidence-based recovery.</desc>
+  <defs>
+    <linearGradient id="bg" x1="78" y1="30" x2="1194" y2="388" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F172A"/>
+      <stop offset="0.5" stop-color="#111827"/>
+      <stop offset="1" stop-color="#172554"/>
+    </linearGradient>
+    <linearGradient id="orbA" x1="920" y1="42" x2="1188" y2="228" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#38BDF8"/>
+      <stop offset="1" stop-color="#2563EB"/>
+    </linearGradient>
+    <linearGradient id="orbB" x1="878" y1="150" x2="1148" y2="330" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A78BFA"/>
+      <stop offset="1" stop-color="#7C3AED"/>
+    </linearGradient>
+  </defs>
+  <rect x="24" y="24" width="1232" height="372" rx="32" fill="url(#bg)"/>
+  <circle cx="1038" cy="118" r="122" fill="url(#orbA)" fill-opacity="0.22"/>
+  <circle cx="1118" cy="244" r="92" fill="url(#orbB)" fill-opacity="0.18"/>
+  <rect x="86" y="72" width="246" height="34" rx="17" fill="#0B1220" stroke="#334155"/>
+  <text x="108" y="94" fill="#E2E8F0" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="15" font-weight="700">xiaojiou176-open studio system</text>
+  <text x="86" y="164" fill="#F8FAFC" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="52" font-weight="800">Proofyard</text>
+  <text x="86" y="212" fill="#CBD5E1" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="24" font-weight="600">Run one workflow, inspect one evidence bundle,</text>
+  <text x="86" y="246" fill="#CBD5E1" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="24" font-weight="600">and recover with facts instead of guesswork.</text>
+  <rect x="86" y="292" width="168" height="30" rx="15" fill="#111827" stroke="#1F2937"/>
+  <rect x="268" y="292" width="172" height="30" rx="15" fill="#111827" stroke="#1F2937"/>
+  <rect x="454" y="292" width="176" height="30" rx="15" fill="#111827" stroke="#1F2937"/>
+  <text x="110" y="312" fill="#BFDBFE" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14" font-weight="700">CANONICAL RUN</text>
+  <text x="292" y="312" fill="#DDD6FE" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14" font-weight="700">INSPECT REPORTS</text>
+  <text x="478" y="312" fill="#93C5FD" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14" font-weight="700">RECOVER FAILURES</text>
+</svg>

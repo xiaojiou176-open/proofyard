@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "exceptions": [
+    {
+      "id": "governance-firstparty-length-001",
+      "gate": "firstparty-file-length",
+      "path": "scripts/ci/run-in-container.sh",
+      "reason": "CI task router remains centralized until the hosted-first gate set is split into smaller entrypoints.",
+      "owner_role": "platform-owner",
+      "expires_on": "2026-04-13",
+      "debt_ref": "DEBT-FIRSTPARTY-LENGTH-001"
+    },
+    {
+      "id": "governance-firstparty-length-002",
+      "gate": "firstparty-file-length",
+      "path": "scripts/runtime-gc.sh",
+      "reason": "Runtime garbage-collection policy is still consolidated in one maintainer script while cleanup phases stabilize.",
+      "owner_role": "platform-owner",
+      "expires_on": "2026-04-13",
+      "debt_ref": "DEBT-FIRSTPARTY-LENGTH-002"
+    },
+    {
+      "id": "governance-firstparty-length-003",
+      "gate": "firstparty-file-length",
+      "path": "apps/mcp-server/src/tools/register-tools/register-run-tools.ts",
+      "reason": "Run tool surface is still in one file until the tool router is split by capability family.",
+      "owner_role": "platform-owner",
+      "expires_on": "2026-04-13",
+      "debt_ref": "DEBT-FIRSTPARTY-LENGTH-003"
+    },
+    {
+      "id": "governance-firstparty-length-004",
+      "gate": "firstparty-file-length",
+      "path": "apps/web/src/views/TaskCenterView.tsx",
+      "reason": "Task Center view remains oversized until the run-record and evidence panes are extracted into smaller containers.",
+      "owner_role": "frontend-owner",
+      "expires_on": "2026-04-13",
+      "debt_ref": "DEBT-FIRSTPARTY-LENGTH-004"
+    },
+    {
+      "id": "governance-firstparty-length-005",
+      "gate": "firstparty-file-length",
+      "path": "apps/api/app/services/automation_service.py",
+      "reason": "Automation service still centralizes task orchestration until the scheduler/runtime slices are split apart.",
+      "owner_role": "backend-owner",
+      "expires_on": "2026-04-13",
+      "debt_ref": "DEBT-FIRSTPARTY-LENGTH-005"
+    }
+  ]
+}

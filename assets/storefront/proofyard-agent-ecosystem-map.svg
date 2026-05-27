@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
+  <title id="title">Proofyard agent ecosystem fit map</title>
+  <desc id="desc">A visual matrix showing how Proofyard fits Codex, Claude Code, OpenHands, OpenCode, and OpenClaw through API-first and MCP-first roads.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#eff6ff"/>
+      <stop offset="100%" stop-color="#dbeafe"/>
+    </linearGradient>
+    <linearGradient id="shellCard" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <linearGradient id="subCard" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#eff6ff"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1280" height="760" fill="url(#bg)"/>
+  <circle cx="1140" cy="104" r="126" fill="#93c5fd" opacity="0.30"/>
+  <circle cx="146" cy="640" r="140" fill="#60a5fa" opacity="0.18"/>
+
+  <text x="86" y="108" fill="#1e3a8a" font-size="24" font-family="Helvetica, Arial, sans-serif" letter-spacing="5">BROWSER-EVIDENCE FIT MAP</text>
+  <text x="86" y="188" fill="#0f172a" font-size="68" font-weight="700" font-family="Helvetica, Arial, sans-serif">Proofyard for agent ecosystems</text>
+  <text x="86" y="246" fill="#334155" font-size="26" font-family="Helvetica, Arial, sans-serif">Use one canonical run, keep retained evidence,</text>
+  <text x="86" y="282" fill="#334155" font-size="26" font-family="Helvetica, Arial, sans-serif">then choose the road that matches the outer shell.</text>
+
+  <rect x="86" y="326" width="424" height="86" rx="24" fill="#0f172a"/>
+  <text x="118" y="378" fill="#f8fafc" font-size="30" font-family="Menlo, Monaco, monospace">API-first or MCP-first</text>
+
+  <text x="86" y="468" fill="#0f172a" font-size="22" font-weight="700" font-family="Helvetica, Arial, sans-serif">What stays true</text>
+  <text x="86" y="506" fill="#334155" font-size="22" font-family="Helvetica, Arial, sans-serif">Proofyard is the browser-evidence and recovery layer.</text>
+  <text x="86" y="538" fill="#334155" font-size="22" font-family="Helvetica, Arial, sans-serif">It is not a vendor plugin and not a generic AI shell.</text>
+
+  <g transform="translate(610 92)">
+    <rect width="584" height="584" rx="30" fill="rgba(255,255,255,0.88)" stroke="#bfdbfe" stroke-width="2"/>
+    <text x="32" y="52" fill="#1e3a8a" font-size="21" font-weight="700" font-family="Helvetica, Arial, sans-serif">Best fit at a glance</text>
+    <text x="32" y="84" fill="#475569" font-size="16" font-family="Helvetica, Arial, sans-serif">Pick the outer shell. Keep the browser lane auditable.</text>
+
+    <g transform="translate(32 118)">
+      <rect width="246" height="122" rx="22" fill="url(#shellCard)"/>
+      <text x="22" y="36" fill="#93c5fd" font-size="16" font-family="Helvetica, Arial, sans-serif" letter-spacing="2">MCP-FIRST TODAY</text>
+      <text x="22" y="72" fill="#ffffff" font-size="28" font-weight="700" font-family="Helvetica, Arial, sans-serif">Claude Code</text>
+      <text x="22" y="104" fill="#ffffff" font-size="24" font-weight="700" font-family="Helvetica, Arial, sans-serif">OpenCode</text>
+    </g>
+
+    <g transform="translate(304 118)">
+      <rect width="248" height="122" rx="22" fill="url(#subCard)" stroke="#cbd5e1"/>
+      <text x="22" y="36" fill="#1e3a8a" font-size="16" font-family="Helvetica, Arial, sans-serif" letter-spacing="2">API-FIRST TODAY</text>
+      <text x="22" y="72" fill="#0f172a" font-size="28" font-weight="700" font-family="Helvetica, Arial, sans-serif">Codex</text>
+      <text x="22" y="104" fill="#0f172a" font-size="24" font-weight="700" font-family="Helvetica, Arial, sans-serif">OpenHands · OpenClaw</text>
+    </g>
+
+    <g transform="translate(32 272)">
+      <rect width="520" height="92" rx="20" fill="#f8fafc" stroke="#cbd5e1"/>
+      <text x="24" y="36" fill="#1d4ed8" font-size="18" font-weight="700" font-family="Helvetica, Arial, sans-serif">Why builders care</text>
+      <text x="24" y="64" fill="#334155" font-size="16" font-family="Helvetica, Arial, sans-serif">canonical run · retained evidence · recovery ladder · compare · governed MCP</text>
+    </g>
+
+    <g transform="translate(32 390)">
+      <rect width="246" height="144" rx="20" fill="#eff6ff" stroke="#bfdbfe"/>
+      <text x="22" y="36" fill="#1d4ed8" font-size="18" font-weight="700" font-family="Helvetica, Arial, sans-serif">What you open first</text>
+      <text x="22" y="68" fill="#0f172a" font-size="20" font-weight="700" font-family="Helvetica, Arial, sans-serif">1. AI Agents page</text>
+      <text x="22" y="96" fill="#334155" font-size="16" font-family="Helvetica, Arial, sans-serif">2. Coding-agent fit</text>
+      <text x="22" y="120" fill="#334155" font-size="16" font-family="Helvetica, Arial, sans-serif">3. API or MCP road</text>
+    </g>
+
+    <g transform="translate(304 390)">
+      <rect width="248" height="144" rx="20" fill="#f8fafc" stroke="#cbd5e1"/>
+      <text x="22" y="36" fill="#1d4ed8" font-size="18" font-weight="700" font-family="Helvetica, Arial, sans-serif">What it is not</text>
+      <text x="22" y="68" fill="#0f172a" font-size="18" font-weight="700" font-family="Helvetica, Arial, sans-serif">Not an official plugin</text>
+      <text x="22" y="96" fill="#334155" font-size="16" font-family="Helvetica, Arial, sans-serif">Not a generic AI copilot shell</text>
+      <text x="22" y="120" fill="#334155" font-size="16" font-family="Helvetica, Arial, sans-serif">Not a hidden second backend</text>
+    </g>
+  </g>
+</svg>

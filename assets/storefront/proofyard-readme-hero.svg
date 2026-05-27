@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">Proofyard README hero</title>
+  <desc id="desc">A storefront hero showing one command, evidence bundles, and replay-ready browser automation.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fbff"/>
+      <stop offset="100%" stop-color="#dbeafe"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <circle cx="1110" cy="96" r="120" fill="#bfdbfe" opacity="0.55"/>
+  <circle cx="160" cy="630" r="150" fill="#93c5fd" opacity="0.28"/>
+  <text x="88" y="122" fill="#1e3a8a" font-size="26" font-family="Helvetica, Arial, sans-serif" letter-spacing="6">AUDITABLE BROWSER AUTOMATION</text>
+  <text x="88" y="214" fill="#0f172a" font-size="82" font-weight="700" font-family="Helvetica, Arial, sans-serif">Proofyard</text>
+  <text x="88" y="286" fill="#0f172a" font-size="28" font-family="Helvetica, Arial, sans-serif">Run one public command,</text>
+  <text x="88" y="322" fill="#0f172a" font-size="28" font-family="Helvetica, Arial, sans-serif">inspect the evidence bundle,</text>
+  <text x="88" y="358" fill="#0f172a" font-size="28" font-family="Helvetica, Arial, sans-serif">recover from the exact step that failed.</text>
+  <rect x="88" y="390" width="470" height="78" rx="22" fill="#0f172a"/>
+  <text x="122" y="439" fill="#f8fafc" font-size="30" font-family="Menlo, Monaco, monospace">just run</text>
+  <text x="88" y="518" fill="#334155" font-size="28" font-family="Helvetica, Arial, sans-serif">Mainline</text>
+  <text x="88" y="560" fill="#0f172a" font-size="24" font-family="Menlo, Monaco, monospace">pnpm uiq run --profile pr</text>
+  <text x="88" y="596" fill="#0f172a" font-size="24" font-family="Menlo, Monaco, monospace">--target web.local</text>
+  <g transform="translate(690 120)">
+    <rect width="490" height="486" rx="28" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+    <rect x="26" y="26" width="438" height="112" rx="22" fill="url(#card)"/>
+    <text x="52" y="64" fill="#93c5fd" font-size="18" font-family="Helvetica, Arial, sans-serif" letter-spacing="3">RUN CONTROL</text>
+    <text x="52" y="92" fill="#ffffff" font-size="24" font-weight="700" font-family="Helvetica, Arial, sans-serif">Quick launch</text>
+    <text x="52" y="118" fill="#ffffff" font-size="24" font-weight="700" font-family="Helvetica, Arial, sans-serif">to evidence trail</text>
+    <rect x="26" y="146" width="200" height="152" rx="20" fill="#eff6ff" stroke="#bfdbfe"/>
+    <text x="48" y="184" fill="#1d4ed8" font-size="20" font-family="Helvetica, Arial, sans-serif">Current action</text>
+    <text x="48" y="226" fill="#0f172a" font-size="24" font-weight="700" font-family="Helvetica, Arial, sans-serif">Canonical run</text>
+    <text x="48" y="256" fill="#334155" font-size="16" font-family="Helvetica, Arial, sans-serif">One public path for</text>
+    <text x="48" y="278" fill="#334155" font-size="16" font-family="Helvetica, Arial, sans-serif">operators</text>
+    <rect x="250" y="146" width="214" height="152" rx="20" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="272" y="184" fill="#1d4ed8" font-size="20" font-family="Helvetica, Arial, sans-serif">Evidence bundle</text>
+    <text x="272" y="226" fill="#0f172a" font-size="22" font-weight="700" font-family="Helvetica, Arial, sans-serif">runs/&lt;runId&gt;</text>
+    <text x="272" y="256" fill="#334155" font-size="16" font-family="Helvetica, Arial, sans-serif">Manifest, checks,</text>
+    <text x="272" y="278" fill="#334155" font-size="16" font-family="Helvetica, Arial, sans-serif">screenshots</text>
+    <rect x="26" y="308" width="438" height="160" rx="20" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="48" y="346" fill="#1d4ed8" font-size="20" font-family="Helvetica, Arial, sans-serif">Flow workshop</text>
+    <text x="48" y="388" fill="#0f172a" font-size="26" font-weight="700" font-family="Helvetica, Arial, sans-serif">Replay, inspect, resume</text>
+    <text x="48" y="418" fill="#334155" font-size="16" font-family="Helvetica, Arial, sans-serif">Find the failed step and keep going</text>
+    <text x="48" y="440" fill="#334155" font-size="16" font-family="Helvetica, Arial, sans-serif">without guessing.</text>
+  </g>
+</svg>

@@ -1,0 +1,103 @@
+{
+  "thresholds": {
+    "globalMin": 85,
+    "coreMin": 95,
+    "globalBranchesMin": 80,
+    "comparisonEpsilon": 0.05
+  },
+  "globalBlockingSources": ["backend", "frontend", "apps-web", "packages", "automation"],
+  "sources": [
+    {
+      "name": "backend",
+      "kind": "pytest-json",
+      "path": ".runtime-cache/coverage/apps/api/coverage.json",
+      "prefixes": ["apps/api/app/"],
+      "includeInGlobalGate": true
+    },
+    {
+      "name": "frontend",
+      "kind": "summary-json",
+      "path": ".runtime-cache/coverage/apps/web/coverage-summary.json",
+      "prefixes": ["apps/web/src/"],
+      "includeInGlobalGate": true
+    },
+    {
+      "name": "apps-web",
+      "kind": "summary-json",
+      "path": ".runtime-cache/coverage/apps-web/coverage-summary.json",
+      "prefixes": ["apps/web/src/"],
+      "includeInGlobalGate": true
+    },
+    {
+      "name": "mcp-server",
+      "kind": "summary-json",
+      "path": ".runtime-cache/coverage/mcp-server/coverage-summary.json",
+      "prefixes": ["apps/mcp-server/src/"]
+    },
+    {
+      "name": "packages",
+      "kind": "summary-json",
+      "path": ".runtime-cache/coverage/packages/coverage-summary.json",
+      "includeInGlobalGate": true,
+      "prefixes": [
+        "packages/core/src/manifest/io.ts",
+        "packages/orchestrator/src/commands/run/",
+        "packages/ai-prompts/src/",
+        "packages/ai-review/src/",
+        "packages/ui/src/"
+      ],
+      "excludes": [
+        "packages/core/src/manifest/types.ts",
+        "packages/orchestrator/src/commands/run/run-types.ts",
+        "packages/orchestrator/src/commands/run/stages.ts",
+        "packages/ui/src/index.ts"
+      ]
+    },
+    {
+      "name": "automation",
+      "kind": "summary-json",
+      "path": ".runtime-cache/coverage/automation/coverage-summary.json",
+      "includeInGlobalGate": true,
+      "prefixes": [
+        "apps/automation-runner/scripts/record-session.shared.ts",
+        "apps/automation-runner/scripts/extract-video-flow.ts",
+        "apps/automation-runner/scripts/generate-ui-ux-gemini-report.ts",
+        "apps/automation-runner/scripts/replay-flow-step.ts",
+        "apps/automation-runner/scripts/replay-register.ts",
+        "apps/automation-runner/scripts/replay-flow-draft.ts",
+        "apps/automation-runner/scripts/replay-flow-draft-helpers.ts",
+        "apps/automation-runner/scripts/generate-from-reconstruction.ts",
+        "apps/automation-runner/scripts/build-manifest.ts",
+        "apps/automation-runner/scripts/midscene-driver.ts",
+        "apps/automation-runner/scripts/lib/"
+      ],
+      "excludes": [
+        "apps/automation-runner/scripts/manifest-protocol.ts",
+        "apps/automation-runner/scripts/lib/env.js",
+        "apps/automation-runner/scripts/lib/computer_use_playwright_executor.mjs",
+        "apps/automation-runner/scripts/drivers/types.ts",
+        "apps/automation-runner/scripts/drivers/swift-xcuitest-smoke.ts",
+        "apps/automation-runner/scripts/drivers/tauri-webdriver-smoke.ts",
+        "apps/automation-runner/scripts/run-target-smoke.ts",
+        "apps/automation-runner/scripts/extract-register-spec.ts"
+      ]
+    }
+  ],
+  "coreTargets": [
+    "apps/api/app/api/register.py",
+    "apps/api/app/core/access_control.py",
+    "apps/api/app/services/computer_use_service.py",
+    "apps/api/app/services/embedding_service.py",
+    "apps/web/src/hooks/useAppStore.ts",
+    "apps/web/src/hooks/useApiClient.ts",
+    "apps/web/src/views/QuickLaunchView.tsx",
+    "apps/web/src/components/CommandGrid.tsx",
+    "packages/ui/src/button.tsx",
+    "apps/web/src/App.tsx",
+    "apps/mcp-server/src/core.ts",
+    "packages/orchestrator/src/commands/run/pipeline/reporting.ts",
+    "packages/core/src/manifest/io.ts",
+    "packages/ai-review/src/generate-findings.ts",
+    "apps/automation-runner/scripts/generate-ui-ux-gemini-report.ts"
+  ]
+}
