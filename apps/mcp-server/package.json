@@ -1,0 +1,61 @@
+{
+  "name": "@proofyard/mcp-server",
+  "version": "0.1.1",
+  "mcpName": "io.github.xiaojiou176-open/proofyard-mcp",
+  "description": "Proofyard MCP adapter for governed AI-client access to runs, proof, and workflow operations",
+  "homepage": "https://xiaojiou176-open.github.io/proofyard/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiaojiou176-open/proofyard.git",
+    "directory": "apps/mcp-server"
+  },
+  "bugs": {
+    "url": "https://github.com/xiaojiou176-open/proofyard/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "proofyard",
+    "mcp",
+    "browser-automation",
+    "evidence",
+    "recovery",
+    "ai-agents",
+    "codex",
+    "coding-agents"
+  ],
+  "type": "module",
+  "main": "./dist/server.cjs",
+  "types": "./dist/types/server.d.ts",
+  "exports": {
+    ".": "./dist/server.cjs"
+  },
+  "bin": {
+    "proofyard-mcp": "./dist/server.cjs"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "package.json",
+    "server.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "start": "node --import tsx src/server.ts",
+    "build": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && pnpm exec esbuild src/server.ts --bundle --platform=node --target=node20 --format=cjs --outfile=dist/server.cjs && node ../../scripts/mcp/finalize-build-output.mjs dist/server.cjs && tsc -p tsconfig.build.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "test": "node --import tsx --test tests/mcp-*.test.ts",
+    "pack:dry-run": "npm pack --dry-run"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.28.0",
+    "zod": "4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "25.2.3",
+    "esbuild": "0.27.3",
+    "tsx": "4.21.0",
+    "typescript": "5.9.3"
+  }
+}

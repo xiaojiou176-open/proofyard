@@ -1,0 +1,44 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.xiaojiou176-open/proofyard-mcp",
+  "title": "Proofyard MCP",
+  "description": "Governed stdio MCP surface for Proofyard browser-evidence, retained proof, and recovery workflows.",
+  "repository": {
+    "url": "https://github.com/xiaojiou176-open/proofyard",
+    "source": "github"
+  },
+  "version": "0.1.1",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@proofyard/mcp-server",
+      "version": "0.1.1",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "UIQ_MCP_API_BASE_URL",
+          "description": "Optional Proofyard backend base URL when the MCP server should call a live backend.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "UIQ_MCP_WORKSPACE_ROOT",
+          "description": "Optional absolute path to the Proofyard workspace root when the MCP server should read a different checkout.",
+          "isRequired": false,
+          "format": "filepath",
+          "isSecret": false
+        },
+        {
+          "name": "UIQ_MCP_AUTOMATION_TOKEN",
+          "description": "Optional backend automation token for live API-backed MCP calls.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
