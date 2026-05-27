@@ -1,6 +1,6 @@
 # Recovery Safety Policy
 
-ProofTrail does not treat recovery like a magic self-heal button.
+Proofyard does not treat recovery like a magic self-heal button.
 
 This page defines the Wave 5 contract for recovery actions:
 

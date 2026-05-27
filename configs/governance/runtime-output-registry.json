@@ -222,7 +222,7 @@
       "cleanupClass": "reclaim",
       "sizeBudgetMb": 2048,
       "mustKeepLatest": true,
-      "notes": "Repo-scoped host pnpm store and virtual-store namespace for ProofTrail."
+      "notes": "Repo-scoped host pnpm store and virtual-store namespace for Proofyard."
     }
   ],
   "reclaimScopes": [
@@ -252,7 +252,7 @@
         "Workspace install must remain the only supported dependency restore path.",
         "No repo-owned mainline script may recreate isolated installs with pnpm install --ignore-workspace."
       ],
-      "notes": "Repo-exclusive host pnpm store and virtual-store namespace for ProofTrail."
+      "notes": "Repo-exclusive host pnpm store and virtual-store namespace for Proofyard."
     },
     {
       "id": "automation-runner-node-modules",

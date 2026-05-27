@@ -1,6 +1,6 @@
 # MCP Distribution Contract
 
-This page is the **registry-facing contract** for the ProofTrail MCP surface.
+This page is the **registry-facing contract** for the Proofyard MCP surface.
 It documents four separate truth lanes: local stdio works now; the ClawHub
 skill page is live as a public discovery page for the repo-owned skill packet;
 Goose `#26` and agent-skill.co `#182` are active upstream review lanes; the
@@ -23,7 +23,7 @@ Use it when you need the shortest truthful summary of:
 | --- | --- |
 | Name | `@proofyard/mcp-server` |
 | Registry server name | `io.github.xiaojiou176-open/proofyard-mcp` |
-| Description | `Governed MCP access to ProofTrail runs, proof, and workflows` |
+| Description | `Governed MCP access to Proofyard runs, proof, and workflows` |
 | Version | `0.1.1` |
 | Homepage | `https://xiaojiou176-open.github.io/proofyard/` |
 | Repository | `https://github.com/xiaojiou176-open/proofyard` |
@@ -183,7 +183,7 @@ only. It must not be described as a live install path until the npm package is
 actually published and read back from the upstream registry.
 
 The container example above describes the intended GHCR install shape only. A
-mounted ProofTrail checkout (or another compatible workspace root) is still
+mounted Proofyard checkout (or another compatible workspace root) is still
 assumed, and it is not a standalone hosted MCP endpoint. Today public read-back
 does **not** confirm a live GitHub Packages page for this image, so Docker must
 not be described as a listed/live public lane here. That also means Docker does
@@ -201,9 +201,9 @@ pnpm mcp:container:smoke
 
 ## Supporting docs
 
-- [ProofTrail MCP Server README](../../apps/mcp-server/README.md)
+- [Proofyard MCP Server README](../../apps/mcp-server/README.md)
 - [Registry submission artifact](../../apps/mcp-server/server.json)
 - [MCP for Browser Automation](../how-to/mcp-quickstart-1pager.md)
 - [Distribution Status](../../DISTRIBUTION.md)
 - [Integration Boundaries](../../INTEGRATIONS.md)
-- [ProofTrail MCP Skill](../../skills/proofyard-mcp/SKILL.md)
+- [Proofyard MCP Skill](../../skills/proofyard-mcp/SKILL.md)

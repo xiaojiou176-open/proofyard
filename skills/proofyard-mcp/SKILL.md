@@ -1,6 +1,6 @@
 ---
 name: proofyard-mcp
-description: Teach an agent to install ProofTrail's governed stdio MCP server, use the safest read and proof tools first, and keep future package or listing claims honest.
+description: Teach an agent to install Proofyard's governed stdio MCP server, use the safest read and proof tools first, and keep future package or listing claims honest.
 author: xiaojiou176
 version: "0.1.1"
 tags:
@@ -17,9 +17,9 @@ triggers:
   - uiq proof
 ---
 
-# ProofTrail MCP Skill
+# Proofyard MCP Skill
 
-Teach the agent how to install, connect, and use ProofTrail's governed MCP
+Teach the agent how to install, connect, and use Proofyard's governed MCP
 surface as a browser-evidence and recovery layer.
 
 ## Use this skill when
@@ -31,15 +31,15 @@ surface as a browser-evidence and recovery layer.
 
 ## What this package teaches
 
-- how to launch ProofTrail's current repo-native MCP server
-- how to choose the safest ProofTrail tool families first
+- how to launch Proofyard's current repo-native MCP server
+- how to choose the safest Proofyard tool families first
 - how to move from catalog and read tools into governed run or proof tools
 - how to talk about future npm, Docker, or registry surfaces without
   overclaiming publication
 
-## What ProofTrail is
+## What Proofyard is
 
-ProofTrail is an evidence-first browser automation and recovery layer.
+Proofyard is an evidence-first browser automation and recovery layer.
 
 It helps AI agents and human operators:
 
@@ -70,7 +70,7 @@ It helps AI agents and human operators:
 
 ## Suggested first prompt
 
-Use ProofTrail as a governed browser-evidence layer. Start with `uiq_catalog`
+Use Proofyard as a governed browser-evidence layer. Start with `uiq_catalog`
 to confirm the MCP surface is attached. Then use `uiq_read` or
 `uiq_quality_read` to inspect one existing run or failure surface. If a real run
 is already present, follow with `uiq_proof` or `uiq_run_and_report` to show the
@@ -80,7 +80,7 @@ retained evidence and summarize the most important next action.
 
 Current install path:
 
-1. clone the ProofTrail repo
+1. clone the Proofyard repo
 2. run `pnpm install`
 3. point your MCP client at the repo-local stdio command
 4. start the MCP bridge with `pnpm mcp:start`
@@ -93,7 +93,7 @@ Protocol and auth truth:
 
 - the ClawHub page at `https://clawhub.ai/skills/proofyard-mcp` is live
 - that page is a public discovery page for this repo-owned skill packet
-- it does **not** turn ProofTrail into a hosted MCP endpoint, official plugin,
+- it does **not** turn Proofyard into a hosted MCP endpoint, official plugin,
   or generic cross-host skill-registry publication
 
 ## Repo-owned packet and review lanes
@@ -129,11 +129,11 @@ published.
 ## Boundaries
 
 - this packet is not an official plugin
-- ProofTrail is not a hosted service
-- ProofTrail is not a hosted SaaS service
-- ProofTrail is not a hosted MCP endpoint
+- Proofyard is not a hosted service
+- Proofyard is not a hosted SaaS service
+- Proofyard is not a hosted MCP endpoint
 - this packet may appear as a live ClawHub skill page, but that does not turn
-  ProofTrail into an official plugin or hosted MCP endpoint
+  Proofyard into an official plugin or hosted MCP endpoint
 - this packet does not claim a live OpenHands/extensions listing
 - this packet does not claim a live Goose, agent-skill.co, or awesome-opencode
   listing without fresh read-back

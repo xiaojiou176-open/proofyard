@@ -1,7 +1,7 @@
 {
   "name": "@proofyard/web",
   "version": "0.1.0",
-  "description": "ProofTrail command center for evidence-first browser automation, recovery, and guided operator workflows",
+  "description": "Proofyard command center for evidence-first browser automation, recovery, and guided operator workflows",
   "private": true,
   "type": "module",
   "scripts": {

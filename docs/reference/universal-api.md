@@ -1,6 +1,6 @@
 # Universal API Reference
 
-This page is the public API reference landing page for ProofTrail.
+This page is the public API reference landing page for Proofyard.
 
 It does not try to restate every schema inline. Its job is simpler: explain
 which API families exist, what lane they belong to, and where to look next when
@@ -8,7 +8,7 @@ you need the exact contract.
 
 ## Builder Start Here
 
-If you are integrating ProofTrail from another tool, start with this order:
+If you are integrating Proofyard from another tool, start with this order:
 
 1. read this page for lane boundaries
 2. read [API builder quickstart](../how-to/api-builder-quickstart.md) for runnable examples
@@ -38,7 +38,7 @@ If your real question is:
 - `How would an OpenClaw gateway keep browser work in a separate backend?`
 
 the truthful answer is: use this API layer when you want direct contract-level
-control and keep the coding agent outside ProofTrail.
+control and keep the coding agent outside Proofyard.
 
 If you reached this page from a Codex, Claude Code, OpenHands, OpenCode, or
 OpenClaw workflow, the same rule still applies:
@@ -47,7 +47,7 @@ OpenClaw workflow, the same rule still applies:
 - use **MCP** when that outer agent shell should consume governed tools instead
   of raw REST semantics
 
-ProofTrail is the browser-evidence contract layer in that setup, not the
+Proofyard is the browser-evidence contract layer in that setup, not the
 vendor-specific shell.
 
 For the shortest repo-native contract check, run:
@@ -62,7 +62,7 @@ want the broader endpoint coverage check as well.
 
 ## Category Fit
 
-ProofTrail's API is part of an evidence-first browser automation platform with
+Proofyard's API is part of an evidence-first browser automation platform with
 recovery and MCP.
 
 That means the API should be read through the same lane model as the product:
@@ -77,7 +77,7 @@ appear in the same user story.
 ## OpenAPI Contract
 
 - source of truth: `contracts/openapi/api.yaml`
-- public title: `ProofTrail Platform API`
+- public title: `Proofyard Platform API`
 - purpose: describe the backend contract that supports canonical runs,
   operator workflows, retained evidence, recovery, reconstruction, and MCP side
   roads
@@ -181,7 +181,7 @@ For named agent ecosystems, the split is simplest when you read it like this:
 - either road is still valid whenever your outer system changes shape
 
 For the dedicated search-intent landing page, see
-[ProofTrail for Coding Agents and Agent Ecosystems](../how-to/proofyard-for-coding-agents.md).
+[Proofyard for Coding Agents and Agent Ecosystems](../how-to/proofyard-for-coding-agents.md).
 
 ## Reading Order
 

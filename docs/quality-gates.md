@@ -1,6 +1,6 @@
 # Quality Gates
 
-ProofTrail keeps storefront truth and engineering truth separate on purpose.
+Proofyard keeps storefront truth and engineering truth separate on purpose.
 
 Generated governance references:
 
@@ -9,7 +9,7 @@ Generated governance references:
 
 ## Governance Layers
 
-ProofTrail's current governance model uses five layers on purpose:
+Proofyard's current governance model uses five layers on purpose:
 
 - `pre-commit`: local-fast commit gate
 - `pre-push`: stronger local pre-push gate

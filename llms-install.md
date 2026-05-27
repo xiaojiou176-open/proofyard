@@ -1,12 +1,12 @@
-# ProofTrail MCP Install For Agent Shells
+# Proofyard MCP Install For Agent Shells
 
 This file is the shortest honest install path for agent shells that want the
-repo-native ProofTrail MCP surface.
+repo-native Proofyard MCP surface.
 
 ## What This Installs
 
 - a governed stdio MCP surface
-- backed by the local ProofTrail checkout
+- backed by the local Proofyard checkout
 - optional live backend token forwarding
 - **not** a hosted HTTP endpoint
 - **not** a published npm install today

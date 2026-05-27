@@ -100,7 +100,7 @@ pwTest("@frontend-nonstub @nonstub live command catalog is rendered through the 
   if (exitIfBackendUnavailable()) return
 
   await page.goto("/")
-  await expect(page.getByRole("heading", { level: 1, name: "ProofTrail" })).toBeVisible()
+  await expect(page.getByRole("heading", { level: 1, name: "Proofyard" })).toBeVisible()
   const commandCards = page.locator(".command-card")
   await expect.poll(() => commandCards.count()).toBeGreaterThan(0)
   await expect

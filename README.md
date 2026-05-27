@@ -1,11 +1,11 @@
-# ProofTrail
+# Proofyard
 
 Evidence-first browser automation with recovery and MCP.
 
 For AI agents and human operators who need inspectable runs, retained evidence,
 and guided recovery.
 
-> ProofTrail is the browser-evidence and recovery layer, not a generic browser
+> Proofyard is the browser-evidence and recovery layer, not a generic browser
 > bot and not a hosted agent shell.
 
 Current public distribution and ecosystem boundaries:
@@ -53,7 +53,7 @@ If you only need the truthful packet order, keep it this simple:
     new top-level product identity
 - **Current public skill/discovery lanes**
   - the ClawHub skill page is live as a public discovery page for the
-    repo-owned ProofTrail MCP skill packet
+    repo-owned Proofyard MCP skill packet
   - the repo-owned skill packet under `skills/proofyard-mcp/` is materialized
     here, but no generic cross-host skill-registry publication is evidenced yet
   - Goose `#26`, agent-skill.co `#182`, and awesome-opencode `#275` are now
@@ -70,7 +70,7 @@ Those later lanes can be documented now, but they must stay documented as
 **later / contract-only / not yet live** until a fresh upstream read-back
 exists.
 
-![ProofTrail storefront loop](assets/storefront/proofyard-storefront-loop.gif)
+![Proofyard storefront loop](assets/storefront/proofyard-storefront-loop.gif)
 
 The static storefront hero source still lives at
 `assets/storefront/proofyard-readme-hero.svg`.
@@ -78,12 +78,12 @@ The static storefront hero source still lives at
 The storefront command-center screenshot artifact lives at
 `assets/storefront/proofyard-hero.png`.
 
-> ProofTrail is for AI agents and human operators who need browser automation
+> Proofyard is for AI agents and human operators who need browser automation
 > to stay inspectable, replayable, and recoverable after the first run.
 
 ## Category Fit
 
-ProofTrail is an evidence-first browser automation product:
+Proofyard is an evidence-first browser automation product:
 
 - run one canonical workflow
 - inspect one retained evidence bundle
@@ -108,7 +108,7 @@ That is the default product lane for Wave 2:
 - recovery/review before guesswork
 - ecosystem, builder, and MCP pages only after the first proof path is clear
 
-## Why ProofTrail
+## Why Proofyard
 
 - **One canonical path**: start with `just run`, then inspect one retained
   evidence bundle instead of juggling ad-hoc scripts and shell fragments.
@@ -117,7 +117,7 @@ That is the default product lane for Wave 2:
 - **AI and MCP in the right place**: use AI reconstruction and MCP as governed
   side roads after the first proof run, not as replacements for the
   deterministic mainline.
-- **Strong AI-builder fit without fake heat**: ProofTrail is a truthful browser
+- **Strong AI-builder fit without fake heat**: Proofyard is a truthful browser
   evidence layer for Codex, Claude Code, OpenHands, OpenCode, OpenClaw, and
   other AI-agent workflows that need retained proof, recovery, and governed
   integration instead of prompt-only browser improvisation.
@@ -130,12 +130,12 @@ Desktop host-automation note:
 
 ## Builder Entry
 
-If you are integrating ProofTrail into another toolchain, use this order:
+If you are integrating Proofyard into another toolchain, use this order:
 
 1. [API Builder Quickstart](docs/how-to/api-builder-quickstart.md)
 2. [Universal API Reference](docs/reference/universal-api.md)
 3. `node --import tsx contracts/scripts/generate-client.ts --verify`
-4. [ProofTrail MCP Server README](apps/mcp-server/README.md)
+4. [Proofyard MCP Server README](apps/mcp-server/README.md)
 
 That sequence helps you separate:
 
@@ -156,9 +156,9 @@ discovery pages or unpublished package contracts.
   - optional `UIQ_MCP_API_BASE_URL` / `UIQ_MCP_AUTOMATION_TOKEN` when you want
     the MCP process to call a live backend
 - **Live public skill page**
-  - the ClawHub ProofTrail MCP page is live as a discovery surface for the
+  - the ClawHub Proofyard MCP page is live as a discovery surface for the
     skill packet
-  - that page does **not** turn ProofTrail into a hosted endpoint, official
+  - that page does **not** turn Proofyard into a hosted endpoint, official
     plugin, or generic skill-registry publication
 - **Repo-owned skill packet and review lanes**
   - `skills/proofyard-mcp/` is the repo-owned install skill packet
@@ -180,16 +180,16 @@ If you are evaluating this repo for **Codex**, **Claude Code**,
 **OpenHands**, **OpenCode**, **OpenClaw**, or similar coding-agent workflows,
 keep the fit narrow and honest:
 
-- ProofTrail does **not** replace a coding agent
+- Proofyard does **not** replace a coding agent
 - it fits as the browser execution, retained evidence, recovery, and governed
   MCP/API layer that a coding agent can call
 - the best public entry is still
-  [ProofTrail for AI Agents](docs/how-to/proofyard-for-ai-agents.md), then the
+  [Proofyard for AI Agents](docs/how-to/proofyard-for-ai-agents.md), then the
   builder/API and MCP pages
 
 ## For Coding-Agent And Agent-Stack Workflows
 
-If you found ProofTrail while searching for:
+If you found Proofyard while searching for:
 
 - browser automation for Codex
 - browser automation for Claude Code
@@ -201,7 +201,7 @@ If you found ProofTrail while searching for:
 
 read this repo in one very specific way:
 
-> ProofTrail is a browser-execution and evidence layer for agent shells such as
+> Proofyard is a browser-execution and evidence layer for agent shells such as
 > Codex, Claude Code, OpenHands, OpenCode, OpenClaw, and other tool-using AI
 > workflows. It is **not** claiming to be an official vendor-specific
 > integration, plugin, or generic AI assistant shell.
@@ -210,16 +210,16 @@ The most truthful ecosystem fit today looks like this:
 
 | Ecosystem | Best public angle | Best first road |
 | --- | --- | --- |
-| Claude Code | governed browser-evidence side road for a tool-using coding shell | [ProofTrail for Coding Agents and Agent Ecosystems](docs/how-to/proofyard-for-coding-agents.md) -> [MCP for Browser Automation](docs/how-to/mcp-quickstart-1pager.md) |
-| Codex | browser-evidence substrate with API-first control and optional MCP | [ProofTrail for Coding Agents and Agent Ecosystems](docs/how-to/proofyard-for-coding-agents.md) -> [API Builder Quickstart](docs/how-to/api-builder-quickstart.md) |
-| OpenHands | browser-evidence subsystem behind a larger orchestration runtime | [ProofTrail for AI Agents](docs/how-to/proofyard-for-ai-agents.md) -> [API Builder Quickstart](docs/how-to/api-builder-quickstart.md) |
-| OpenCode | governed MCP browser surface behind the coding-agent shell | [ProofTrail for Coding Agents and Agent Ecosystems](docs/how-to/proofyard-for-coding-agents.md) -> [MCP for Browser Automation](docs/how-to/mcp-quickstart-1pager.md) |
-| OpenClaw | browser workflow backend behind a multi-channel gateway or tool router | [ProofTrail for Coding Agents and Agent Ecosystems](docs/how-to/proofyard-for-coding-agents.md) -> [API Builder Quickstart](docs/how-to/api-builder-quickstart.md) |
+| Claude Code | governed browser-evidence side road for a tool-using coding shell | [Proofyard for Coding Agents and Agent Ecosystems](docs/how-to/proofyard-for-coding-agents.md) -> [MCP for Browser Automation](docs/how-to/mcp-quickstart-1pager.md) |
+| Codex | browser-evidence substrate with API-first control and optional MCP | [Proofyard for Coding Agents and Agent Ecosystems](docs/how-to/proofyard-for-coding-agents.md) -> [API Builder Quickstart](docs/how-to/api-builder-quickstart.md) |
+| OpenHands | browser-evidence subsystem behind a larger orchestration runtime | [Proofyard for AI Agents](docs/how-to/proofyard-for-ai-agents.md) -> [API Builder Quickstart](docs/how-to/api-builder-quickstart.md) |
+| OpenCode | governed MCP browser surface behind the coding-agent shell | [Proofyard for Coding Agents and Agent Ecosystems](docs/how-to/proofyard-for-coding-agents.md) -> [MCP for Browser Automation](docs/how-to/mcp-quickstart-1pager.md) |
+| OpenClaw | browser workflow backend behind a multi-channel gateway or tool router | [Proofyard for Coding Agents and Agent Ecosystems](docs/how-to/proofyard-for-coding-agents.md) -> [API Builder Quickstart](docs/how-to/api-builder-quickstart.md) |
 
 The truthful bridge is:
 
-1. [ProofTrail for AI Agents](docs/how-to/proofyard-for-ai-agents.md)
-2. [ProofTrail for Coding Agents and Agent Ecosystems](docs/how-to/proofyard-for-coding-agents.md)
+1. [Proofyard for AI Agents](docs/how-to/proofyard-for-ai-agents.md)
+2. [Proofyard for Coding Agents and Agent Ecosystems](docs/how-to/proofyard-for-coding-agents.md)
 3. [MCP for Browser Automation](docs/how-to/mcp-quickstart-1pager.md)
 4. [API Builder Quickstart](docs/how-to/api-builder-quickstart.md)
 
@@ -240,7 +240,7 @@ board:
 
 - **Claude Code** and **OpenCode** are the clearest MCP-first fits today
 - **Codex**, **OpenHands**, and **OpenClaw** usually start API-first or hybrid
-- **ProofTrail** stays the browser-evidence and recovery layer in all cases
+- **Proofyard** stays the browser-evidence and recovery layer in all cases
 
 The ecosystem-fit visual source lives at
 `assets/storefront/proofyard-agent-ecosystem-map.svg`.
@@ -250,11 +250,11 @@ The ecosystem-fit visual source lives at
 Once the canonical evaluation path already makes sense, use these pages as the
 current second ring for ecosystem fit, governed side roads, and deeper proof:
 
-1. [ProofTrail for AI Agents](docs/how-to/proofyard-for-ai-agents.md)
-2. [ProofTrail for Coding Agents and Agent Ecosystems](docs/how-to/proofyard-for-coding-agents.md)
+1. [Proofyard for AI Agents](docs/how-to/proofyard-for-ai-agents.md)
+2. [Proofyard for Coding Agents and Agent Ecosystems](docs/how-to/proofyard-for-coding-agents.md)
 3. [MCP for Browser Automation](docs/how-to/mcp-quickstart-1pager.md)
 4. [AI Reconstruction Side Road](docs/how-to/ai-reconstruction-side-road.md)
-5. [ProofTrail vs Generic Browser Agents](docs/compare/proofyard-vs-generic-browser-agents.md)
+5. [Proofyard vs Generic Browser Agents](docs/compare/proofyard-vs-generic-browser-agents.md)
 6. [Evidence, Recovery, and Review Workspace](docs/how-to/evidence-recovery-review-workspace.md)
 
 If your search intent sounds more like:
@@ -267,7 +267,7 @@ If your search intent sounds more like:
 - `MCP browser automation for AI agents`
 - `browser evidence layer for coding agents`
 
-start with [ProofTrail for AI Agents](docs/how-to/proofyard-for-ai-agents.md)
+start with [Proofyard for AI Agents](docs/how-to/proofyard-for-ai-agents.md)
 only after the first-run lane is already clear.
 
 That sequence keeps the outward story honest:
@@ -306,7 +306,7 @@ Choose the shortest path that matches what you want to confirm first:
 
 ## 15-Minute Evaluation Path
 
-If you are seeing ProofTrail for the first time, keep the first pass simple:
+If you are seeing Proofyard for the first time, keep the first pass simple:
 
 1. run `just setup`
 2. run `just run`
@@ -342,7 +342,7 @@ use the same story in product form:
 
 How do we make browser automation reproducible, inspectable, and recoverable?
 
-ProofTrail gives you one public mainline for running a workflow, one evidence
+Proofyard gives you one public mainline for running a workflow, one evidence
 bundle for understanding what happened, and one shared repo for the backend,
 web command center, automation runner, and MCP adapter that support that flow.
 
@@ -473,7 +473,7 @@ Wave 5 also makes the recovery boundary more explicit:
 
 ## Outward Product Story
 
-Use this mental model when you explain ProofTrail to a new evaluator:
+Use this mental model when you explain Proofyard to a new evaluator:
 
 - **What it is**: evidence-first browser automation with recovery and MCP
 - **Who it helps**: AI agents and human operators who need trustworthy browser workflows
@@ -500,7 +500,7 @@ Not suitable for:
 
 ## Validation and Governance
 
-ProofTrail keeps the public story honest by separating runtime proof from
+Proofyard keeps the public story honest by separating runtime proof from
 governance checks.
 
 - [Minimal success case](docs/showcase/minimal-success-case.md)
@@ -523,7 +523,7 @@ Public collaboration contract:
 
 ## Maintainer Space Hygiene
 
-ProofTrail treats disk cleanup as a governed maintenance path, not an ad-hoc
+Proofyard treats disk cleanup as a governed maintenance path, not an ad-hoc
 "delete the biggest folder" exercise.
 
 - `just space-report` emits a repo-exclusive JSON report for runtime buckets,
@@ -610,5 +610,5 @@ public docs map.
 
 This repository is released under the [MIT License](LICENSE).
 
-If ProofTrail saves you time during evaluation or implementation, star the repo
+If Proofyard saves you time during evaluation or implementation, star the repo
 so you can find the updates, release notes, and new evidence examples later.

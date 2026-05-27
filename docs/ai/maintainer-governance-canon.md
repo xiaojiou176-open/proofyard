@@ -5,7 +5,7 @@ collaboration decisions.
 
 ## Current public identity
 
-- Product name: `ProofTrail`
+- Product name: `Proofyard`
 - Public category: auditable browser automation platform
 - Canonical public mainline: `just run`
 - Direct orchestrator command: `pnpm uiq run --profile pr --target web.local`

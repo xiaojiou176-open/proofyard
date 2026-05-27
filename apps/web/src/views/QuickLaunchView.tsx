@@ -87,7 +87,7 @@ function QuickLaunchView({
         <Card className="launch-hero-card">
           <CardContent className="launch-hero-grid p-4">
             <div className="launch-hero-copy">
-              <p className="launch-hero-kicker">{t("ProofTrail Command Center")}</p>
+              <p className="launch-hero-kicker">{t("Proofyard Command Center")}</p>
               <h2 className="launch-hero-title">
                 {t("Evidence-first browser automation with recovery and MCP")}
               </h2>
@@ -553,7 +553,7 @@ function QuickLaunchView({
                   "Use MCP when an external AI client needs to inspect runs, launch workflows, or export proof on top of the existing backend and artifacts. It is not a second backend."
                 )}{" "}
                 {t(
-                  "Use it when the agent shell should stay external and ProofTrail should stay the browser-evidence substrate."
+                  "Use it when the agent shell should stay external and Proofyard should stay the browser-evidence substrate."
                 )}
               </p>
               <div className="mt-3">

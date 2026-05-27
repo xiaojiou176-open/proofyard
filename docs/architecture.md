@@ -1,6 +1,6 @@
 # Architecture
 
-ProofTrail is a monorepo for evidence-first browser automation.
+Proofyard is a monorepo for evidence-first browser automation.
 
 The outward category line is:
 
@@ -22,7 +22,7 @@ something breaks.
 
 ## Core Operating Model
 
-ProofTrail has three related but distinct execution concepts. Treating them as
+Proofyard has three related but distinct execution concepts. Treating them as
 the same thing is the easiest way to get confused.
 
 | Lane | What it is | Primary entrypoint | Primary source of truth |
@@ -112,7 +112,7 @@ Recovery also keeps an explicit Wave 5 safety boundary:
 - replay actions require human confirmation
 - OTP, provider, and manual-input actions remain manual-only
 
-That means ProofTrail now exposes a stronger recovery assistant, but it still does not ship an autonomous self-heal loop.
+That means Proofyard now exposes a stronger recovery assistant, but it still does not ship an autonomous self-heal loop.
 
 ## Legacy Helper Lane
 

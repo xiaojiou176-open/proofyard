@@ -77,10 +77,10 @@ That sequence keeps the public story honest:
 - start with the category line and first evaluation path
 - move into the AI-agent and coding-agent bridge before contract-level builder entry
 - then explain AI and MCP as governed side roads instead of replacement mainlines
-- only then use the alternatives page to explain where ProofTrail fits and
+- only then use the alternatives page to explain where Proofyard fits and
   where generic browser agents still win
 - use the API builder quickstart and universal API pages only when the reader
-  is integrating ProofTrail into another toolchain instead of evaluating the
+  is integrating Proofyard into another toolchain instead of evaluating the
   operator story first
 
 For the current Wave 5 closeout and bounded-bet story, continue with:

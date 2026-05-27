@@ -1,6 +1,6 @@
 # Publication Receipt Bundle
 
-This page is the receipt wall for ProofTrail's later publication lanes.
+This page is the receipt wall for Proofyard's later publication lanes.
 
 Use it when you need to answer a plain question:
 
@@ -174,7 +174,7 @@ The clean order is:
 
 Do **not** rewrite these receipts as proof that:
 
-- ProofTrail already has a live generic skill-registry listing
+- Proofyard already has a live generic skill-registry listing
 - the npm package is already installable from upstream
 - the Official MCP Registry already lists the repo
 - the GHCR package is publicly available

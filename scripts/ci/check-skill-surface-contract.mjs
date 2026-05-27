@@ -60,7 +60,7 @@ if (manifest) {
 
 if (skillText) {
   const requiredPhrases = [
-    "ProofTrail",
+    "Proofyard",
     "stdio",
     "local-with-optional-backend-token",
     "Current / usable today",

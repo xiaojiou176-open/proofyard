@@ -179,7 +179,7 @@ function ConsoleHeader({
             </svg>
           </div>
           <div className="header-text">
-            <h1>ProofTrail</h1>
+            <h1>Proofyard</h1>
             <p>{t("Browser automation platform")}</p>
           </div>
         </div>

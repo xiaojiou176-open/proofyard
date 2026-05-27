@@ -1,6 +1,6 @@
 # Dependencies and Third-Party Notes
 
-ProofTrail depends on Python and Node.js packages, plus a small set of external developer tools used in CI and local verification.
+Proofyard depends on Python and Node.js packages, plus a small set of external developer tools used in CI and local verification.
 
 ## Current Repository License
 

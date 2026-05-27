@@ -1,6 +1,6 @@
-# ProofTrail MCP Server
+# Proofyard MCP Server
 
-`apps/mcp-server` is the **governed MCP side road** for ProofTrail.
+`apps/mcp-server` is the **governed MCP side road** for Proofyard.
 
 It exposes this repository's automation, reporting, and register orchestration
 flows as MCP tools for external AI clients without replacing the canonical
@@ -8,7 +8,7 @@ public mainline.
 
 This README documents a **repo-native MCP surface** and a **later-lane package
 contract**.
-It is not proof that ProofTrail already has a published registry package,
+It is not proof that Proofyard already has a published registry package,
 published Docker image, or official vendor integration.
 
 The repo now also materializes the official MCP Registry submission descriptor
@@ -31,7 +31,7 @@ This is also the truthful integration shape for **Codex-, Claude Code-,
 OpenHands-, OpenCode-, and OpenClaw-style coding agents**:
 
 - the coding agent remains the outer shell
-- ProofTrail remains the browser automation, retained evidence, and recovery
+- Proofyard remains the browser automation, retained evidence, and recovery
   substrate
 - MCP is the governed tool bridge between them
 
@@ -41,7 +41,7 @@ replaces those shells. The truthful pitch is that it gives them a governed
 browser-evidence and recovery layer.
 
 For the direct search-intent page, see
-[ProofTrail for Coding Agents and Agent Ecosystems](../../docs/how-to/proofyard-for-coding-agents.md).
+[Proofyard for Coding Agents and Agent Ecosystems](../../docs/how-to/proofyard-for-coding-agents.md).
 
 ## When to Use It
 
@@ -80,7 +80,7 @@ pnpm test:mcp-server:real
 
 ## Builder Quick Path
 
-Use this order if you are integrating ProofTrail into another agent stack:
+Use this order if you are integrating Proofyard into another agent stack:
 
 1. verify the API/generated-client contract is current
 
@@ -165,7 +165,7 @@ That container surface is intentionally narrow:
 - it builds `dist/server.cjs`
 - it keeps `stdio` as the protocol
 - it does not pretend to be a hosted HTTP endpoint
-- it expects a mounted ProofTrail checkout (or another compatible workspace
+- it expects a mounted Proofyard checkout (or another compatible workspace
   root) through `UIQ_MCP_WORKSPACE_ROOT`
 
 Repo verification command:

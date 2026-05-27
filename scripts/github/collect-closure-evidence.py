@@ -198,7 +198,7 @@ def overall_status(sections: list[dict[str, Any]]) -> str:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Collect GitHub closure evidence for ProofTrail.")
+    parser = argparse.ArgumentParser(description="Collect GitHub closure evidence for Proofyard.")
     parser.add_argument("--repo", default=REPO_DEFAULT, help="GitHub repo in owner/name form.")
     parser.add_argument(
         "--manual-evidence",

@@ -210,7 +210,7 @@ function OnboardingTour({ active, onComplete }: OnboardingTourProps) {
               </Button>
             )}
             <Button type="button" size="sm" onClick={handleNext}>
-              {step === STEPS.length - 1 ? t("Start using ProofTrail") : t("Next")}
+              {step === STEPS.length - 1 ? t("Start using Proofyard") : t("Next")}
             </Button>
           </div>
         </div>

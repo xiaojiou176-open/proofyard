@@ -336,8 +336,8 @@ async function handleApiRoute(route: Route, state: MockState): Promise<void> {
 async function closeOnboarding(page: Page): Promise<void> {
   await page.getByRole("button", { name: "Next" }).click()
   await page.getByRole("button", { name: "Next" }).click()
-  await page.getByRole("button", { name: "Start using ProofTrail" }).click()
-  await page.getByRole("heading", { level: 1, name: "ProofTrail" }).waitFor({ state: "visible" })
+  await page.getByRole("button", { name: "Start using Proofyard" }).click()
+  await page.getByRole("heading", { level: 1, name: "Proofyard" }).waitFor({ state: "visible" })
 }
 
 async function runTaskA(page: Page): Promise<{ success: boolean; firstError: string | null }> {

@@ -1,11 +1,11 @@
 # Docs Index
 
-This is the public docs map for ProofTrail.
+This is the public docs map for Proofyard.
 
 Start here when the README tells you the product story and you now want the
 next layer of proof, operating detail, and governance boundaries.
 
-> ProofTrail is **evidence-first browser automation with recovery and MCP**.
+> Proofyard is **evidence-first browser automation with recovery and MCP**.
 > The pages below help you evaluate that story from first run to side-road
 > integrations without pretending the repo is a generic AI bot platform.
 
@@ -19,8 +19,8 @@ If you arrived here because you are evaluating a browser-evidence layer for
 Codex, Claude Code, OpenHands, OpenCode, OpenClaw, or another AI-agent shell,
 finish the first-run lane first, then continue into the second ring below.
 
-![ProofTrail proof loop](../assets/storefront/proofyard-readme-hero.svg)
-![ProofTrail storefront loop](../assets/storefront/proofyard-storefront-loop.gif)
+![Proofyard proof loop](../assets/storefront/proofyard-readme-hero.svg)
+![Proofyard storefront loop](../assets/storefront/proofyard-storefront-loop.gif)
 
 The first-run UI lane stays intentionally strict:
 `Quick Launch -> Task Center -> Recovery Center -> Flow Workshop`.
@@ -33,20 +33,20 @@ The first-run UI lane stays intentionally strict:
 
 ## Second Ring: Ecosystem And Builder Discovery
 
-- [ProofTrail for AI Agents](how-to/proofyard-for-ai-agents.md)
-- [ProofTrail for Coding Agents and Agent Ecosystems](how-to/proofyard-for-coding-agents.md)
+- [Proofyard for AI Agents](how-to/proofyard-for-ai-agents.md)
+- [Proofyard for Coding Agents and Agent Ecosystems](how-to/proofyard-for-coding-agents.md)
 - [MCP for Browser Automation](how-to/mcp-quickstart-1pager.md)
 - [AI reconstruction side road](how-to/ai-reconstruction-side-road.md)
 - [Evidence, Recovery, and Review Workspace](how-to/evidence-recovery-review-workspace.md)
-- [ProofTrail vs generic browser agents](compare/proofyard-vs-generic-browser-agents.md)
+- [Proofyard vs generic browser agents](compare/proofyard-vs-generic-browser-agents.md)
 
 These six pages are the current outward matrix after the first-run lane:
 
-1. [ProofTrail for AI Agents](how-to/proofyard-for-ai-agents.md)
-2. [ProofTrail for Coding Agents and Agent Ecosystems](how-to/proofyard-for-coding-agents.md)
+1. [Proofyard for AI Agents](how-to/proofyard-for-ai-agents.md)
+2. [Proofyard for Coding Agents and Agent Ecosystems](how-to/proofyard-for-coding-agents.md)
 3. [MCP for Browser Automation](how-to/mcp-quickstart-1pager.md)
 4. [AI Reconstruction Side Road](how-to/ai-reconstruction-side-road.md)
-5. [ProofTrail vs Generic Browser Agents](compare/proofyard-vs-generic-browser-agents.md)
+5. [Proofyard vs Generic Browser Agents](compare/proofyard-vs-generic-browser-agents.md)
 6. [Evidence, Recovery, and Review Workspace](how-to/evidence-recovery-review-workspace.md)
 
 Read them as a connected second ring, not as six co-equal first-run entry
@@ -85,7 +85,7 @@ If you arrived here from a high-intent coding-agent search such as:
 - `MCP browser tools for AI agents`
 - `browser automation API for coding agents`
 
-start with [ProofTrail for AI Agents](how-to/proofyard-for-ai-agents.md),
+start with [Proofyard for AI Agents](how-to/proofyard-for-ai-agents.md),
 then choose either the [API builder quickstart](how-to/api-builder-quickstart.md)
 or [MCP for Browser Automation](how-to/mcp-quickstart-1pager.md) as the next
 layer after the first-run proof path.
@@ -98,15 +98,15 @@ the deepest current evidence/recovery/review loop.
 
 - [API builder quickstart](how-to/api-builder-quickstart.md)
 - [docs/reference/universal-api.md](reference/universal-api.md)
-- [ProofTrail MCP Server README](../apps/mcp-server/README.md)
+- [Proofyard MCP Server README](../apps/mcp-server/README.md)
 - [docs/reference/mcp-distribution-contract.md](reference/mcp-distribution-contract.md)
 
 ## MCP Install Surfaces
 
-- [ProofTrail MCP Server README](../apps/mcp-server/README.md)
+- [Proofyard MCP Server README](../apps/mcp-server/README.md)
 - [MCP for Browser Automation](how-to/mcp-quickstart-1pager.md)
 - [docs/reference/mcp-distribution-contract.md](reference/mcp-distribution-contract.md)
-- [ProofTrail MCP Skill](../skills/proofyard-mcp/SKILL.md)
+- [Proofyard MCP Skill](../skills/proofyard-mcp/SKILL.md)
 
 ## Distribution And Integration Status
 
@@ -128,15 +128,15 @@ If you arrived here after searching for:
 
 use this route:
 
-1. [ProofTrail for AI Agents](how-to/proofyard-for-ai-agents.md)
+1. [Proofyard for AI Agents](how-to/proofyard-for-ai-agents.md)
 2. [MCP for Browser Automation](how-to/mcp-quickstart-1pager.md)
 3. [API builder quickstart](how-to/api-builder-quickstart.md)
 
 Truth boundary:
 
-- ProofTrail can act as the browser-evidence substrate for Codex, Claude Code,
+- Proofyard can act as the browser-evidence substrate for Codex, Claude Code,
   OpenHands, OpenCode, OpenClaw, and other tool-using agent workflows
-- ProofTrail does **not** claim an official vendor-specific integration or a
+- Proofyard does **not** claim an official vendor-specific integration or a
   generic coding-agent shell or generic AI assistant shell
 
 ## Product and Operator Guides

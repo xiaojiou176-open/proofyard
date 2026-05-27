@@ -1,6 +1,6 @@
 # Storefront Assets
 
-This directory documents the reviewable source assets for ProofTrail's public
+This directory documents the reviewable source assets for Proofyard's public
 storefront.
 
 ## Current asset set
@@ -22,7 +22,7 @@ storefront.
   - Message: `just run -> retained evidence bundle -> recover exact failed step`
 - `../../assets/storefront/proofyard-agent-ecosystem-map.svg`
   - Purpose: README ecosystem-fit visual for coding-agent and agent-stack discovery
-  - Message: which named ecosystems are MCP-first, API-first, or hybrid while ProofTrail stays the browser-evidence layer
+  - Message: which named ecosystems are MCP-first, API-first, or hybrid while Proofyard stays the browser-evidence layer
 
 ## Source of truth
 

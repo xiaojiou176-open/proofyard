@@ -54,7 +54,7 @@ pwTest("@core-nonstub @nonstub @counterfactual run and cancel chain over live lo
   )
   await page.goto("/")
 
-  await expect(page.getByRole("heading", { level: 1, name: "ProofTrail" })).toBeVisible()
+  await expect(page.getByRole("heading", { level: 1, name: "Proofyard" })).toBeVisible()
   await page.locator("body").click()
 
   const runResponse = await page.request.post(`${API_ORIGIN}/api/automation/run`, {

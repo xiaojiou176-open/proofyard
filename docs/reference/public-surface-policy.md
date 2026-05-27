@@ -1,6 +1,6 @@
 # Public Surface Policy
 
-ProofTrail keeps one public storefront story.
+Proofyard keeps one public storefront story.
 
 That story is made of:
 

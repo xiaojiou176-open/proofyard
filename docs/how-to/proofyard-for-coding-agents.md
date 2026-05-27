@@ -1,4 +1,4 @@
-# ProofTrail for Coding Agents and Agent Ecosystems
+# Proofyard for Coding Agents and Agent Ecosystems
 
 This page is for one very specific search intent:
 
@@ -6,7 +6,7 @@ This page is for one very specific search intent:
 > coding agent a browser automation layer without losing evidence, recovery,
 > and operator review?
 
-ProofTrail is not trying to replace your coding agent shell.
+Proofyard is not trying to replace your coding agent shell.
 
 It gives that shell a **governed browser execution layer** with:
 
@@ -35,19 +35,19 @@ And now you need browser automation that stays:
 
 ## The short answer
 
-Use ProofTrail when your coding agent still needs a browser lane, but you do
+Use Proofyard when your coding agent still needs a browser lane, but you do
 not want that browser lane to disappear into one-shot logs or generic bot
 behavior.
 
 Think of it like adding a flight recorder and recovery checklist to a vehicle:
 
 - your coding agent still drives the broader workflow
-- ProofTrail records what happened in the browser lane
+- Proofyard records what happened in the browser lane
 - the retained run becomes something you can inspect, compare, and hand off
 
 ## Truthful ecosystem fit matrix
 
-ProofTrail does **not** claim first-party Codex-native, Claude-Code-native,
+Proofyard does **not** claim first-party Codex-native, Claude-Code-native,
 OpenHands-native, OpenCode-native, or OpenClaw-native product integrations.
 
 It does claim something more grounded:
@@ -56,7 +56,7 @@ It does claim something more grounded:
 | --- | --- | --- | --- |
 | Claude Code | governed browser-evidence side road for a tool-using coding shell | [MCP for Browser Automation](mcp-quickstart-1pager.md) | official vendor adapter |
 | Codex | browser-evidence substrate with direct API control and optional MCP | [API Builder Quickstart](api-builder-quickstart.md) | official Codex plugin |
-| OpenHands | browser-evidence subsystem behind a larger orchestration runtime | [API Builder Quickstart](api-builder-quickstart.md) | ProofTrail replacing the outer runtime |
+| OpenHands | browser-evidence subsystem behind a larger orchestration runtime | [API Builder Quickstart](api-builder-quickstart.md) | Proofyard replacing the outer runtime |
 | OpenCode | governed MCP browser surface behind the coding-agent shell | [MCP for Browser Automation](mcp-quickstart-1pager.md) | official OpenCode adapter |
 | OpenClaw | browser workflow backend behind a multi-channel gateway or tool router | [API Builder Quickstart](api-builder-quickstart.md) | first-party OpenClaw plugin |
 
@@ -80,7 +80,7 @@ Across all five ecosystems, the grounded promise stays the same:
 
 ## Where this fits in a coding-agent stack
 
-| Layer | What stays outside ProofTrail | What ProofTrail contributes |
+| Layer | What stays outside Proofyard | What Proofyard contributes |
 | --- | --- | --- |
 | Coding agent shell | planning, code edits, issue flow, repo reasoning | browser execution substrate |
 | Browser lane | raw scripts, helper-only replay, brittle one-offs | canonical run plus retained evidence |
@@ -89,7 +89,7 @@ Across all five ecosystems, the grounded promise stays the same:
 
 That means the most honest category fit is:
 
-> ProofTrail is browser automation **for** coding agents, not a coding agent
+> Proofyard is browser automation **for** coding agents, not a coding agent
 > replacement.
 
 ## When API is the better road
@@ -117,7 +117,7 @@ in tools, tasks, and delegable actions.
 Start here:
 
 1. [MCP for Browser Automation](mcp-quickstart-1pager.md)
-2. [ProofTrail MCP Server README](../../apps/mcp-server/README.md)
+2. [Proofyard MCP Server README](../../apps/mcp-server/README.md)
 3. `pnpm mcp:check`
 
 ## Why this matters for named agent ecosystems
@@ -132,7 +132,7 @@ What they often still need from a browser layer is:
 - a way to compare and explain what changed
 - a governed integration surface instead of ad-hoc scripts
 
-That is exactly where ProofTrail fits, whether the outer shell is Codex,
+That is exactly where Proofyard fits, whether the outer shell is Codex,
 Claude Code, OpenHands, OpenCode, OpenClaw, or another tool-using agent stack.
 
 ## Honest boundary
@@ -158,7 +158,7 @@ It only claims what the repo already supports:
 ## Suggested reading order
 
 1. [README.md](../../README.md)
-2. [ProofTrail for AI Agents](proofyard-for-ai-agents.md)
+2. [Proofyard for AI Agents](proofyard-for-ai-agents.md)
 3. this page
 4. [MCP for Browser Automation](mcp-quickstart-1pager.md)
 5. [Universal API Reference](../reference/universal-api.md)

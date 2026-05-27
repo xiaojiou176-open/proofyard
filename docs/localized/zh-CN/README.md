@@ -1,4 +1,4 @@
-# ProofTrail 中文入口
+# Proofyard 中文入口
 
 这个页面只做一件事：帮中文读者快速理解英文主文档，不和英文 canonical public mainline 抢主线。
 

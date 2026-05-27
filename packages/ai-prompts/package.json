@@ -1,7 +1,7 @@
 {
   "name": "@uiq/ai-prompts",
   "version": "0.1.0",
-  "description": "ProofTrail AI prompt contracts for reconstruction, review, and operator guidance",
+  "description": "Proofyard AI prompt contracts for reconstruction, review, and operator guidance",
   "private": true,
   "type": "module",
   "exports": {

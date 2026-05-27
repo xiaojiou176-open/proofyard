@@ -675,7 +675,7 @@ pwTest.describe('@frontend-critical-buttons', () => {
     await installBackendStubs(page, state)
     await page.goto('/')
 
-    await expect(page.getByRole('heading', { level: 1, name: 'ProofTrail' })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'Proofyard' })).toBeVisible()
 
     await page.getByRole('button', { name: 'Run' }).first().click()
     await expect(page.getByText('Submitted Open homepage')).toBeVisible()
@@ -935,7 +935,7 @@ pwTest.describe('@frontend-critical-buttons', () => {
     await expect(page.getByRole('dialog', { name: 'Step 2: submit the task from "Quick Launch"' })).toBeVisible()
     await page.getByRole('button', { name: 'Next' }).click()
     await expect(page.getByRole('dialog', { name: 'Step 3: confirm the result in "Task Center"' })).toBeVisible()
-    await page.getByRole('button', { name: 'Start using ProofTrail' }).click()
+    await page.getByRole('button', { name: 'Start using Proofyard' }).click()
 
     await expect(page.getByRole('dialog', { name: 'Step 1: decide the goal and inspect the parameter rail' })).toHaveCount(0)
     await expect.poll(() => page.evaluate(() => window.localStorage.getItem('ab_onboarding_done'))).toBe('1')

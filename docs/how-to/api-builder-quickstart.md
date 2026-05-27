@@ -1,11 +1,11 @@
 # API Builder Quickstart
 
 This page is for builders who already understand the product story and now need
-the shortest truthful path into ProofTrail's contract layer.
+the shortest truthful path into Proofyard's contract layer.
 
 Use this page when you are:
 
-- wiring ProofTrail into another script or service
+- wiring Proofyard into another script or service
 - evaluating the generated TypeScript client
 - deciding whether you need raw API semantics or the governed MCP tool surface
 
@@ -27,7 +27,7 @@ Think of it like plumbing versus appliances:
 - the **MCP server** is the controlled faucet surface an external AI client can use
 
 For **Codex- and Claude Code-style workflows**, choose API when the coding
-agent should stay in charge of reasoning while ProofTrail supplies browser
+agent should stay in charge of reasoning while Proofyard supplies browser
 execution, retained evidence, and recovery semantics.
 
 ## Builder Reading Order
@@ -36,7 +36,7 @@ execution, retained evidence, and recovery semantics.
 2. [Universal API Reference](../reference/universal-api.md)
 3. `contracts/openapi/api.yaml`
 4. `apps/web/src/api-gen/client.ts`
-5. [ProofTrail MCP Server README](../../apps/mcp-server/README.md)
+5. [Proofyard MCP Server README](../../apps/mcp-server/README.md)
 
 The generated client in `apps/web/src/api-gen/` is a **repo-local helper** for
 this workspace. It is not a published SDK package.
@@ -73,7 +73,7 @@ The generated client is already checked into the repo.
 Use it from a repo-local script or another package inside this workspace.
 
 ```ts
-// Example: a repo-local script launched from the ProofTrail workspace root.
+// Example: a repo-local script launched from the Proofyard workspace root.
 import {
   listAutomationCommands,
   listEvidenceRuns,
@@ -125,9 +125,9 @@ bash scripts/docs-gate.sh
 
 ## Next Stop
 
-- read [ProofTrail for Coding Agents and Agent Ecosystems](proofyard-for-coding-agents.md) if
+- read [Proofyard for Coding Agents and Agent Ecosystems](proofyard-for-coding-agents.md) if
   your search intent started from a coding-agent shell
-- read [ProofTrail for AI Agents](proofyard-for-ai-agents.md) if you want the
+- read [Proofyard for AI Agents](proofyard-for-ai-agents.md) if you want the
   audience-fit page before you pick an integration road
 - stay on [Universal API Reference](../reference/universal-api.md) if you need
   endpoint families and lane semantics

@@ -1,7 +1,7 @@
 {
   "name": "@proofyard/automation-runner",
   "version": "0.1.0",
-  "description": "ProofTrail automation runner for recording, replay, and artifact-based reconstruction side roads",
+  "description": "Proofyard automation runner for recording, replay, and artifact-based reconstruction side roads",
   "private": true,
   "type": "module",
   "scripts": {

@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
-  <title id="title">ProofTrail hero</title>
+  <title id="title">Proofyard README hero</title>
   <desc id="desc">A storefront hero showing one command, evidence bundles, and replay-ready browser automation.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
@@ -15,7 +15,7 @@
   <circle cx="1110" cy="96" r="120" fill="#bfdbfe" opacity="0.55"/>
   <circle cx="160" cy="630" r="150" fill="#93c5fd" opacity="0.28"/>
   <text x="88" y="122" fill="#1e3a8a" font-size="26" font-family="Helvetica, Arial, sans-serif" letter-spacing="6">AUDITABLE BROWSER AUTOMATION</text>
-  <text x="88" y="214" fill="#0f172a" font-size="82" font-weight="700" font-family="Helvetica, Arial, sans-serif">ProofTrail</text>
+  <text x="88" y="214" fill="#0f172a" font-size="82" font-weight="700" font-family="Helvetica, Arial, sans-serif">Proofyard</text>
   <text x="88" y="286" fill="#0f172a" font-size="28" font-family="Helvetica, Arial, sans-serif">Run one public command,</text>
   <text x="88" y="322" fill="#0f172a" font-size="28" font-family="Helvetica, Arial, sans-serif">inspect the evidence bundle,</text>
   <text x="88" y="358" fill="#0f172a" font-size="28" font-family="Helvetica, Arial, sans-serif">recover from the exact step that failed.</text>

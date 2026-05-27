@@ -17,7 +17,7 @@ const surfaces = {
   webIndex: read("apps/web/index.html"),
 }
 
-requireIncludes("README.md", surfaces.readme, "ProofTrail for Coding Agents and Agent Ecosystems")
+requireIncludes("README.md", surfaces.readme, "Proofyard for Coding Agents and Agent Ecosystems")
 requireIncludes("README.md", surfaces.readme, "browser automation for Codex")
 requireIncludes("README.md", surfaces.readme, "browser automation for Claude Code")
 requireIncludes("README.md", surfaces.readme, "OpenHands")
@@ -26,7 +26,7 @@ requireIncludes("README.md", surfaces.readme, "OpenClaw")
 requireIncludes("README.md", surfaces.readme, "not claiming")
 
 requireIncludes("docs/README.md", surfaces.docsReadme, "proofyard-for-coding-agents.md")
-requireIncludes("docs/index.md", surfaces.docsIndex, "ProofTrail for Coding Agents and Agent Ecosystems")
+requireIncludes("docs/index.md", surfaces.docsIndex, "Proofyard for Coding Agents and Agent Ecosystems")
 requireIncludes("docs/index.md", surfaces.docsIndex, "Codex")
 requireIncludes("docs/index.md", surfaces.docsIndex, "Claude Code")
 requireIncludes("docs/index.md", surfaces.docsIndex, "OpenHands")

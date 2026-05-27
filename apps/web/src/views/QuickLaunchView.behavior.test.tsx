@@ -310,7 +310,7 @@ describe("QuickLaunchView behavior", () => {
 
     expect(container.textContent).toContain("AI Reconstruction Assistant")
     expect(container.textContent).toContain("MCP Integration Side Road")
-    expect(container.textContent).toContain("ProofTrail Command Center")
+    expect(container.textContent).toContain("Proofyard Command Center")
     expect(container.textContent).toContain("Evidence-first browser automation with recovery and MCP")
     expect(container.textContent).toContain("tool-using shells")
     expect(container.textContent).toContain("Codex")
@@ -743,7 +743,7 @@ describe("QuickLaunchView behavior", () => {
       )
     })
 
-    expect(container.textContent).toContain("ProofTrail Command Center")
+    expect(container.textContent).toContain("Proofyard Command Center")
     expect(container.textContent).toContain("Evidence-first browser automation with recovery and MCP")
     expect(container.textContent).toContain(
       "This is for AI agents, Codex, Claude Code, OpenHands, OpenCode, OpenClaw, and human operators who need inspectable runs instead of guesswork."

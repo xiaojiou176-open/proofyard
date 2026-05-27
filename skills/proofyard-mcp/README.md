@@ -1,13 +1,13 @@
-# ProofTrail MCP Public Skill
+# Proofyard MCP Public Skill
 
-This folder is the public, self-contained skill packet for ProofTrail's
+This folder is the public, self-contained skill packet for Proofyard's
 governed MCP surface.
 
 ## Purpose
 
 Use it when you want one portable skill folder that teaches:
 
-- what ProofTrail helps an outer agent shell do
+- what Proofyard helps an outer agent shell do
 - how to attach the current repo-native stdio MCP server
 - which tool families are safest first
 - what one concrete first-success path looks like
@@ -67,4 +67,4 @@ Use it when you want one portable skill folder that teaches:
 - no published npm package claim without fresh proof
 - no claim that a repo-defined Docker contract means Docker-live or
   registry-live; those are different counters
-- no hosted ProofTrail SaaS or hosted MCP endpoint
+- no hosted Proofyard SaaS or hosted MCP endpoint

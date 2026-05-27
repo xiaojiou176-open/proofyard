@@ -27,7 +27,7 @@ from space_governance import (  # noqa: E402
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Emit a repo-exclusive disk space report for ProofTrail.")
+    parser = argparse.ArgumentParser(description="Emit a repo-exclusive disk space report for Proofyard.")
     parser.add_argument("--repo-root", default=None, help="Repo root to inspect. Defaults to the current repository.")
     parser.add_argument(
         "--runtime-root",

@@ -1,6 +1,6 @@
 # Public Surface Sanitization Policy
 
-ProofTrail keeps a governed public surface on purpose.
+Proofyard keeps a governed public surface on purpose.
 
 ## Public Surface
 

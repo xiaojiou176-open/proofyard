@@ -2,7 +2,7 @@
 
 This page is for the first run when you want the fewest moving parts possible.
 
-ProofTrail is **evidence-first browser automation with recovery and MCP**.
+Proofyard is **evidence-first browser automation with recovery and MCP**.
 This page covers the first evaluation path, not the AI or MCP side roads.
 
 ## The public road

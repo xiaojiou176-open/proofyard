@@ -1,6 +1,6 @@
-# ProofTrail MCP Capabilities
+# Proofyard MCP Capabilities
 
-These are the current tool families surfaced by ProofTrail's governed MCP
+These are the current tool families surfaced by Proofyard's governed MCP
 server.
 
 ## Best first tools

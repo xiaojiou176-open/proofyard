@@ -3,7 +3,7 @@
 This page is for builders and operators who need the MCP side road without
 confusing it with the repo default road.
 
-ProofTrail uses MCP as a **governed integration surface for AI clients**.
+Proofyard uses MCP as a **governed integration surface for AI clients**.
 It does not turn MCP into a second backend or a replacement for `just run`.
 
 This is also the page to read when your integration starts from Codex, Claude
@@ -44,12 +44,12 @@ Do not treat MCP setup as the first-run public story.
 Use this page if all three statements are already true:
 
 - you understand that `just run` is still the default public road
-- you want an external AI client to call ProofTrail through tools
+- you want an external AI client to call Proofyard through tools
   instead of raw REST or shell
 - you still want the browser, evidence, and recovery substrate to stay governed
 
-If you are still deciding whether ProofTrail itself fits your category, read
-[ProofTrail vs Generic Browser Agents](../compare/proofyard-vs-generic-browser-agents.md)
+If you are still deciding whether Proofyard itself fits your category, read
+[Proofyard vs Generic Browser Agents](../compare/proofyard-vs-generic-browser-agents.md)
 first.
 
 This page is also a truthful landing point if your search intent looked like:
@@ -62,7 +62,7 @@ This page is also a truthful landing point if your search intent looked like:
 
 MCP is not here to replace the mainline.
 
-It matters because it lets an external AI client consume ProofTrail as a
+It matters because it lets an external AI client consume Proofyard as a
 governed tool surface instead of forcing the client to speak raw REST or shell
 commands directly.
 
@@ -72,7 +72,7 @@ This MCP path is especially relevant when:
 
 - Codex needs browser tools without losing retained evidence
 - Claude Code needs governed browser-facing tools instead of raw shell glue
-- another tool-using AI agent needs ProofTrail to stay the browser-evidence
+- another tool-using AI agent needs Proofyard to stay the browser-evidence
   substrate instead of becoming the agent shell itself
 
 Truth boundary:
@@ -83,7 +83,7 @@ Truth boundary:
 
 ## What MCP gives you here
 
-In ProofTrail, MCP is useful because it lets an external AI client:
+In Proofyard, MCP is useful because it lets an external AI client:
 
 - inspect recent runs and retained evidence without inventing
   a second control plane
@@ -100,12 +100,12 @@ That is the real category fit:
 
 ## Codex and Claude Code style client fit
 
-ProofTrail does **not** claim an official Codex-only or Claude Code-only MCP
+Proofyard does **not** claim an official Codex-only or Claude Code-only MCP
 integration.
 
 The truthful claim is:
 
-- if your coding agent already speaks tools, ProofTrail's MCP server can act as
+- if your coding agent already speaks tools, Proofyard's MCP server can act as
   the governed browser-evidence surface
 - if your coding agent needs exact request and response semantics, use the API
   instead
@@ -140,7 +140,7 @@ agent shell and the browser/evidence/recovery substrate separate and honest.
 That is the truthful Codex / Claude Code angle here:
 
 - their shell stays the shell
-- ProofTrail stays the browser-evidence and recovery substrate
+- Proofyard stays the browser-evidence and recovery substrate
 - MCP is the governed bridge between them
 
 ## Choose the right surface
@@ -149,14 +149,14 @@ That is the truthful Codex / Claude Code angle here:
 | :--- | :--- | :--- |
 | prove one workflow locally | `just run` | deterministic first-proof path |
 | integrate exact request/response semantics | [API Builder Quickstart](api-builder-quickstart.md) | API is the contract layer |
-| let an external AI client call governed tools | [ProofTrail MCP Server README](../../apps/mcp-server/README.md) | MCP is the governed tool layer |
+| let an external AI client call governed tools | [Proofyard MCP Server README](../../apps/mcp-server/README.md) | MCP is the governed tool layer |
 
 ## Minimal builder path
 
 If you already know you need MCP, keep the first pass short:
 
 1. verify the contract layer with [API Builder Quickstart](api-builder-quickstart.md)
-2. read the [ProofTrail MCP Server README](../../apps/mcp-server/README.md)
+2. read the [Proofyard MCP Server README](../../apps/mcp-server/README.md)
 3. verify the checked-in MCP surface with `pnpm mcp:check`
 4. only then attach your MCP client
 
@@ -251,11 +251,11 @@ Future Docker example (**not yet published**):
 
 ## Suggested reading path
 
-1. [ProofTrail for AI Agents](proofyard-for-ai-agents.md)
-2. [ProofTrail for Coding Agents and Agent Ecosystems](proofyard-for-coding-agents.md)
+1. [Proofyard for AI Agents](proofyard-for-ai-agents.md)
+2. [Proofyard for Coding Agents and Agent Ecosystems](proofyard-for-coding-agents.md)
 3. [Evidence, Recovery, and Review Workspace](evidence-recovery-review-workspace.md)
 4. [API Builder Quickstart](api-builder-quickstart.md)
-5. [ProofTrail MCP Server README](../../apps/mcp-server/README.md)
+5. [Proofyard MCP Server README](../../apps/mcp-server/README.md)
 6. [MCP Distribution Contract](../reference/mcp-distribution-contract.md)
 7. [AI Reconstruction Side Road](ai-reconstruction-side-road.md)
 

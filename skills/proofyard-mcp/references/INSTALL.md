@@ -1,4 +1,4 @@
-# Install And Attach ProofTrail MCP
+# Install And Attach Proofyard MCP
 
 ## Local repo setup
 

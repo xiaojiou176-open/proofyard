@@ -729,7 +729,7 @@ function TaskCenterView({
               }
               description={
                 evidenceRegistryState === "missing"
-                  ? t("ProofTrail cannot find the canonical runs directory in this checkout yet. Start with the canonical run first so the manifest-backed evidence surface can exist.")
+                  ? t("Proofyard cannot find the canonical runs directory in this checkout yet. Start with the canonical run first so the manifest-backed evidence surface can exist.")
                   : t("The canonical runs directory exists, but there are no retained evidence runs to inspect yet. Run the canonical path first, then come back here to explain, share, or compare the result.")
               }
               supportingNote={

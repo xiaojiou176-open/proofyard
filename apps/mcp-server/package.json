@@ -2,7 +2,7 @@
   "name": "@proofyard/mcp-server",
   "version": "0.1.1",
   "mcpName": "io.github.xiaojiou176-open/proofyard-mcp",
-  "description": "ProofTrail MCP adapter for governed AI-client access to runs, proof, and workflow operations",
+  "description": "Proofyard MCP adapter for governed AI-client access to runs, proof, and workflow operations",
   "homepage": "https://xiaojiou176-open.github.io/proofyard/",
   "repository": {
     "type": "git",

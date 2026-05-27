@@ -428,7 +428,7 @@ describe("App", () => {
     expect((store.setTaskState as ReturnType<typeof vi.fn>).mock.calls[0][0]).toBe("loading")
     expect(store.setFeedbackText).toHaveBeenCalledWith("System ready")
     expect(store.addLog).toHaveBeenCalledWith("success", "System initialization completed")
-    expect(store.pushNotice).toHaveBeenCalledWith("success", "System ready. Welcome to ProofTrail.")
+    expect(store.pushNotice).toHaveBeenCalledWith("success", "System ready. Welcome to Proofyard.")
 
     expect(store.setStudioTemplateName).toHaveBeenCalledWith("Template 1")
     expect(store.setStudioDefaults).toHaveBeenCalledWith({ email: "demo@example.com" })

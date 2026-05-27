@@ -1,6 +1,6 @@
 # Integration Boundaries
 
-ProofTrail is a **browser-evidence and recovery layer**.
+Proofyard is a **browser-evidence and recovery layer**.
 
 It can sit behind coding-agent or operator workflows, but this repository does
 **not** currently claim:
@@ -20,7 +20,7 @@ It can sit behind coding-agent or operator workflows, but this repository does
 | HTTP API | yes | repo-native | The canonical API contract lives in `docs/reference/universal-api.md` and the checked-in generated client stays repo-local. |
 | MCP server | yes | repo-native | `apps/mcp-server/` provides the governed MCP surface for local or self-managed use. |
 | AI prompt contracts | yes | repo-native | `packages/ai-prompts/` exists as a private workspace package, not as a published registry surface. |
-| ProofTrail MCP install skill | yes | repo-native guidance | `skills/proofyard-mcp/` explains how agent shells should install and use the current stdio surface without pretending a registry package is already live. |
+| Proofyard MCP install skill | yes | repo-native guidance | `skills/proofyard-mcp/` explains how agent shells should install and use the current stdio surface without pretending a registry package is already live. |
 | GitHub Pages storefront | yes | public-facing | Pages explains product fit and routes people into docs, but it is not a plugin or marketplace listing. |
 
 ## Ecosystem Fit, Truthfully
@@ -46,7 +46,7 @@ integration products in this repo:
 
 ## What The Skill Does
 
-The ProofTrail MCP skill is an **installation and usage guide**, not a plugin.
+The Proofyard MCP skill is an **installation and usage guide**, not a plugin.
 
 Its job is to help Codex-, Claude Code-, OpenHands-, OpenCode-, and
 OpenClaw-style shells understand:
@@ -64,7 +64,7 @@ It must stay aligned with:
 
 ## How To Read The Current Repo
 
-If you are evaluating ProofTrail for an external toolchain, the truthful order
+If you are evaluating Proofyard for an external toolchain, the truthful order
 is:
 
 1. decide whether you need API-first or MCP-first control

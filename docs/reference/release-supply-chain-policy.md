@@ -1,6 +1,6 @@
 # Release Supply-Chain Policy
 
-ProofTrail distinguishes between repository-generated summaries and strong
+Proofyard distinguishes between repository-generated summaries and strong
 release-grade proof.
 
 ## Current rule

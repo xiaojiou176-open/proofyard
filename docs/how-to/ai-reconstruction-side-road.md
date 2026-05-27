@@ -1,6 +1,6 @@
 # AI Reconstruction Side Road
 
-ProofTrail's AI reconstruction path is for the moment after artifacts already
+Proofyard's AI reconstruction path is for the moment after artifacts already
 exist and a human or AI-adjacent workflow still wants help rebuilding or
 refining a flow.
 
@@ -24,7 +24,7 @@ The rule is simple:
 
 ## Why this side road exists at all
 
-ProofTrail is not trying to win on generic browser autonomy.
+Proofyard is not trying to win on generic browser autonomy.
 
 This side road exists because browser evidence is often rich enough to help an
 AI system rebuild intent, suggest a draft, or recover flow structure after the
@@ -62,7 +62,7 @@ Do not use it when:
 
 ## What this path does
 
-In ProofTrail, AI reconstruction helps with:
+In Proofyard, AI reconstruction helps with:
 
 1. resolving a likely profile from artifacts
 2. previewing a reconstructed draft
@@ -100,7 +100,7 @@ Use the path in this order:
 
 Generic AI browser tools often optimize for open-ended autonomy.
 
-ProofTrail optimizes for a different thing:
+Proofyard optimizes for a different thing:
 
 - evidence you can inspect later
 - recovery you can explain
@@ -116,7 +116,7 @@ That is exactly why it matters to AI-agent builders:
 
 If you want a system whose main value is open-ended browser autonomy, this page
 should probably push you toward the alternatives framing instead of trying to
-stretch ProofTrail into something else.
+stretch Proofyard into something else.
 
 If you want AI help that starts from retained artifacts, stays reviewable, and
 feeds back into a governed operator workflow, this side road is the right fit.
@@ -124,6 +124,6 @@ feeds back into a governed operator workflow, this side road is the right fit.
 ## Next pages
 
 - [docs/reference/run-evidence-example.md](../reference/run-evidence-example.md)
-- [ProofTrail for AI Agents](proofyard-for-ai-agents.md)
+- [Proofyard for AI Agents](proofyard-for-ai-agents.md)
 - [docs/how-to/mcp-quickstart-1pager.md](mcp-quickstart-1pager.md)
 - [docs/compare/proofyard-vs-generic-browser-agents.md](../compare/proofyard-vs-generic-browser-agents.md)

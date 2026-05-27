@@ -1,6 +1,6 @@
-# ProofTrail MCP Listings Cockpit
+# Proofyard MCP Listings Cockpit
 
-This page is the honest outer-lane cockpit for ProofTrail's MCP surface.
+This page is the honest outer-lane cockpit for Proofyard's MCP surface.
 
 It separates:
 
@@ -84,14 +84,14 @@ It separates:
 ### mcpservers.org
 
 - `Title / Project Name`
-  - `ProofTrail MCP`
+  - `Proofyard MCP`
 - `Link to GitHub Repository`
   - `https://github.com/xiaojiou176-open/proofyard`
 - `Short Description`
-  - Governed stdio MCP surface for ProofTrail browser-evidence,
+  - Governed stdio MCP surface for Proofyard browser-evidence,
     retained proof, and recovery workflows.
 - `Full Description`
-  - ProofTrail MCP gives coding-agent shells a governed bridge into
+  - Proofyard MCP gives coding-agent shells a governed bridge into
     browser-evidence runs, retained proof bundles, and recovery workflows.
   - The current supported road is local checkout + stdio, with optional
     live-backend forwarding.
@@ -119,7 +119,7 @@ It separates:
 - `Type`
   - `MCP Server`
 - `Name`
-  - `ProofTrail MCP`
+  - `Proofyard MCP`
 - `URL`
   - `https://github.com/xiaojiou176-open/proofyard`
 - `Server Config`
@@ -142,13 +142,13 @@ It separates:
 - `GitHub Repository URL`
   - `https://github.com/xiaojiou176-open/proofyard`
 - `Title`
-  - `ProofTrail MCP`
+  - `Proofyard MCP`
 - `One-liner`
   - Governed stdio MCP surface for browser-evidence, retained proof,
     and recovery workflows.
 - `Long description`
-  - ProofTrail MCP helps coding-agent shells inspect retained run evidence,
-    launch governed workflow tools, and operate on ProofTrail's recovery
+  - Proofyard MCP helps coding-agent shells inspect retained run evidence,
+    launch governed workflow tools, and operate on Proofyard's recovery
     surfaces through a local stdio bridge.
   - The honest install road today is repo checkout + stdio, with optional
     local backend forwarding; it is not a hosted HTTP MCP runtime.

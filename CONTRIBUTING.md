@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping improve ProofTrail.
+Thanks for helping improve Proofyard.
 
 ## Before you open a pull request
 
@@ -46,7 +46,7 @@ also run:
 For storefront changes, make sure the public route still makes sense to a first
 time visitor:
 
-- README answers what ProofTrail is, who it is for, and what to try first
+- README answers what Proofyard is, who it is for, and what to try first
 - `just run` remains the canonical public mainline
 - supporting docs routes in `docs/index.md` still resolve
 
@@ -59,7 +59,7 @@ time visitor:
 
 ## Contribution boundary
 
-ProofTrail is still operating under a **public-preview boundary** for
+Proofyard is still operating under a **public-preview boundary** for
 reviewable contributions.
 
 - Prefer changes that keep the canonical public mainline, proof contract, and

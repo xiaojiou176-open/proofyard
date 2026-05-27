@@ -29,7 +29,7 @@ Deferred for a separate future program:
 - public template marketplace
 - deeper evaluator acceleration beyond the current guided path
 - deeper AI/MCP productization beyond the current side-road surfaces
-- deep `UIQ -> ProofTrail` technical rename
+- deep `UIQ -> Proofyard` technical rename
 
 No-go for now:
 

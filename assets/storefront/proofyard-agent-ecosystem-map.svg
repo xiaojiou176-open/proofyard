@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
-  <title id="title">ProofTrail agent ecosystem fit map</title>
-  <desc id="desc">A visual matrix showing how ProofTrail fits Codex, Claude Code, OpenHands, OpenCode, and OpenClaw through API-first and MCP-first roads.</desc>
+  <title id="title">Proofyard agent ecosystem fit map</title>
+  <desc id="desc">A visual matrix showing how Proofyard fits Codex, Claude Code, OpenHands, OpenCode, and OpenClaw through API-first and MCP-first roads.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#eff6ff"/>
@@ -21,7 +21,7 @@
   <circle cx="146" cy="640" r="140" fill="#60a5fa" opacity="0.18"/>
 
   <text x="86" y="108" fill="#1e3a8a" font-size="24" font-family="Helvetica, Arial, sans-serif" letter-spacing="5">BROWSER-EVIDENCE FIT MAP</text>
-  <text x="86" y="188" fill="#0f172a" font-size="68" font-weight="700" font-family="Helvetica, Arial, sans-serif">ProofTrail for agent ecosystems</text>
+  <text x="86" y="188" fill="#0f172a" font-size="68" font-weight="700" font-family="Helvetica, Arial, sans-serif">Proofyard for agent ecosystems</text>
   <text x="86" y="246" fill="#334155" font-size="26" font-family="Helvetica, Arial, sans-serif">Use one canonical run, keep retained evidence,</text>
   <text x="86" y="282" fill="#334155" font-size="26" font-family="Helvetica, Arial, sans-serif">then choose the road that matches the outer shell.</text>
 
@@ -29,7 +29,7 @@
   <text x="118" y="378" fill="#f8fafc" font-size="30" font-family="Menlo, Monaco, monospace">API-first or MCP-first</text>
 
   <text x="86" y="468" fill="#0f172a" font-size="22" font-weight="700" font-family="Helvetica, Arial, sans-serif">What stays true</text>
-  <text x="86" y="506" fill="#334155" font-size="22" font-family="Helvetica, Arial, sans-serif">ProofTrail is the browser-evidence and recovery layer.</text>
+  <text x="86" y="506" fill="#334155" font-size="22" font-family="Helvetica, Arial, sans-serif">Proofyard is the browser-evidence and recovery layer.</text>
   <text x="86" y="538" fill="#334155" font-size="22" font-family="Helvetica, Arial, sans-serif">It is not a vendor plugin and not a generic AI shell.</text>
 
   <g transform="translate(610 92)">
