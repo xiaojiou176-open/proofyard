@@ -1,0 +1,36 @@
+run:
+  timeout: 5m
+  tests: false
+  skip-dirs:
+    - frontend
+    - automation
+    - apps
+    - packages
+    - .runtime-cache
+    - node_modules
+  skip-files:
+    - ".*\\.gen\\.go$"
+    - ".*\\.pb\\.go$"
+    - ".*_mock\\.go$"
+
+linters:
+  disable-all: true
+  enable:
+    - gofumpt
+    - goimports
+    - errcheck
+    - gosec
+    - unused
+    - revive
+    - govet
+    - ineffassign
+    - staticcheck
+
+linters-settings:
+  gofumpt:
+    extra-rules: true
+
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0

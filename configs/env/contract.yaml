@@ -1,0 +1,2053 @@
+version: 1
+description: Canonical env-variable contract for this repository.
+limits:
+  max_variable_count: 350
+allow_undeclared_exact:
+  - ABORT_COMMAND
+  - CI
+  - GITHUB_ACTIONS
+  - GITHUB_BASE_REF
+  - GITHUB_EVENT_NAME
+  - GITHUB_REF
+  - GITHUB_REPOSITORY
+  - GITHUB_STEP_SUMMARY
+  - HOME
+  - LANG
+  - LAST_RUN_AT
+  - LC_ALL
+  - LINE_LIMIT
+  - MAX_BEHIND
+  - PATH
+  - PYTEST_XDIST_WORKER
+  - ROOT_DIR
+  - SCOPE
+  - STARTED_AT
+  - STATE_PATH
+  - STATUS
+  - STRATEGY
+  - SYNC_BRANCH_DATE
+  - TERM
+allow_undeclared_prefixes:
+  - AI_REVIEW_
+  - AUTOMATION_GLOBAL_
+  - AUTOMATION_RUNTIME_
+  - GEMINI_
+  - GOOGLE_
+  - npm_
+  - PNPM_
+  - PLAYWRIGHT_
+  - RECON_
+  - TM_
+  - UIQ_
+  - VITE_
+variables:
+  - name: APP_ENV
+    section: core
+    default: development
+    required: false
+    sensitive: false
+    description: Runtime environment name.
+  - name: NODE_ENV
+    section: core
+    default: development
+    required: false
+    sensitive: false
+    description: Node.js runtime environment name for frontend, MCP, and orchestrator helpers.
+  - name: LOG_LEVEL
+    section: core
+    default: DEBUG
+    required: false
+    sensitive: false
+    description: Backend log level.
+  - name: LOG_MAX_BYTES
+    section: core
+    default: 5242880
+    required: false
+    sensitive: false
+    description: Per-log-file max size in bytes.
+  - name: LOG_BACKUP_COUNT
+    section: core
+    default: 5
+    required: false
+    sensitive: false
+    description: Number of rotated log files.
+  - name: CORS_ALLOWED_ORIGINS
+    section: core
+    default: http://127.0.0.1:17373,http://localhost:17373
+    required: false
+    sensitive: false
+    description: Comma-separated CORS origin allowlist.
+  - name: TRUSTED_HOSTS
+    section: core
+    default: 127.0.0.1,localhost,testserver
+    required: false
+    sensitive: false
+    description: Comma-separated trusted host allowlist.
+  - name: COOKIE_SECURE
+    section: core
+    default: true
+    required: false
+    sensitive: false
+    description: Set secure cookie policy.
+  - name: CSRF_TTL_SECONDS
+    section: core
+    default: 900
+    required: false
+    sensitive: false
+    description: CSRF token TTL in seconds.
+  - name: FRONTEND_REGISTER_URL
+    section: core
+    default: ""
+    required: false
+    sensitive: false
+    description: Optional frontend register URL override.
+
+  - name: AUTOMATION_API_TOKEN
+    section: auth
+    default: replace-with-strong-token
+    required: true
+    sensitive: true
+    description: Shared API token used by automation endpoints; placeholders and weak values are rejected fail-fast (min length 16).
+  - name: AUTOMATION_REQUIRE_TOKEN
+    section: auth
+    default: true
+    required: false
+    sensitive: false
+    description: Enforce token requirement for automation APIs.
+  - name: AUTOMATION_ALLOW_LOCAL_NO_TOKEN
+    section: auth
+    default: false
+    required: false
+    sensitive: false
+    description: Allow loopback no-token access only when APP_ENV is development or test; must remain false in production.
+
+  - name: AUTOMATION_RATE_LIMIT_PER_MINUTE
+    section: limits
+    default: 120
+    required: false
+    sensitive: false
+    description: Per-route per-client rate limit.
+  - name: AUTOMATION_MAX_RATE_BUCKETS
+    section: limits
+    default: 2000
+    required: false
+    sensitive: false
+    description: In-memory rate-limit bucket cap.
+  - name: AUTOMATION_FAILURE_ALERT_THRESHOLD
+    section: limits
+    default: 0.2
+    required: false
+    sensitive: false
+    description: Failure ratio threshold for alert state.
+  - name: AUTOMATION_MAX_TASKS
+    section: limits
+    default: 300
+    required: false
+    sensitive: false
+    description: Max queued/runnable tasks retained.
+  - name: AUTOMATION_MAX_PARALLEL
+    section: limits
+    default: 8
+    required: false
+    sensitive: false
+    description: Max concurrent automation tasks.
+  - name: AUTOMATION_MAX_PARALLEL_LONG
+    section: limits
+    default: 1
+    required: false
+    sensitive: false
+    description: Max concurrent long-running tasks.
+  - name: AUTOMATION_DEFAULT_RETRIES
+    section: limits
+    default: 1
+    required: false
+    sensitive: false
+    description: Default retry count for failed tasks.
+  - name: AUTOMATION_RETRY_BASE_SECONDS
+    section: limits
+    default: "1.0"
+    required: false
+    sensitive: false
+    description: Base delay in seconds for retry backoff.
+  - name: AUTOMATION_RETRY_MAX_SECONDS
+    section: limits
+    default: "30.0"
+    required: false
+    sensitive: false
+    description: Maximum retry delay in seconds after backoff.
+  - name: AUTOMATION_RETRY_JITTER_RATIO
+    section: limits
+    default: 0.2
+    required: false
+    sensitive: false
+    description: Random jitter ratio applied to retry backoff delays.
+  - name: AUTOMATION_COMMAND_TIMEOUT_SECONDS
+    section: limits
+    default: 1800
+    required: false
+    sensitive: false
+    description: Command timeout in seconds.
+  - name: AUTOMATION_COMPLETED_TASK_TTL_SECONDS
+    section: limits
+    default: 86400
+    required: false
+    sensitive: false
+    description: TTL in seconds for completed task records.
+  - name: AUTOMATION_IDEMPOTENCY_TTL_SECONDS
+    section: limits
+    default: 21600
+    required: false
+    sensitive: false
+    description: TTL in seconds for idempotency replay records.
+  - name: AUTOMATION_RETENTION_HOURS
+    section: limits
+    default: 24
+    required: false
+    sensitive: false
+    description: Retention window for automation artifacts in hours.
+  - name: RUNTIME_GC_RETENTION_DAYS
+    section: limits
+    default: 7
+    required: false
+    sensitive: false
+    description: Runtime garbage-collection retention window in days.
+  - name: CACHE_MAX_ENTRIES
+    section: limits
+    default: 2000
+    required: false
+    sensitive: false
+    description: Maximum in-memory cache entries.
+  - name: CACHE_TTL_SECONDS
+    section: limits
+    default: 3600
+    required: false
+    sensitive: false
+    description: Cache entry TTL in seconds.
+
+  - name: UIQ_AUTO_TICKETING
+    section: limits
+    default: false
+    required: false
+    sensitive: false
+    description: Enable CI auto-ticketing integration for failure clusters.
+  - name: UIQ_GEMINI_LIVE_SMOKE_REQUIRED
+    section: limits
+    default: false
+    required: false
+    sensitive: false
+    description: Require Gemini live smoke gate with real browser verification; when true, UIQ_BASE_URL must be external (non-loopback) and GEMINI_API_KEY must be available.
+  - name: UIQ_GEMINI_LIVE_SMOKE_TIMEOUT_MS
+    section: limits
+    default: 15000
+    required: false
+    sensitive: false
+    description: Timeout budget in milliseconds for the live Gemini smoke request.
+  - name: UIQ_MCP_STRESS_TIME_BUDGET_MS
+    section: limits
+    default: 300000
+    required: false
+    sensitive: false
+    description: CI time-budget threshold in milliseconds for MCP stress gate runs.
+
+  - name: DATABASE_URL
+    section: storage
+    default: postgresql+psycopg://automation:automation@postgres:5432/automation
+    required: false
+    sensitive: true
+    description: SQL persistence backend URL.
+  - name: REDIS_URL
+    section: storage
+    default: redis://redis:6379/0
+    required: false
+    sensitive: true
+    description: Redis backend URL for shared rate limiting.
+  - name: UNIVERSAL_AUTOMATION_RUNTIME_DIR
+    section: storage
+    default: ""
+    required: false
+    sensitive: false
+    description: Override universal runtime directory.
+  - name: UNIVERSAL_PLATFORM_DATA_DIR
+    section: storage
+    default: ""
+    required: false
+    sensitive: false
+    description: Override universal platform data directory.
+  - name: PROJECT_PYTHON_ENV
+    section: storage
+    default: .runtime-cache/toolchains/python/.venv
+    required: false
+    sensitive: false
+    description: Managed local Python project environment root used by repo-owned entrypoints.
+  - name: UV_PROJECT_ENVIRONMENT
+    section: storage
+    default: .runtime-cache/toolchains/python/.venv
+    required: false
+    sensitive: false
+    description: uv project environment override used to place the Python runtime under the repo-managed toolchains bucket.
+
+  - name: RUM_SUMMARY_PATH
+    section: observability
+    default: .runtime-cache/metrics/rum-summary.json
+    required: false
+    sensitive: false
+    description: RUM summary file path.
+  - name: TRACING_ENABLED
+    section: observability
+    default: false
+    required: false
+    sensitive: false
+    description: Enable OpenTelemetry tracing.
+  - name: TRACING_EXPORTER
+    section: observability
+    default: console
+    required: false
+    sensitive: false
+    description: "Tracing exporter: console or otlp."
+  - name: TRACING_SERVICE_NAME
+    section: observability
+    default: uiq-backend
+    required: false
+    sensitive: false
+    description: Service name tag for tracing.
+  - name: TRACING_OTLP_ENDPOINT
+    section: observability
+    default: ""
+    required: false
+    sensitive: false
+    description: OTLP endpoint URL when exporter=otlp.
+  - name: TRACING_OTLP_HEADERS
+    section: observability
+    default: ""
+    required: false
+    sensitive: true
+    description: Optional OTLP headers string.
+
+  - name: FLOW_OTP_PROVIDER
+    section: otp
+    default: gmail
+    required: false
+    sensitive: false
+    description: OTP provider strategy.
+  - name: FLOW_OTP_REGEX
+    section: otp
+    default: '\b(\d{6})\b'
+    required: false
+    sensitive: false
+    description: OTP regex capture pattern.
+  - name: FLOW_OTP_SENDER_FILTER
+    section: otp
+    default: ""
+    required: false
+    sensitive: false
+    description: Optional sender filter.
+  - name: FLOW_OTP_SUBJECT_FILTER
+    section: otp
+    default: ""
+    required: false
+    sensitive: false
+    description: Optional subject filter.
+  - name: FLOW_OTP_TIMEOUT_SECONDS
+    section: otp
+    default: 240
+    required: false
+    sensitive: false
+    description: OTP polling timeout in seconds.
+  - name: FLOW_OTP_POLL_INTERVAL_SECONDS
+    section: otp
+    default: 5
+    required: false
+    sensitive: false
+    description: OTP polling interval in seconds.
+  - name: GMAIL_IMAP_USER
+    section: otp
+    default: ""
+    required: false
+    sensitive: true
+    description: Gmail IMAP username.
+  - name: GMAIL_IMAP_PASSWORD
+    section: otp
+    default: ""
+    required: false
+    sensitive: true
+    description: Gmail IMAP app password.
+  - name: IMAP_HOST
+    section: otp
+    default: ""
+    required: false
+    sensitive: false
+    description: Generic IMAP host.
+  - name: IMAP_USER
+    section: otp
+    default: ""
+    required: false
+    sensitive: true
+    description: Generic IMAP username.
+  - name: IMAP_PASSWORD
+    section: otp
+    default: ""
+    required: false
+    sensitive: true
+    description: Generic IMAP password.
+
+  - name: VONAGE_INBOUND_TOKEN
+    section: vonage
+    default: ""
+    required: false
+    sensitive: true
+    description: Vonage inbound webhook token.
+  - name: VONAGE_OTP_TO_NUMBER
+    section: vonage
+    default: ""
+    required: false
+    sensitive: false
+    description: Allowed recipient number for OTP pickup.
+  - name: VONAGE_SIGNATURE_SECRET
+    section: vonage
+    default: ""
+    required: false
+    sensitive: true
+    description: Vonage callback signature secret.
+  - name: VONAGE_SIGNATURE_ALGO
+    section: vonage
+    default: sha256
+    required: false
+    sensitive: false
+    description: Vonage signature algorithm.
+  - name: VONAGE_SIGNATURE_MAX_SKEW_SECONDS
+    section: vonage
+    default: 600
+    required: false
+    sensitive: false
+    description: Max callback timestamp skew.
+  - name: VONAGE_MESSAGE_ID_TTL_SECONDS
+    section: vonage
+    default: 86400
+    required: false
+    sensitive: false
+    description: Message-id dedupe TTL.
+  - name: OTP_DEDUPE_REDIS_PREFIX
+    section: vonage
+    default: otp:vonage:dedupe
+    required: false
+    sensitive: false
+    description: Redis key prefix for Vonage OTP dedupe.
+  - name: OTP_DEDUPE_STRICT
+    section: vonage
+    default: false
+    required: false
+    sensitive: false
+    description: Fail closed when dedupe storage is unavailable.
+  - name: VONAGE_API_KEY
+    section: vonage
+    default: ""
+    required: false
+    sensitive: true
+    description: Vonage API key for health checks.
+  - name: VONAGE_API_SECRET
+    section: vonage
+    default: ""
+    required: false
+    sensitive: true
+    description: Vonage API secret for health checks.
+  - name: VONAGE_MIN_BALANCE
+    section: vonage
+    default: 1
+    required: false
+    sensitive: false
+    description: Minimum expected account balance.
+  - name: VONAGE_POOL_NUMBERS
+    section: vonage
+    default: ""
+    required: false
+    sensitive: false
+    description: Optional comma-separated required number pool.
+
+  - name: UIQ_MCP_API_BASE_URL
+    section: mcp
+    default: http://127.0.0.1:18080
+    required: false
+    sensitive: false
+    description: MCP backend base URL.
+  - name: UIQ_MCP_AUTOMATION_TOKEN
+    section: mcp
+    default: ""
+    required: false
+    sensitive: true
+    description: Token forwarded by MCP to backend.
+  - name: UIQ_MCP_ALLOW_REMOTE_BASE_URL
+    section: mcp
+    default: false
+    required: false
+    sensitive: false
+    description: Allow non-loopback backend base URL.
+  - name: UIQ_MCP_ALLOW_REMOTE_TOKEN_FORWARDING
+    section: mcp
+    default: false
+    required: false
+    sensitive: false
+    description: Allow forwarding token to approved remote hosts.
+  - name: UIQ_MCP_REMOTE_TOKEN_HOST_ALLOWLIST
+    section: mcp
+    default: ""
+    required: false
+    sensitive: false
+    description: Comma-separated host allowlist for remote token forwarding.
+  - name: UIQ_MCP_API_TIMEOUT_MS
+    section: mcp
+    default: 30000
+    required: false
+    sensitive: false
+    description: MCP API request timeout budget.
+  - name: UIQ_MCP_API_RETRY_MAX_ATTEMPTS
+    section: mcp
+    default: 6
+    required: false
+    sensitive: false
+    description: Max attempts for retrying transient MCP API network errors.
+  - name: UIQ_MCP_API_RETRY_BASE_DELAY_MS
+    section: mcp
+    default: 100
+    required: false
+    sensitive: false
+    description: Base retry delay in milliseconds for transient MCP API network errors.
+  - name: UIQ_MCP_HEALTH_TIMEOUT_MS
+    section: mcp
+    default: 2000
+    required: false
+    sensitive: false
+    description: MCP health-check timeout budget.
+  - name: UIQ_MCP_WORKSPACE_ROOT
+    section: mcp
+    default: .
+    required: false
+    sensitive: false
+    description: MCP default workspace root.
+  - name: UIQ_MCP_WORKSPACE_ALLOWLIST
+    section: mcp
+    default: ""
+    required: false
+    sensitive: false
+    description: Optional workspace allowlist.
+  - name: UIQ_MCP_GOVERN_RATE_LIMIT_CALLS
+    section: mcp
+    default: 3
+    required: false
+    sensitive: false
+    description: Per-session governed-tool call budget.
+  - name: UIQ_MCP_GOVERN_RATE_LIMIT_WINDOW_SECONDS
+    section: mcp
+    default: 60
+    required: false
+    sensitive: false
+    description: Window size for governed-tool rate limiting.
+  - name: UIQ_MCP_GOVERN_TIMEOUT_MS
+    section: mcp
+    default: 30000
+    required: false
+    sensitive: false
+    description: Per-governed-tool timeout budget.
+  - name: UIQ_MCP_GOVERN_SESSION_BUDGET_MS
+    section: mcp
+    default: 120000
+    required: false
+    sensitive: false
+    description: Session-wide governed-tool timeout budget.
+  - name: UIQ_MCP_PERFECT_MODE
+    section: mcp
+    default: true
+    required: false
+    sensitive: false
+    description: Enable perfect-mode MCP guardrails and strict defaults.
+  - name: UIQ_MCP_TOOL_GROUPS
+    section: mcp
+    default: advanced,register,proof,analysis
+    required: false
+    sensitive: false
+    description: Optional MCP tool groups to expose; use comma-separated groups or all.
+  - name: UIQ_MCP_BACKEND_PORT
+    section: mcp
+    default: 18080
+    required: false
+    sensitive: false
+    description: Preferred backend port for MCP-managed runtime.
+  - name: UIQ_MCP_DEV_RUNTIME_ROOT
+    section: mcp
+    default: ""
+    required: false
+    sensitive: false
+    description: Optional runtime directory for MCP local backend.
+  - name: UIQ_MCP_FAKE_UIQ_BIN
+    section: mcp
+    default: ""
+    required: false
+    sensitive: false
+    description: Override path to fake uiq binary in tests.
+  - name: UIQ_MCP_STRESS_PARALLEL
+    section: mcp
+    default: 2
+    required: false
+    sensitive: false
+    description: Parallel workers for MCP stress gate in CI workflows.
+  - name: UIQ_MCP_AUDIT_MAX_BYTES
+    section: mcp
+    default: 10485760
+    required: false
+    sensitive: false
+    description: Max size per MCP audit log file in bytes.
+  - name: UIQ_MCP_AUDIT_BACKUP_COUNT
+    section: mcp
+    default: 10
+    required: false
+    sensitive: false
+    description: Number of rotated MCP audit log files.
+  - name: UIQ_MCP_AUDIT_RETENTION_DAYS
+    section: mcp
+    default: 14
+    required: false
+    sensitive: false
+    description: MCP audit retention window in days.
+  - name: UIQ_MCP_RUNTIME_CACHE_ROOT
+    section: mcp
+    default: .runtime-cache
+    required: false
+    sensitive: false
+    description: Runtime cache root used by MCP server.
+  - name: UIQ_MCP_RUN_STREAM_TERM_GRACE_MS
+    section: mcp
+    default: 5000
+    required: false
+    sensitive: false
+    description: Grace period before terminating run-stream process.
+
+  - name: VITE_DEFAULT_BASE_URL
+    section: frontend
+    default: http://127.0.0.1:17380
+    required: false
+    sensitive: false
+    description: Frontend default backend base URL.
+  - name: VITE_RUM_ENABLED
+    section: frontend
+    default: false
+    required: false
+    sensitive: false
+    description: Enable frontend RUM event forwarding.
+
+  - name: AI_PROVIDER
+    section: ai
+    default: gemini
+    required: false
+    sensitive: false
+    description: Active AI provider.
+  - name: GEMINI_API_KEY
+    section: ai
+    default: ""
+    required: false
+    sensitive: true
+    description: Gemini API key (required for Gemini live smoke when UIQ_GEMINI_LIVE_SMOKE_REQUIRED=true).
+  - name: GEMINI_MODEL_PRIMARY
+    section: ai
+    default: models/gemini-3.1-pro-preview
+    required: false
+    sensitive: false
+    description: Primary Gemini model name.
+  - name: GEMINI_MODEL_FLASH
+    section: ai
+    default: models/gemini-3-flash-preview
+    required: false
+    sensitive: false
+    description: Gemini flash model name.
+  - name: GEMINI_QUALITY_PROFILE
+    section: ai
+    default: pro
+    required: false
+    sensitive: false
+    description: Gemini quality profile selector (pro or fast).
+  - name: GEMINI_TOOL_MODE
+    section: ai
+    default: auto
+    required: false
+    sensitive: false
+    description: Gemini function/tool calling mode.
+  - name: GEMINI_INCLUDE_THOUGHTS
+    section: ai
+    default: true
+    required: false
+    sensitive: false
+    description: Include Gemini thought signatures in multi-turn flows.
+  - name: GEMINI_CONTEXT_CACHE_MODE
+    section: ai
+    default: memory
+    required: false
+    sensitive: false
+    description: Context-caching strategy for Gemini requests (memory or api).
+  - name: GEMINI_CONTEXT_CACHE_TTL_SECONDS
+    section: ai
+    default: 3600
+    required: false
+    sensitive: false
+    description: In-memory context-cache TTL in seconds for reconstruction extraction.
+  - name: GEMINI_MEDIA_RESOLUTION
+    section: ai
+    default: high
+    required: false
+    sensitive: false
+    description: Default media resolution hint for Gemini multimodal requests.
+  - name: GEMINI_MEDIA_RESOLUTION_DEFAULT
+    section: ai
+    default: high
+    required: false
+    sensitive: false
+    description: Fallback media resolution when request-specific hint is absent.
+  - name: GEMINI_EMBED_MODEL
+    section: ai
+    default: gemini-embedding-001
+    required: false
+    sensitive: false
+    description: Gemini embedding model name.
+  - name: GEMINI_THINKING_LEVEL
+    section: ai
+    default: high
+    required: false
+    sensitive: false
+    description: Gemini thinking effort level.
+  - name: COMMAND_TOWER_EVIDENCE_MAX_BYTES
+    section: ai
+    default: 3145728
+    required: false
+    sensitive: false
+    description: Max bytes returned for command tower evidence payloads.
+  - name: AI_SPEED_MODE
+    section: ai
+    default: false
+    required: false
+    sensitive: false
+    description: Prefer speed-oriented AI behavior.
+  - name: AI_MAX_STEPS
+    section: ai
+    default: 50
+    required: false
+    sensitive: false
+    description: Maximum allowed AI computer-use iteration steps.
+  - name: AI_REVIEW_MODE
+    section: ai
+    default: llm
+    required: false
+    sensitive: false
+    description: AI review execution mode (llm or rule_fallback).
+  - name: AI_REVIEW_GEMINI_MULTIMODAL
+    section: ai
+    default: false
+    required: false
+    sensitive: false
+    description: Enable Gemini multimodal UI/UX review from screenshots/video artifacts.
+  - name: AI_REVIEW_GEMINI_TOP_SCREENSHOTS
+    section: ai
+    default: 3
+    required: false
+    sensitive: false
+    description: Maximum screenshot artifacts sent to Gemini for multimodal UI/UX review.
+  - name: UIQ_AI_FIX_MODE
+    section: ai
+    default: report_only
+    required: false
+    sensitive: false
+    description: AI fix execution mode (report_only or auto).
+  - name: UIQ_AI_FIX_ALLOWLIST
+    section: ai
+    default: packages,apps,backend,frontend
+    required: false
+    sensitive: false
+    description: Comma-delimited relative path allowlist for auto-fix targets.
+  - name: AI_FIX_MAX_ITERATIONS
+    section: ai
+    default: 2
+    required: false
+    sensitive: false
+    description: Maximum post-fix regression iterations before hard failure.
+  - name: UIQ_COMPUTER_USE_TASK
+    section: ai
+    default: ""
+    required: false
+    sensitive: false
+    description: Fallback computer-use task when profile/target does not define one.
+  - name: PROVIDER_POLICY_PATH
+    section: ai
+    default: configs/ai/provider-policy.yaml
+    required: false
+    sensitive: false
+    description: Path to provider policy configuration file.
+  - name: ACTION_SCHEMA_PATH
+    section: ai
+    default: packages/core/src/ai/action-schema.json
+    required: false
+    sensitive: false
+    description: Path to AI action schema definition file.
+  - name: MIDSCENE_MODEL_NAME
+    section: ai
+    default: ""
+    required: false
+    sensitive: false
+    description: Midscene model identifier.
+  - name: MIDSCENE_STRICT
+    section: ai
+    default: true
+    required: false
+    sensitive: false
+    description: Strict selector matching in Midscene flows.
+  - name: MIDSCENE_ALLOW_FALLBACK
+    section: ai
+    default: false
+    required: false
+    sensitive: false
+    description: Allow Midscene fallback behavior.
+  - name: RECONSTRUCTION_ARTIFACT_MAX_BYTES
+    section: ai
+    default: 16777216
+    required: false
+    sensitive: false
+    description: Max reconstruction artifact size in bytes.
+  - name: RECON_MAIN_ENGINE
+    section: ai
+    default: gemini
+    required: false
+    sensitive: false
+    description: Primary reconstruction engine identifier.
+  - name: RECON_ENABLE_ENSEMBLE
+    section: ai
+    default: false
+    required: false
+    sensitive: false
+    description: Enable multi-engine ensemble reconstruction mode.
+  - name: RECON_EXPERIMENTAL_ENGINES
+    section: ai
+    default: lavague,uitars,openadapt
+    required: false
+    sensitive: false
+    description: Optional comma-separated experimental reconstruction engines.
+  - name: RECON_ENGINE_ALLOWED_HOSTS
+    section: ai
+    default: ""
+    required: false
+    sensitive: false
+    description: Optional allowlist of hostnames for reconstruction engine calls.
+  - name: RECON_ENGINE_TIMEOUT_SECONDS
+    section: ai
+    default: 20
+    required: false
+    sensitive: false
+    description: Timeout for reconstruction engine requests in seconds.
+  - name: UIQ_GEMINI_LIVE_SMOKE_ENDPOINT
+    section: ai
+    default: https://generativelanguage.googleapis.com
+    required: false
+    sensitive: false
+    description: Base endpoint for Gemini live smoke gate requests.
+  - name: UIQ_GEMINI_LIVE_SMOKE_MODEL
+    section: ai
+    default: gemini-3-flash-preview
+    required: false
+    sensitive: false
+    description: Model name used by the Gemini live smoke gate.
+  - name: UIQ_GEMINI_LIVE_BROWSER_TIMEOUT_MS
+    section: ai
+    default: 20000
+    required: false
+    sensitive: false
+    description: Browser navigation timeout in milliseconds for the required external URL check in the Gemini live smoke gate.
+  - name: UIQ_GEMINI_LIVE_SMOKE_PROMPT
+    section: ai
+    default: "Return exactly: OK"
+    required: false
+    sensitive: false
+    description: Prompt text used by the Gemini live smoke gate.
+  - name: AUTOMATION_GLOBAL_CLEANUP_INTERVAL_MINUTES
+    section: limits
+    default: 60
+    required: false
+    sensitive: false
+    description: Periodic global cleanup interval in minutes.
+  - name: AUTOMATION_GLOBAL_CLEANUP_MAX_SIZE_GB
+    section: limits
+    default: 5
+    required: false
+    sensitive: false
+    description: Maximum runtime cache size before cleanup trigger.
+  - name: AUTOMATION_GLOBAL_CLEANUP_TTL_HOURS
+    section: limits
+    default: 24
+    required: false
+    sensitive: false
+    description: Time-to-live for global cleanup candidates in hours.
+  - name: AUTOMATION_RUNTIME_MAX_BYTES
+    section: limits
+    default: 1073741824
+    required: false
+    sensitive: false
+    description: Max bytes allowed in automation runtime cache.
+  - name: UIQ_RUNTIME_CACHE_ROOT
+    section: storage
+    default: .runtime-cache
+    required: false
+    sensitive: false
+    description: Canonical runtime cache root path.
+  - name: UIQ_REPO_ROOT
+    section: storage
+    default: ""
+    required: false
+    sensitive: false
+    description: Optional repository root override for tool routing.
+  - name: UIQ_TRUSTED_BIN_DIRS
+    section: storage
+    default: ""
+    required: false
+    sensitive: false
+    description: Optional comma-separated trusted binary directories.
+
+  - name: UIQ_TEST_MODE
+    section: tests
+    default: parallel
+    required: false
+    sensitive: false
+    description: "Test matrix mode: parallel or serial."
+  - name: UIQ_SUITE_WEB_E2E
+    section: tests
+    default: 1
+    required: false
+    sensitive: false
+    description: Enable apps/web e2e suite.
+  - name: UIQ_SUITE_FRONTEND_E2E
+    section: tests
+    default: 1
+    required: false
+    sensitive: false
+    description: Enable frontend e2e suite.
+  - name: UIQ_SUITE_FRONTEND_UNIT
+    section: tests
+    default: 1
+    required: false
+    sensitive: false
+    description: Enable frontend unit suite.
+  - name: UIQ_SUITE_BACKEND
+    section: tests
+    default: 1
+    required: false
+    sensitive: false
+    description: Enable backend suite.
+  - name: UIQ_SUITE_AUTOMATION_CHECK
+    section: tests
+    default: 0
+    required: false
+    sensitive: false
+    description: Enable automation-check suite.
+  - name: UIQ_CAPTURE_API_MOCK
+    section: tests
+    default: 0
+    required: false
+    sensitive: false
+    description: Enable API mock routing for capture/explore/chaos in local CI web target.
+  - name: UIQ_E2E_PORT
+    section: tests
+    default: 4173
+    required: false
+    sensitive: false
+    description: apps/web e2e target port.
+  - name: UIQ_FRONTEND_E2E_PORT
+    section: tests
+    default: 43173
+    required: false
+    sensitive: false
+    description: frontend e2e target port.
+  - name: UIQ_TEST_LOG_DIR
+    section: tests
+    default: .runtime-cache/artifacts/ci/test-matrix
+    required: false
+    sensitive: false
+    description: Test matrix log directory.
+  - name: UIQ_TEST_RUN_ID
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: Optional explicit test run identifier.
+  - name: UIQ_FAILFAST_TERM_GRACE_SEC
+    section: tests
+    default: 3
+    required: false
+    sensitive: false
+    description: Grace window in seconds before fail-fast escalates from TERM to KILL in test matrix cleanup.
+  - name: UIQ_TEST_CHILD_PID_FILE
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: Temporary file path used by fail-fast matrix tests to pass child process PID across shell/python boundaries.
+  - name: UIQ_TEST_MATRIX_CMD_APPS_WEB_E2E
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: Optional command override for the apps/web e2e suite in scripts/test-matrix.sh.
+  - name: UIQ_TEST_MATRIX_CMD_FRONTEND_E2E
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: Optional command override for the frontend e2e suite in scripts/test-matrix.sh.
+  - name: UIQ_TEST_MATRIX_CMD_FRONTEND_UNIT
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: Optional command override for the frontend unit suite in scripts/test-matrix.sh.
+  - name: UIQ_TEST_MATRIX_CMD_BACKEND_PYTEST
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: Optional command override for the backend pytest suite in scripts/test-matrix.sh.
+  - name: UIQ_TEST_MATRIX_CMD_AUTOMATION_CHECK
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: Optional command override for the automation-check suite in scripts/test-matrix.sh.
+  - name: UIQ_TEST_MATRIX_CMD_ORCHESTRATOR_MCP_GATE
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: Optional command override for the orchestrator MCP gate suite in scripts/test-matrix.sh.
+  - name: UIQ_AUTOMATION_INSTALL_DEPS
+    section: tests
+    default: 0
+    required: false
+    sensitive: false
+    description: Reinstall automation dependencies before automation-check when set to 1.
+  - name: UIQ_FRONTEND_E2E_WORKERS
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: Playwright worker override for frontend e2e suite.
+  - name: UIQ_AUTOMATION_WORKERS
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: Playwright worker override for automation suite.
+  - name: MATRIX_TARGET
+    section: ci
+    default: ""
+    required: false
+    sensitive: false
+    description: Matrix target dimension used by workflow jobs.
+  - name: MATRIX_PROFILE
+    section: ci
+    default: ""
+    required: false
+    sensitive: false
+    description: Matrix profile dimension used by workflow jobs.
+  - name: UIQ_ENABLE_REAL_BACKEND_TESTS
+    section: tests
+    default: false
+    required: false
+    sensitive: false
+    description: Enable MCP real backend regression tests.
+  # Auto-added from env governance undeclared scan
+  - name: AUTOMATION_BACKEND_PORT
+    section: runtime
+    default: 17380
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: BACKEND_PID
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: BACKEND_PORT
+    section: runtime
+    default: 17380
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: BASELINE_WINDOW
+    section: ci
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (ci scope)."
+  - name: BASE_ORIGIN
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: CDP_HTTP_URL
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: CDP_URL
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: CDP_DISCOVERY_TIMEOUT_MS
+    section: runtime
+    default: 5000
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: COMPUTER_USE_AUTO_CONFIRM
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: DEFAULT_BRANCH
+    section: ci
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (ci scope)."
+  - name: DEFAULT_START_URL
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: DEFAULT_WORKSPACE_ALLOWLIST_ENV
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: DESKTOP_RUN_ID_PREFIX
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: EMAIL_A
+    section: runtime
+    default: ""
+    required: false
+    sensitive: true
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: EMAIL_B
+    section: runtime
+    default: ""
+    required: false
+    sensitive: true
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: FLOW_CAPTURE_SCREENSHOTS
+    section: otp
+    default: true
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (otp scope)."
+  - name: FLOW_CAPTURE_SENSITIVE_SCREENSHOTS
+    section: otp
+    default: false
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (otp scope)."
+  - name: FLOW_DISABLE_AUTO_RUNTIME_CLEANUP
+    section: otp
+    default: false
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (otp scope)."
+  - name: FLOW_FROM_STEP_ID
+    section: otp
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (otp scope)."
+  - name: FLOW_INPUT
+    section: otp
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (otp scope)."
+  - name: FLOW_LOAD_RESUME_CONTEXT
+    section: otp
+    default: true
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (otp scope)."
+  - name: FLOW_OTP_CODE
+    section: otp
+    default: ""
+    required: false
+    sensitive: true
+    description: "Governed env variable detected by automated env scan (otp scope)."
+  - name: FLOW_OTP_PROVIDER_TIMEOUT_MS
+    section: otp
+    default: 8000
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (otp scope)."
+  - name: FLOW_PROTECTED_PROVIDER_DOMAINS
+    section: otp
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (otp scope)."
+  - name: FLOW_PROTECTED_PROVIDER_GATE_POLICY
+    section: otp
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (otp scope)."
+  - name: FLOW_REPLAY_PRECONDITIONS
+    section: otp
+    default: false
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (otp scope)."
+  - name: FLOW_RESUME_CONTEXT
+    section: otp
+    default: false
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (otp scope)."
+  - name: FLOW_SECRET_INPUT
+    section: otp
+    default: ""
+    required: false
+    sensitive: true
+    description: "Governed env variable detected by automated env scan (otp scope)."
+  - name: FLOW_SELECTOR_INDEX
+    section: otp
+    default: 0
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (otp scope)."
+  - name: FLOW_SESSION_ID
+    section: otp
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (otp scope)."
+  - name: FLOW_STEP_ID
+    section: otp
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (otp scope)."
+  - name: HEADLESS
+    section: runtime
+    default: false
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: MIDSCENE_DRIVER
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: MODE
+    section: runtime
+    default: "manual"
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: NIGHTLY_RUN_ID
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: OTP_CODE
+    section: otp
+    default: ""
+    required: false
+    sensitive: true
+    description: "Governed env variable detected by automated env scan (otp scope)."
+  - name: OTP_PROVIDER
+    section: otp
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (otp scope)."
+  - name: PASSWORD
+    section: runtime
+    default: ""
+    required: false
+    sensitive: true
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: PIPELINE_BACKEND_PORT
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: POLL_TIMEOUT_SECONDS
+    section: runtime
+    default: 120
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: PYTHON_BIN
+    section: otp
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (otp scope)."
+  - name: RECON_PARAM_INPUT
+    section: ai
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (ai scope)."
+  - name: RECON_SECRET_INPUT
+    section: ai
+    default: ""
+    required: false
+    sensitive: true
+    description: "Governed env variable detected by automated env scan (ai scope)."
+  - name: RECON_SECRET_PASSWORD
+    section: ai
+    default: ""
+    required: false
+    sensitive: true
+    description: "Governed env variable detected by automated env scan (ai scope)."
+  - name: RECORD_MODE
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: REDACTED
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: REGISTER_PASSWORD
+    section: otp
+    default: ""
+    required: false
+    sensitive: true
+    description: "Governed env variable detected by automated env scan (otp scope)."
+  - name: REPLAY_PASSWORD
+    section: otp
+    default: ""
+    required: false
+    sensitive: true
+    description: "Governed env variable detected by automated env scan (otp scope)."
+  - name: REPLAY_TOKEN
+    section: otp
+    default: ""
+    required: false
+    sensitive: true
+    description: "Governed env variable detected by automated env scan (otp scope)."
+  - name: RESUME
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: RETRIES
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: ROUND
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: RUNTIME_ROOT
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: RUN_ID
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: RUN_IDS
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: RUN_ID_BASE
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: RUN_ID_MAX_LENGTH
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: RUN_ID_PREFIX
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: RUN_SUFFIX
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: SAMPLE_SIZE
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: SEEN_RUN_IDS
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: SESSION_ID
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: SPEC_PATH
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: START_URL
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: START_URL_INPUT
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: SUCCESS_SELECTOR
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: SWIFT_BUNDLE_ID
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: SWIFT_BUNDLE_ID_INPUT
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: SWIFT_RUN_ID
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: TASK_CENTER_PANEL_COMMAND_RUNS_TEST_ID
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: TASK_CENTER_PANEL_TEMPLATE_RUNS_TEST_ID
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: TASK_CENTER_TAB_COMMAND_RUNS_TEST_ID
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: TASK_CENTER_TAB_TEMPLATE_RUNS_TEST_ID
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: TAURI_APP_PATH_INPUT
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: TAURI_RUN_ID
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: UIQ_BASE_URL
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: Canonical runtime base URL for E2E/playwright and Gemini live smoke gates; required when UIQ_GEMINI_LIVE_SMOKE_REQUIRED=true.
+  - name: UIQ_CT_HOST
+    section: tests
+    default: "127.0.0.1"
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: UIQ_CT_PORT
+    section: tests
+    default: 4174
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: UIQ_MCP_IMAP_PASSWORD
+    section: mcp
+    default: ""
+    required: false
+    sensitive: true
+    description: "Governed env variable detected by automated env scan (mcp scope)."
+  - name: UIQ_ORCHESTRATOR_MAX_PARALLEL_TASKS
+    section: runtime
+    default: 4
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: UIQ_ORCHESTRATOR_PARALLEL
+    section: runtime
+    default: 1
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: UIQ_PLAYWRIGHT_CT_WORKERS
+    section: tests
+    default: "50%"
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: UIQ_PLAYWRIGHT_E2E_WORKERS
+    section: tests
+    default: "50%"
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: UIQ_PLAYWRIGHT_WORKERS
+    section: tests
+    default: "50%"
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: UIQ_PROFILE
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: UIQ_TARGET
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: UIQ_TOOLCHAIN_VERSION
+    section: runtime
+    default: "0.1.0"
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: UIQ_UNIT_FILE_PARALLELISM
+    section: tests
+    default: true
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: UIQ_UNIT_MAX_WORKERS
+    section: tests
+    default: 4
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: UIQ_UNIT_MIN_WORKERS
+    section: tests
+    default: 1
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: UIQ_WEB_PORT
+    section: tests
+    default: 4173
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: UI_AUDIT_BACKEND_PORT
+    section: tests
+    default: 17380
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: UI_AUDIT_USE_REAL_BACKEND
+    section: tests
+    default: false
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: USABILITY_SAMPLE_SIZE
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: USE_SYSTEM_CHROME
+    section: runtime
+    default: false
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: VIDEO_ANALYZER_PROVIDER
+    section: ai
+    default: "gemini"
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (ai scope)."
+  - name: VONAGE_LOAD_CONCURRENCY
+    section: vonage
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (vonage scope)."
+  - name: VONAGE_LOAD_TOTAL
+    section: vonage
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (vonage scope)."
+  - name: VONAGE_AUDIT_BACKUP_COUNT
+    section: vonage
+    default: 4
+    required: false
+    sensitive: false
+    description: Vonage callback audit log backup file count.
+  - name: VONAGE_AUDIT_MAX_BYTES
+    section: vonage
+    default: 2097152
+    required: false
+    sensitive: false
+    description: Vonage callback audit log max file size in bytes.
+  - name: VONAGE_AUDIT_RETENTION_DAYS
+    section: vonage
+    default: 7
+    required: false
+    sensitive: false
+    description: Vonage callback audit log retention window in days.
+  - name: VONAGE_WEBHOOK_URL
+    section: vonage
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (vonage scope)."
+  - name: WEB_PORT
+    section: tests
+    default: 4173
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: WEB_RUN_ID
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (runtime scope)."
+  - name: MANUAL_RUN_ID
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Governed env variable detected by automated env scan (tests scope)."
+  - name: RUNTIME_CACHE_DIR
+    section: runtime
+    default: .runtime-cache/cache
+    required: false
+    sensitive: false
+    description: "Runtime cache directory override."
+  - name: RUNTIME_GC_KEEP_RUNS
+    section: runtime
+    default: 50
+    required: false
+    sensitive: false
+    description: "Canonical number of latest run artifact directories to keep."
+  - name: RUNTIME_GC_CI_KEEP_COUNT
+    section: runtime
+    default: 30
+    required: false
+    sensitive: false
+    description: "Canonical number of latest CI artifact entries to keep under .runtime-cache/artifacts/ci."
+  - name: RUNTIME_GC_CI_RETENTION_DAYS
+    section: runtime
+    default: 14
+    required: false
+    sensitive: false
+    description: "Retention window in days for CI artifact entries under .runtime-cache/artifacts/ci."
+  - name: RUNTIME_GC_SCOPE
+    section: runtime
+    default: all
+    required: false
+    sensitive: false
+    description: "Default runtime-gc cleanup scope (logs|runs|cache|dev|mcp|automation|backups|all)."
+  - name: RUNTIME_GC_DIR_SIZE_THRESHOLD_MB
+    section: runtime
+    default: 256
+    required: false
+    sensitive: false
+    description: "Trigger cleanup for dev/mcp/automation/backups when directory size reaches threshold MB."
+  - name: RUNTIME_GC_MAX_DELETE_PER_RUN
+    section: runtime
+    default: 500
+    required: false
+    sensitive: false
+    description: "Maximum delete operations allowed in a single runtime-gc execution."
+  - name: RUNTIME_GC_STATE_PATH
+    section: runtime
+    default: .runtime-cache/metrics/runtime-gc-state.json
+    required: false
+    sensitive: false
+    description: "Runtime GC state output path."
+  - name: RUNTIME_BACKUP_RETENTION_DAYS
+    section: runtime
+    default: 14
+    required: false
+    sensitive: false
+    description: "Runtime backup archive retention in days."
+  - name: RUNTIME_BACKUP_KEEP_COUNT
+    section: runtime
+    default: 20
+    required: false
+    sensitive: false
+    description: "Maximum number of runtime backup archives to keep."
+  - name: RUNTIME_LOG_DIR
+    section: runtime
+    default: .runtime-cache/logs
+    required: false
+    sensitive: false
+    description: "Runtime log directory override."
+  - name: BASE_BRANCH
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Upstream sync script variable for base branch."
+  - name: SYNC_BRANCH
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Upstream sync script variable for generated sync branch."
+  - name: UPSTREAM_BRANCH
+    section: runtime
+    default: main
+    required: false
+    sensitive: false
+    description: "Upstream sync script variable for upstream branch."
+  - name: UPSTREAM_REF
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Upstream sync script variable for upstream ref."
+  - name: UPSTREAM_REMOTE
+    section: runtime
+    default: upstream
+    required: false
+    sensitive: false
+    description: "Upstream sync script variable for remote name."
+  - name: UPSTREAM_URL
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Upstream sync script variable for upstream URL."
+  - name: ROOT
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Script-local root variable detected by env governance scanner."
+  - name: CANONICAL_PIPELINE_PATH
+    section: runtime
+    default: "Flow -> Template -> Run"
+    required: false
+    sensitive: false
+    description: "Canonical pipeline narrative label used by run-pipeline scripts."
+  - name: CONFIG_REQUIRED
+    section: runtime
+    default: true
+    required: false
+    sensitive: false
+    description: "Upstream source config required flag read by bootstrap scripts."
+  - name: FRONTEND_SRC
+    section: frontend
+    default: apps/web/src
+    required: false
+    sensitive: false
+    description: "Frontend source root override for CI inventory checks."
+  - name: MANIFEST_FILE
+    section: frontend
+    default: apps/web/src/testing/button-manifest.ts
+    required: false
+    sensitive: false
+    description: "Button inventory manifest file path override."
+  - name: REMOTE_NAME
+    section: runtime
+    default: upstream
+    required: false
+    sensitive: false
+    description: "Upstream remote name parsed from source config."
+  - name: RUNTIME_BACKUP_DIR
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Backup output directory override for runtime backup scripts."
+  - name: STRICT_FLAG
+    section: runtime
+    default: false
+    required: false
+    sensitive: false
+    description: "Computed strict-mode flag used by upstream bootstrap scripts."
+  - name: TOTAL_STEPS
+    section: runtime
+    default: 9
+    required: false
+    sensitive: false
+    description: "Preflight total-step marker used for progress labeling."
+  - name: UIQ_DESKTOP_ONLY_STEPS
+    section: tests
+    default: desktop_readiness,desktop_smoke,desktop_e2e,desktop_business_regression,desktop_soak
+    required: false
+    sensitive: false
+    description: "Optional desktop-only step ID registry (CSV or JSON)."
+  - name: UIQ_DRIVER_CAPABILITIES_REGISTRY_FILE
+    section: tests
+    default: configs/drivers/capabilities.registry.json
+    required: false
+    sensitive: false
+    description: "Driver capability registry file path override."
+  - name: UIQ_DRIVER_CAPABILITIES_REGISTRY_JSON
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Inline driver capability registry payload (JSON object)."
+  - name: UIQ_PREFLIGHT_MODE
+    section: tests
+    default: full
+    required: false
+    sensitive: false
+    description: "Preflight mode override: full or minimal."
+  - name: UIQ_PROFILE_REGISTRY_DIR
+    section: tests
+    default: profiles
+    required: false
+    sensitive: false
+    description: "Profile registry directory override."
+  - name: UIQ_PROFILE_REGISTRY_NAMES
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Inline profile registry names (CSV or JSON array)."
+  - name: UIQ_PROFILE_SCHEMA_REGISTRY_FILE
+    section: tests
+    default: configs/schemas/profile.v1.schema.json
+    required: false
+    sensitive: false
+    description: "Profile schema registry file path override."
+  - name: UIQ_RUN_GATE_CHECK_IDS
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Gate check registry IDs override (CSV or JSON array)."
+  - name: UIQ_SUITE_ORCHESTRATOR_MCP
+    section: tests
+    default: 1
+    required: false
+    sensitive: false
+    description: "Enable orchestrator MCP suite in test matrix (0/1)."
+  - name: UIQ_SWIFT_BUNDLE_ID
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Swift desktop regression target bundle identifier."
+  - name: UIQ_TARGET_SCHEMA_REGISTRY_FILE
+    section: tests
+    default: configs/schemas/target.v1.schema.json
+    required: false
+    sensitive: false
+    description: "Target schema registry file path override."
+  - name: UIQ_TAURI_APP_PATH
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Absolute app bundle path for Tauri desktop regression."
+  - name: BASE_URL
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "Legacy runtime base URL alias; prefer UIQ_BASE_URL."
+  - name: DRIVER_ID
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Target driver identifier override for desktop smoke scripts."
+  - name: TARGET_ID
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Target identifier override for manifest and smoke scripts."
+  - name: TARGET_PLATFORM
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Target platform override (web|tauri|swift)."
+  - name: TAURI_APP_PATH
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Legacy Tauri app path alias for desktop webdriver scripts."
+  - name: WEBDRIVER_CAPABILITIES_JSON
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Optional JSON capabilities override for webdriver sessions."
+  - name: WEBDRIVER_PROVIDER
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Webdriver provider label for diagnostics."
+  - name: WEBDRIVER_URL
+    section: tests
+    default: "http://127.0.0.1:4444"
+    required: false
+    sensitive: false
+    description: "Webdriver endpoint URL for desktop smoke scripts."
+  - name: XCUITEST_CONFIGURATION
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "XCUITest build configuration override."
+  - name: XCUITEST_DESTINATION
+    section: tests
+    default: "platform=macOS"
+    required: false
+    sensitive: false
+    description: "XCUITest destination override."
+  - name: XCUITEST_MODE
+    section: tests
+    default: "test"
+    required: false
+    sensitive: false
+    description: "XCUITest execution mode (test|build-for-testing)."
+  - name: XCUITEST_ONLY_TESTING
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Comma-separated xcodebuild only-testing entries."
+  - name: XCUITEST_PROJECT
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "XCUITest .xcodeproj path override."
+  - name: XCUITEST_SCHEME
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "XCUITest scheme override."
+  - name: XCUITEST_SKIP_TESTING
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "Comma-separated xcodebuild skip-testing entries."
+  - name: XCUITEST_TEST_PLAN
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "XCUITest test plan override."
+  - name: XCUITEST_WORKSPACE
+    section: tests
+    default: ""
+    required: false
+    sensitive: false
+    description: "XCUITest .xcworkspace path override."
+  - name: UIQ_UPSTREAM_BOOTSTRAP_STRICT
+    section: runtime
+    default: 0
+    required: false
+    sensitive: false
+    description: "Strict-mode toggle for upstream bootstrap (0/1)."
+  - name: UIQ_UPSTREAM_BRANCH
+    section: runtime
+    default: main
+    required: false
+    sensitive: false
+    description: "Upstream branch override for sync/bootstrap scripts."
+  - name: UIQ_UPSTREAM_REPO_URL
+    section: runtime
+    default: ""
+    required: false
+    sensitive: true
+    description: "Upstream repository URL override for sync/bootstrap scripts."
+  - name: UIQ_UPSTREAM_SOURCE_CONFIG
+    section: runtime
+    default: configs/upstream/source.yaml
+    required: false
+    sensitive: false
+    description: "Upstream source config path override."
+  - name: UIQ_WEB_ONLY_STEPS
+    section: tests
+    default: capture,explore,chaos,a11y,perf,visual,load
+    required: false
+    sensitive: false
+    description: "Optional web-only step ID registry (CSV or JSON)."
+  - name: UPSTREAM_BRANCH_OVERRIDE
+    section: runtime
+    default: ""
+    required: false
+    sensitive: false
+    description: "CLI-only upstream branch override marker for sync audits."

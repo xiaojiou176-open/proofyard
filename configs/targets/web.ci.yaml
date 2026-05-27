@@ -1,0 +1,59 @@
+name: web.ci
+type: web
+driver: web-playwright
+baseUrl: http://127.0.0.1:43173
+start:
+  api: PROJECT_PYTHON_ENV=.runtime-cache/toolchains/python/.venv UV_PROJECT_ENVIRONMENT=.runtime-cache/toolchains/python/.venv uv run uvicorn apps.api.app.main:app --host 127.0.0.1 --port 17380
+  web: pnpm --dir apps/web dev --host 127.0.0.1 --port 43173 --strictPort
+healthcheck:
+  url: http://127.0.0.1:43173/
+scope:
+  domains:
+    - http://127.0.0.1:43173
+  allowLocalhostAnyPort: true
+explore:
+  budgetSeconds: 240
+  maxDepth: 3
+  maxStates: 30
+  denylist:
+    - delete
+    - remove
+    - pay
+    - submit
+    - purchase
+    - send
+    - commit
+    - drop
+chaos:
+  seed: 20260002
+  budgetSeconds: 180
+  eventRatio:
+    click: 60
+    input: 20
+    scroll: 10
+    keyboard: 10
+diagnostics:
+  maxItems: 20
+load:
+  vus: 10
+  durationSeconds: 30
+  requestTimeoutMs: 8000
+  engines:
+    - builtin
+    - artillery
+    - k6
+a11y:
+  standard: wcag2aa
+  maxIssues: 400
+  engine: axe
+perf:
+  preset: mobile
+  engine: lhci
+visual:
+  mode: diff
+security:
+  engine: semgrep
+  maxFileSizeKb: 512
+  rulesFile: configs/security-rules.yaml
+  excludeDirs:
+    - coverage

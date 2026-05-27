@@ -1,0 +1,507 @@
+{
+  "schemaVersion": "v1",
+  "runtimeRoot": ".runtime-cache",
+  "allowedBuckets": [
+    "artifacts",
+    "automation",
+    "backups",
+    "cache",
+    "container-home",
+    "coverage",
+    "dev",
+    "history-rewrite",
+    "locks",
+    "logs",
+    "mcp",
+    "metrics",
+    "reports",
+    "security",
+    "temp",
+    "toolchains"
+  ],
+  "legacyBucketsMustNotExist": [
+    "driver-smoke",
+    "test_output",
+    "tmp"
+  ],
+  "legacyLooseFilesMustNotExist": [
+    "debug-coverage.log"
+  ],
+  "requiredLifecycleOwners": {
+    "artifacts": "scripts/runtime-gc.sh",
+    "automation": "scripts/runtime-gc.sh",
+    "backups": "scripts/runtime-gc.sh",
+    "cache": "scripts/runtime-gc.sh",
+    "container-home": "scripts/runtime-gc.sh",
+    "coverage": "scripts/runtime-gc.sh",
+    "dev": "scripts/runtime-gc.sh",
+    "history-rewrite": "scripts/runtime-gc.sh",
+    "locks": "scripts/runtime-gc.sh",
+    "logs": "scripts/runtime-gc.sh",
+    "mcp": "scripts/runtime-gc.sh",
+    "metrics": "scripts/runtime-gc.sh",
+    "reports": "scripts/runtime-gc.sh",
+    "security": "scripts/runtime-gc.sh",
+    "temp": "scripts/runtime-gc.sh",
+    "toolchains": "scripts/runtime-gc.sh"
+  },
+  "allowedImmediateSubdirs": {
+    "artifacts": [
+      "acceptance",
+      "ci",
+      "release",
+      "runs",
+      "test-results"
+    ],
+    "logs": [
+      "audit",
+      "preflight",
+      "runtime"
+    ],
+    "cache": [
+      "coverage",
+      "hypothesis",
+      "playwright",
+      "pytest",
+      "ruff",
+      "visual-baselines"
+    ]
+  },
+  "bucketContracts": [
+    {
+      "bucketId": "artifacts",
+      "allowedLiveEntries": [
+        "acceptance",
+        "ci",
+        "release",
+        "runs",
+        "test-results"
+      ],
+      "requiredToolOutputs": [
+        {
+          "id": "test-matrix-logs",
+          "owner": "scripts/test-matrix.sh",
+          "allowedEntries": [
+            "ci"
+          ]
+        },
+        {
+          "id": "orchestrator-run-artifacts",
+          "owner": "packages/orchestrator/src/cli.ts",
+          "allowedEntries": [
+            "runs"
+          ]
+        },
+        {
+          "id": "ci-artifacts",
+          "owner": ".github/workflows/*.yml",
+          "allowedEntries": [
+            "ci"
+          ]
+        },
+        {
+          "id": "runtime-reachability-report",
+          "owner": "scripts/ci/check-runtime-reachability.sh",
+          "allowedEntries": [
+            "ci"
+          ]
+        },
+        {
+          "id": "security-scan-outputs",
+          "owner": "scripts/security-scan.sh",
+          "allowedEntries": [
+            "ci"
+          ]
+        },
+        {
+          "id": "governance-score-report",
+          "owner": "scripts/ci/governance-score-report.mjs",
+          "allowedEntries": [
+            "ci"
+          ]
+        },
+        {
+          "id": "cold-cache-recovery-report",
+          "owner": "scripts/ci/check-cold-cache-recovery.sh",
+          "allowedEntries": [
+            "ci"
+          ]
+        },
+        {
+          "id": "governance-required-flows-report",
+          "owner": "scripts/ci/governance-required-flows.sh",
+          "allowedEntries": [
+            "ci"
+          ]
+        },
+        {
+          "id": "acceptance-round-artifacts",
+          "owner": "scripts/acceptance/run-acceptance-round.ts",
+          "allowedEntries": [
+            "acceptance"
+          ]
+        },
+        {
+          "id": "release-notes",
+          "owner": "scripts/release/generate-release-notes.sh",
+          "allowedEntries": [
+            "release"
+          ]
+        },
+        {
+          "id": "driver-smoke-artifacts",
+          "owner": "apps/automation-runner/scripts/run-target-smoke.ts",
+          "allowedEntries": [
+            "runs"
+          ]
+        },
+        {
+          "id": "ci-test-output-artifacts",
+          "owner": "scripts/ci/run-in-container.sh + scripts/run-frontend-e2e-nonstub.sh + scripts/run-e2e.sh + apps/web/tests/ct/playwright-ct.config.ts + apps/automation-runner/playwright.config.ts + apps/api/tests/conftest.py",
+          "allowedEntries": [
+            "ci",
+            "test-results"
+          ]
+        }
+      ]
+    },
+    {
+      "bucketId": "logs",
+      "allowedLiveEntries": [
+        "audit",
+        "backend.e2e.dev.log",
+        "frontend.e2e.dev.log",
+        "preflight",
+        "runtime"
+      ],
+      "requiredToolOutputs": [
+        {
+          "id": "backend-runtime-log",
+          "owner": "apps/api/app/core/observability.py",
+          "allowedEntries": [
+            "runtime"
+          ]
+        },
+        {
+          "id": "mcp-audit-log",
+          "owner": "apps/mcp-server/src/core/io.ts",
+          "allowedEntries": [
+            "audit"
+          ]
+        },
+        {
+          "id": "dev-process-logs",
+          "owner": "scripts/dev-up.sh",
+          "allowedEntries": [
+            "runtime"
+          ]
+        },
+        {
+          "id": "pipeline-backend-log",
+          "owner": "scripts/run-pipeline.sh",
+          "allowedEntries": [
+            "runtime"
+          ]
+        },
+        {
+          "id": "e2e-dev-process-logs",
+          "owner": "scripts/run-e2e.sh",
+          "allowedEntries": [
+            "backend.e2e.dev.log",
+            "frontend.e2e.dev.log"
+          ]
+        },
+        {
+          "id": "preflight-logs",
+          "owner": "scripts/preflight.sh",
+          "allowedEntries": [
+            "preflight"
+          ]
+        }
+      ]
+    },
+    {
+      "bucketId": "cache",
+      "allowedLiveEntries": [
+        "coverage",
+        "hypothesis",
+        "playwright",
+        "playwright.e2e.frontend.config.mjs",
+        "pytest",
+        "record-session-cleanup-marker.json",
+        "ruff",
+        "visual-baselines"
+      ],
+      "requiredToolOutputs": [
+        {
+          "id": "playwright-cache",
+          "owner": "scripts/run-e2e.sh",
+          "allowedEntries": [
+            "playwright"
+          ]
+        },
+        {
+          "id": "frontend-e2e-runtime-config",
+          "owner": "scripts/run-e2e.sh",
+          "allowedEntries": [
+            "playwright.e2e.frontend.config.mjs"
+          ]
+        },
+        {
+          "id": "lint-cache",
+          "owner": "scripts/ci/lint-all.sh + scripts/ci/run-in-container.sh + scripts/ci/hooks-equivalence-gate.sh",
+          "allowedEntries": [
+            "ruff"
+          ]
+        },
+        {
+          "id": "pytest-hypothesis-cache",
+          "owner": "scripts/test-matrix.sh + apps/api/tests/conftest.py",
+          "allowedEntries": [
+            "coverage",
+            "hypothesis",
+            "pytest"
+          ]
+        },
+        {
+          "id": "visual-baseline-cache",
+          "owner": "packages/orchestrator/src/commands/visual.ts",
+          "allowedEntries": [
+            "visual-baselines"
+          ]
+        },
+        {
+          "id": "record-session-cleanup-marker",
+          "owner": "apps/automation-runner/scripts/record-session.shared.ts",
+          "allowedEntries": [
+            "record-session-cleanup-marker.json"
+          ]
+        }
+      ]
+    },
+    {
+      "bucketId": "automation",
+      "allowedLiveEntries": [
+        "automation_tasks.db",
+        "computer-use",
+        "lifecycle",
+        "latest-session.json",
+        "pytest-profile-resolve-*",
+        "pytest-recon-*",
+        "tasks.db",
+        "tasks.json",
+        "tasks.lock",
+        "universal",
+        "vonage"
+      ],
+      "requiredToolOutputs": [
+        {
+          "id": "automation-task-store",
+          "owner": "apps/api/app/core/task_store.py + apps/api/alembic.ini",
+          "allowedEntries": [
+            "automation_tasks.db",
+            "tasks.db",
+            "tasks.json",
+            "tasks.lock"
+          ]
+        },
+        {
+          "id": "automation-latest-session-pointer",
+          "owner": "apps/automation-runner/scripts/record-session.ts",
+          "allowedEntries": [
+            "latest-session.json"
+          ]
+        },
+        {
+          "id": "automation-lifecycle-runtime",
+          "owner": "scripts/automation-lifecycle.sh",
+          "allowedEntries": [
+            "lifecycle"
+          ]
+        },
+        {
+          "id": "computer-use-runtime",
+          "owner": "apps/api/app/services/computer_use_service.py",
+          "allowedEntries": [
+            "computer-use"
+          ]
+        },
+        {
+          "id": "automation-test-sandboxes",
+          "owner": "apps/api/tests/test_reconstruction_api.py + apps/api/tests/test_backend_coverage_final_sprint.py + apps/api/tests/test_log_cache_governance.py",
+          "allowedEntries": [
+            "pytest-profile-resolve-*",
+            "pytest-recon-*"
+          ]
+        },
+        {
+          "id": "universal-platform-audit-log",
+          "owner": "apps/api/app/services/universal_platform_service.py",
+          "allowedEntries": [
+            "universal"
+          ]
+        },
+        {
+          "id": "vonage-callback-audit-log",
+          "owner": "apps/api/app/services/vonage_inbox.py",
+          "allowedEntries": [
+            "vonage"
+          ]
+        }
+      ]
+    },
+    {
+      "bucketId": "coverage",
+      "allowedLiveEntries": [
+        "apps-web",
+        "automation",
+        "backend",
+        "frontend",
+        "mcp-server",
+        "packages"
+      ],
+      "requiredToolOutputs": [
+        {
+          "id": "coverage-reports",
+          "owner": "scripts/ci/run-unit-coverage-gate.sh",
+          "allowedEntries": [
+            "apps-web",
+            "automation",
+            "backend",
+            "frontend",
+            "mcp-server",
+            "packages"
+          ]
+        }
+      ]
+    },
+    {
+      "bucketId": "dev",
+      "allowedLiveEntries": [
+        "backend.pid",
+        "backend.port",
+        "frontend.pid",
+        "frontend.port",
+        "runtime-gc.preflight.json"
+      ],
+      "requiredToolOutputs": [
+        {
+          "id": "dev-up-gc-preflight",
+          "owner": "scripts/dev-up.sh",
+          "allowedEntries": [
+            "runtime-gc.preflight.json"
+          ]
+        },
+        {
+          "id": "dev-up-runtime-pointers",
+          "owner": "scripts/dev-up.sh",
+          "allowedEntries": [
+            "backend.pid",
+            "backend.port",
+            "frontend.pid",
+            "frontend.port"
+          ]
+        }
+      ]
+    },
+    {
+      "bucketId": "history-rewrite",
+      "allowedLiveEntries": [
+        "20*"
+      ],
+      "requiredToolOutputs": [
+        {
+          "id": "history-rewrite-scratch",
+          "owner": "scripts/ci/prepare-history-rewrite-scratch.sh",
+          "allowedEntries": [
+            "20*"
+          ]
+        }
+      ]
+    },
+    {
+      "bucketId": "metrics",
+      "allowedLiveEntries": [
+        "runtime-gc-state.json"
+      ],
+      "requiredToolOutputs": [
+        {
+          "id": "runtime-gc-state",
+          "owner": "scripts/runtime-gc.sh",
+          "allowedEntries": [
+            "runtime-gc-state.json"
+          ]
+        }
+      ]
+    },
+    {
+      "bucketId": "toolchains",
+      "allowedLiveEntries": [
+        "python"
+      ],
+      "requiredToolOutputs": [
+        {
+          "id": "managed-python-env",
+          "owner": "scripts/setup.sh",
+          "allowedEntries": [
+            "python"
+          ]
+        }
+      ]
+    }
+  ],
+  "sizeBudgetsMb": {
+    "artifacts_ci": 768,
+    "container-home": 768,
+    "coverage": 1536,
+    "temp": 2048,
+    "toolchains": 4096
+  },
+  "retentionDefaults": {
+    "artifactsRunsKeepCount": 50,
+    "artifactsCiKeepCount": 30,
+    "artifactsCiRetentionDays": 14,
+    "cacheRetentionDays": 7,
+    "containerHomeRetentionDays": 7,
+    "coverageRetentionDays": 7,
+    "logsRetentionDays": 7,
+    "reportsRetentionDays": 7,
+    "securityRetentionDays": 14,
+    "tempRetentionDays": 1,
+    "toolchainsRetentionDays": 30
+  },
+  "spaceGovernance": {
+    "bucketCleanupClasses": {
+      "artifacts": "preserve",
+      "automation": "review",
+      "backups": "preserve",
+      "cache": "review",
+      "container-home": "review",
+      "coverage": "review",
+      "dev": "review",
+      "history-rewrite": "review",
+      "locks": "review",
+      "logs": "review",
+      "mcp": "review",
+      "metrics": "review",
+      "reports": "review",
+      "security": "review",
+      "temp": "safe-clean",
+      "toolchains": "review"
+    },
+    "protectedPaths": [
+      ".runtime-cache/backups",
+      ".runtime-cache/toolchains"
+    ],
+    "protectedPathRules": [
+      {
+        "path": ".runtime-cache/artifacts/runs",
+        "mode": "protect-non-empty-run-dirs",
+        "allowSafeCleanKinds": [
+          "empty-run-stub"
+        ],
+        "notes": "Canonical run evidence stays protected; empty run stub directories may enter the first safe-clean wave."
+      }
+    ]
+  }
+}

@@ -1,0 +1,653 @@
+{
+  "schemaVersion": "v1",
+  "runtimeRoot": ".runtime-cache",
+  "managedBuckets": [
+    {
+      "id": "logs",
+      "path": ".runtime-cache/logs",
+      "kind": "logs",
+      "cleanupOwner": "scripts/runtime-gc.sh",
+      "cleanupClass": "review",
+      "sizeBudgetMb": null,
+      "mustKeepLatest": false,
+      "retention": {
+        "strategy": "rotate+gc",
+        "defaultDays": 7
+      }
+    },
+    {
+      "id": "artifacts",
+      "path": ".runtime-cache/artifacts",
+      "kind": "evidence",
+      "cleanupOwner": "scripts/runtime-gc.sh",
+      "cleanupClass": "preserve",
+      "sizeBudgetMb": null,
+      "mustKeepLatest": true,
+      "retention": {
+        "strategy": "run-keep-count",
+        "keepRuns": 50
+      }
+    },
+    {
+      "id": "cache",
+      "path": ".runtime-cache/cache",
+      "kind": "cache",
+      "cleanupOwner": "scripts/runtime-gc.sh",
+      "cleanupClass": "review",
+      "sizeBudgetMb": null,
+      "mustKeepLatest": false,
+      "retention": {
+        "strategy": "ttl+size-cap",
+        "defaultHours": 72
+      }
+    },
+    {
+      "id": "coverage",
+      "path": ".runtime-cache/coverage",
+      "kind": "coverage",
+      "cleanupOwner": "scripts/runtime-gc.sh",
+      "cleanupClass": "review",
+      "sizeBudgetMb": 1536,
+      "mustKeepLatest": true,
+      "retention": {
+        "strategy": "ttl+keep-latest",
+        "defaultDays": 7
+      }
+    },
+    {
+      "id": "temp",
+      "path": ".runtime-cache/temp",
+      "kind": "temp",
+      "cleanupOwner": "scripts/runtime-gc.sh",
+      "cleanupClass": "safe-clean",
+      "sizeBudgetMb": 2048,
+      "mustKeepLatest": false,
+      "retention": {
+        "strategy": "ttl",
+        "defaultHours": 24
+      }
+    },
+    {
+      "id": "backups",
+      "path": ".runtime-cache/backups",
+      "kind": "backup",
+      "cleanupOwner": "scripts/runtime-gc.sh",
+      "cleanupClass": "preserve",
+      "sizeBudgetMb": null,
+      "mustKeepLatest": true,
+      "retention": {
+        "strategy": "ttl+keep-count",
+        "defaultDays": 14,
+        "keepCount": 20
+      }
+    },
+    {
+      "id": "metrics",
+      "path": ".runtime-cache/metrics",
+      "kind": "metrics",
+      "cleanupOwner": "scripts/runtime-gc.sh",
+      "cleanupClass": "review",
+      "sizeBudgetMb": null,
+      "mustKeepLatest": true,
+      "retention": {
+        "strategy": "append+rotate",
+        "defaultDays": 30
+      }
+    },
+    {
+      "id": "security",
+      "path": ".runtime-cache/security",
+      "kind": "security",
+      "cleanupOwner": "scripts/runtime-gc.sh",
+      "cleanupClass": "review",
+      "sizeBudgetMb": null,
+      "mustKeepLatest": true,
+      "retention": {
+        "strategy": "ttl+ci-keep-count",
+        "defaultDays": 14
+      }
+    },
+    {
+      "id": "reports",
+      "path": ".runtime-cache/reports",
+      "kind": "report",
+      "cleanupOwner": "scripts/runtime-gc.sh",
+      "cleanupClass": "review",
+      "sizeBudgetMb": null,
+      "mustKeepLatest": true,
+      "retention": {
+        "strategy": "ttl+size-cap",
+        "defaultHours": 168
+      }
+    },
+    {
+      "id": "container-home",
+      "path": ".runtime-cache/container-home",
+      "kind": "runtime",
+      "cleanupOwner": "scripts/runtime-gc.sh",
+      "cleanupClass": "review",
+      "sizeBudgetMb": 768,
+      "mustKeepLatest": false,
+      "retention": {
+        "strategy": "ttl+size-cap",
+        "defaultDays": 7
+      }
+    },
+    {
+      "id": "dev",
+      "path": ".runtime-cache/dev",
+      "kind": "runtime",
+      "cleanupOwner": "scripts/runtime-gc.sh",
+      "cleanupClass": "review",
+      "sizeBudgetMb": null,
+      "mustKeepLatest": false,
+      "retention": {
+        "strategy": "ttl+size-cap",
+        "defaultHours": 72
+      }
+    },
+    {
+      "id": "history-rewrite",
+      "path": ".runtime-cache/history-rewrite",
+      "kind": "evidence",
+      "cleanupOwner": "scripts/runtime-gc.sh",
+      "cleanupClass": "review",
+      "sizeBudgetMb": null,
+      "mustKeepLatest": true,
+      "retention": {
+        "strategy": "ttl+keep-count",
+        "defaultDays": 14,
+        "keepCount": 10
+      }
+    },
+    {
+      "id": "mcp",
+      "path": ".runtime-cache/mcp",
+      "kind": "runtime",
+      "cleanupOwner": "scripts/runtime-gc.sh",
+      "cleanupClass": "review",
+      "sizeBudgetMb": null,
+      "mustKeepLatest": false,
+      "retention": {
+        "strategy": "ttl+size-cap",
+        "defaultHours": 72
+      }
+    },
+    {
+      "id": "automation",
+      "path": ".runtime-cache/automation",
+      "kind": "runtime",
+      "cleanupOwner": "scripts/runtime-gc.sh",
+      "cleanupClass": "review",
+      "sizeBudgetMb": null,
+      "mustKeepLatest": false,
+      "retention": {
+        "strategy": "ttl+size-cap",
+        "defaultHours": 168
+      }
+    },
+    {
+      "id": "locks",
+      "path": ".runtime-cache/locks",
+      "kind": "lock",
+      "cleanupOwner": "scripts/runtime-gc.sh",
+      "cleanupClass": "review",
+      "sizeBudgetMb": null,
+      "mustKeepLatest": false,
+      "retention": {
+        "strategy": "stale-lock-ttl",
+        "defaultHours": 24
+      }
+    },
+    {
+      "id": "toolchains",
+      "path": ".runtime-cache/toolchains",
+      "kind": "toolchain",
+      "cleanupOwner": "scripts/runtime-gc.sh",
+      "cleanupClass": "review",
+      "sizeBudgetMb": 4096,
+      "mustKeepLatest": true,
+      "retention": {
+        "strategy": "manual+doctor",
+        "defaultDays": 30
+      }
+    }
+  ],
+  "repoExclusiveExternalLayers": [
+    {
+      "id": "pnpm-proofyard-store",
+      "path": "${HOME}/.cache/pnpm/proofyard/store",
+      "kind": "dependency-store",
+      "owner": ".npmrc",
+      "cleanupClass": "reclaim",
+      "sizeBudgetMb": 2048,
+      "mustKeepLatest": true,
+      "notes": "Repo-scoped host pnpm store and virtual-store namespace for Proofyard."
+    }
+  ],
+  "reclaimScopes": [
+    {
+      "id": "root-venv",
+      "path": ".venv",
+      "kind": "legacy-python-env",
+      "owner": "scripts/space-clean-reclaim.py",
+      "cleanupClass": "reclaim",
+      "rebuildCommand": "just setup",
+      "risk": "high",
+      "preconditions": [
+        "All repo-owned entrypoints and governance allowlists must stop depending on the root .venv path.",
+        "The managed Python environment under .runtime-cache/toolchains/python/.venv must exist and pass validation."
+      ],
+      "notes": "Retired legacy root Python environment. Apply only after single-track validation succeeds."
+    },
+    {
+      "id": "repo-pnpm-store",
+      "path": "${HOME}/.cache/pnpm/proofyard/store",
+      "kind": "repo-exclusive-dependency-store",
+      "owner": "scripts/space-clean-reclaim.py",
+      "cleanupClass": "reclaim",
+      "rebuildCommand": "just setup",
+      "risk": "medium",
+      "preconditions": [
+        "Workspace install must remain the only supported dependency restore path.",
+        "No repo-owned mainline script may recreate isolated installs with pnpm install --ignore-workspace."
+      ],
+      "notes": "Repo-exclusive host pnpm store and virtual-store namespace for Proofyard."
+    },
+    {
+      "id": "automation-runner-node-modules",
+      "path": "apps/automation-runner/node_modules",
+      "kind": "isolated-app-dependency-layer",
+      "owner": "scripts/space-clean-reclaim.py",
+      "cleanupClass": "reclaim",
+      "rebuildCommand": "just setup",
+      "risk": "medium",
+      "preconditions": [
+        "Workspace root install must be the only supported dependency restore path.",
+        "No repo-owned mainline script may recreate isolated installs with pnpm install --ignore-workspace."
+      ],
+      "notes": "Historical isolated dependency layer for the automation runner workspace."
+    },
+    {
+      "id": "mcp-server-node-modules",
+      "path": "apps/mcp-server/node_modules",
+      "kind": "isolated-app-dependency-layer",
+      "owner": "scripts/space-clean-reclaim.py",
+      "cleanupClass": "reclaim",
+      "rebuildCommand": "just setup",
+      "risk": "medium",
+      "preconditions": [
+        "Workspace root install must be the only supported dependency restore path.",
+        "No repo-owned mainline script may recreate isolated installs with pnpm install --ignore-workspace."
+      ],
+      "notes": "Historical isolated dependency layer for the MCP server workspace."
+    }
+  ],
+  "rootNoisePaths": [
+    ".coverage",
+    ".coverage.*",
+    ".hypothesis",
+    ".pnpm-store",
+    ".pytest_cache",
+    ".ruff_cache",
+    "artifacts",
+    "coverage",
+    "mutants",
+    "playwright-report",
+    "test-results",
+    "tmp"
+  ],
+  "requiredGitignoreLines": [
+    "/.runtime-cache/",
+    "/coverage/",
+    "/test-results/",
+    "/playwright-report/",
+    "/mutants/",
+    "/tmp/",
+    "/artifacts/"
+  ],
+  "toolOutputs": [
+    {
+      "id": "backend-runtime-log",
+      "owner": "apps/api/app/core/observability.py",
+      "paths": [
+        ".runtime-cache/logs/runtime/apps.api.app.log"
+      ],
+      "kind": "runtime-log"
+    },
+    {
+      "id": "mcp-audit-log",
+      "owner": "apps/mcp-server/src/core/io.ts",
+      "paths": [
+        ".runtime-cache/logs/audit/mcp-audit.jsonl"
+      ],
+      "kind": "audit-log"
+    },
+    {
+      "id": "dev-process-logs",
+      "owner": "scripts/dev-up.sh",
+      "paths": [
+        ".runtime-cache/logs/runtime/backend.dev.log",
+        ".runtime-cache/logs/runtime/frontend.dev.log"
+      ],
+      "kind": "runtime-log"
+    },
+    {
+      "id": "pipeline-backend-log",
+      "owner": "scripts/run-pipeline.sh",
+      "paths": [
+        ".runtime-cache/logs/runtime/backend.pipeline.log"
+      ],
+      "kind": "runtime-log"
+    },
+    {
+      "id": "e2e-dev-process-logs",
+      "owner": "scripts/run-e2e.sh",
+      "paths": [
+        ".runtime-cache/logs/backend.e2e.dev.log",
+        ".runtime-cache/logs/frontend.e2e.dev.log"
+      ],
+      "kind": "runtime-log"
+    },
+    {
+      "id": "preflight-logs",
+      "owner": "scripts/preflight.sh",
+      "paths": [
+        ".runtime-cache/logs/preflight/"
+      ],
+      "kind": "runtime-log"
+    },
+    {
+      "id": "test-matrix-logs",
+      "owner": "scripts/test-matrix.sh",
+      "paths": [
+        ".runtime-cache/artifacts/ci/test-matrix/<run_id>/"
+      ],
+      "kind": "test-log"
+    },
+    {
+      "id": "orchestrator-run-artifacts",
+      "owner": "packages/orchestrator/src/cli.ts",
+      "paths": [
+        ".runtime-cache/artifacts/runs/<run_id>/manifest.json",
+        ".runtime-cache/artifacts/runs/<run_id>/reports/summary.json",
+        ".runtime-cache/artifacts/runs/<run_id>/reports/diagnostics.index.json",
+        ".runtime-cache/artifacts/runs/<run_id>/reports/log-index.json"
+      ],
+      "kind": "run-evidence"
+    },
+    {
+      "id": "ci-artifacts",
+      "owner": ".github/workflows/*.yml",
+      "paths": [
+        ".runtime-cache/artifacts/ci/<run_id>/"
+      ],
+      "kind": "ci-evidence"
+    },
+    {
+      "id": "history-rewrite-scratch",
+      "owner": "scripts/ci/prepare-history-rewrite-scratch.sh",
+      "paths": [
+        ".runtime-cache/history-rewrite/20*/scratch-summary.json",
+        ".runtime-cache/history-rewrite/20*/scratch-summary.md",
+        ".runtime-cache/history-rewrite/20*/refs.txt"
+      ],
+      "kind": "history-evidence"
+    },
+    {
+      "id": "runtime-reachability-report",
+      "owner": "scripts/ci/check-runtime-reachability.sh",
+      "paths": [
+        ".runtime-cache/artifacts/ci/<run_id>/runtime-reachability.json"
+      ],
+      "kind": "ci-evidence"
+    },
+    {
+      "id": "playwright-cache",
+      "owner": "scripts/run-e2e.sh",
+      "paths": [
+        ".runtime-cache/cache/playwright/"
+      ],
+      "kind": "cache"
+    },
+    {
+      "id": "frontend-e2e-runtime-config",
+      "owner": "scripts/run-e2e.sh",
+      "paths": [
+        ".runtime-cache/cache/playwright.e2e.frontend.config.mjs"
+      ],
+      "kind": "cache"
+    },
+    {
+      "id": "lint-cache",
+      "owner": "scripts/ci/lint-all.sh + scripts/ci/run-in-container.sh + scripts/ci/hooks-equivalence-gate.sh",
+      "paths": [
+        ".runtime-cache/cache/ruff/"
+      ],
+      "kind": "cache"
+    },
+    {
+      "id": "pytest-hypothesis-cache",
+      "owner": "scripts/test-matrix.sh + apps/api/tests/conftest.py",
+      "paths": [
+        ".runtime-cache/cache/coverage/",
+        ".runtime-cache/cache/hypothesis/",
+        ".runtime-cache/cache/pytest/"
+      ],
+      "kind": "cache"
+    },
+    {
+      "id": "visual-baseline-cache",
+      "owner": "packages/orchestrator/src/commands/visual.ts",
+      "paths": [
+        ".runtime-cache/cache/visual-baselines/"
+      ],
+      "kind": "cache"
+    },
+    {
+      "id": "record-session-cleanup-marker",
+      "owner": "apps/automation-runner/scripts/record-session.shared.ts",
+      "paths": [
+        ".runtime-cache/cache/record-session-cleanup-marker.json"
+      ],
+      "kind": "cache"
+    },
+    {
+      "id": "coverage-reports",
+      "owner": "scripts/ci/run-unit-coverage-gate.sh",
+      "paths": [
+        ".runtime-cache/coverage/backend/",
+        ".runtime-cache/coverage/frontend/",
+        ".runtime-cache/coverage/apps-web/",
+        ".runtime-cache/coverage/mcp-server/",
+        ".runtime-cache/coverage/packages/",
+        ".runtime-cache/coverage/automation/"
+      ],
+      "kind": "coverage"
+    },
+    {
+      "id": "security-scan-outputs",
+      "owner": "scripts/security-scan.sh",
+      "paths": [
+        ".runtime-cache/artifacts/ci/<run_id>/security/",
+        ".runtime-cache/security/"
+      ],
+      "kind": "ci-evidence"
+    },
+    {
+      "id": "container-home-cache",
+      "owner": "scripts/ci/run-in-container.sh",
+      "paths": [
+        ".runtime-cache/container-home/"
+      ],
+      "kind": "runtime"
+    },
+    {
+      "id": "dev-up-gc-preflight",
+      "owner": "scripts/dev-up.sh",
+      "paths": [
+        ".runtime-cache/dev/runtime-gc.preflight.json"
+      ],
+      "kind": "runtime"
+    },
+    {
+      "id": "dev-up-runtime-pointers",
+      "owner": "scripts/dev-up.sh",
+      "paths": [
+        ".runtime-cache/dev/backend.pid",
+        ".runtime-cache/dev/backend.port",
+        ".runtime-cache/dev/frontend.pid",
+        ".runtime-cache/dev/frontend.port"
+      ],
+      "kind": "runtime"
+    },
+    {
+      "id": "runtime-gc-state",
+      "owner": "scripts/runtime-gc.sh",
+      "paths": [
+        ".runtime-cache/metrics/runtime-gc-state.json"
+      ],
+      "kind": "metrics"
+    },
+    {
+      "id": "mutation-reports",
+      "owner": "scripts/run-ts-mutation.sh + scripts/summarize-mutation.mjs",
+      "paths": [
+        ".runtime-cache/reports/mutation/"
+      ],
+      "kind": "report"
+    },
+    {
+      "id": "governance-score-report",
+      "owner": "scripts/ci/governance-score-report.mjs",
+      "paths": [
+        ".runtime-cache/artifacts/ci/<run_id>/governance-score-report.json",
+        ".runtime-cache/artifacts/ci/<run_id>/governance-score-report.md"
+      ],
+      "kind": "ci-evidence"
+    },
+    {
+      "id": "cold-cache-recovery-report",
+      "owner": "scripts/ci/check-cold-cache-recovery.sh",
+      "paths": [
+        ".runtime-cache/artifacts/ci/<run_id>/cold-cache-recovery.json"
+      ],
+      "kind": "ci-evidence"
+    },
+    {
+      "id": "governance-required-flows-report",
+      "owner": "scripts/ci/governance-required-flows.sh",
+      "paths": [
+        ".runtime-cache/artifacts/ci/<run_id>/governance-required-flows.json",
+        ".runtime-cache/artifacts/ci/<run_id>/governance-required-flows.md",
+        ".runtime-cache/artifacts/ci/<run_id>/governance-required-flows-baseline.json",
+        ".runtime-cache/artifacts/ci/<run_id>/governance-required-flows-baseline.md",
+        ".runtime-cache/artifacts/ci/<run_id>/governance-required-flows-full.json",
+        ".runtime-cache/artifacts/ci/<run_id>/governance-required-flows-full.md"
+      ],
+      "kind": "ci-evidence"
+    },
+    {
+      "id": "acceptance-round-artifacts",
+      "owner": "scripts/acceptance/run-acceptance-round.ts",
+      "paths": [
+        ".runtime-cache/artifacts/acceptance/round-<round>/runs.json",
+        ".runtime-cache/artifacts/acceptance/round-<round>/summary.md"
+      ],
+      "kind": "acceptance-evidence"
+    },
+    {
+      "id": "release-notes",
+      "owner": "scripts/release/generate-release-notes.sh",
+      "paths": [
+        ".runtime-cache/artifacts/release/release-notes-vnext.md"
+      ],
+      "kind": "ci-evidence"
+    },
+    {
+      "id": "driver-smoke-artifacts",
+      "owner": "apps/automation-runner/scripts/run-target-smoke.ts",
+      "paths": [
+        ".runtime-cache/artifacts/runs/<run_id>/driver-smoke/<target_id>/"
+      ],
+      "kind": "run-evidence"
+    },
+    {
+      "id": "universal-platform-audit-log",
+      "owner": "apps/api/app/services/universal_platform_service.py",
+      "paths": [
+        ".runtime-cache/automation/universal/audit.jsonl"
+      ],
+      "kind": "audit-log"
+    },
+    {
+      "id": "vonage-callback-audit-log",
+      "owner": "apps/api/app/services/vonage_inbox.py",
+      "paths": [
+        ".runtime-cache/automation/vonage/callback-audit.jsonl"
+      ],
+      "kind": "audit-log"
+    },
+    {
+      "id": "automation-task-store",
+      "owner": "apps/api/app/core/task_store.py + apps/api/alembic.ini",
+      "paths": [
+        ".runtime-cache/automation/automation_tasks.db",
+        ".runtime-cache/automation/tasks.db",
+        ".runtime-cache/automation/tasks.json",
+        ".runtime-cache/automation/tasks.lock"
+      ],
+      "kind": "runtime"
+    },
+    {
+      "id": "automation-latest-session-pointer",
+      "owner": "apps/automation-runner/scripts/record-session.ts",
+      "paths": [
+        ".runtime-cache/automation/latest-session.json"
+      ],
+      "kind": "runtime"
+    },
+    {
+      "id": "automation-lifecycle-runtime",
+      "owner": "scripts/automation-lifecycle.sh",
+      "paths": [
+        ".runtime-cache/automation/lifecycle/"
+      ],
+      "kind": "runtime"
+    },
+    {
+      "id": "computer-use-runtime",
+      "owner": "apps/api/app/services/computer_use_service.py",
+      "paths": [
+        ".runtime-cache/automation/computer-use/"
+      ],
+      "kind": "runtime"
+    },
+    {
+      "id": "automation-test-sandboxes",
+      "owner": "apps/api/tests/test_reconstruction_api.py + apps/api/tests/test_backend_coverage_final_sprint.py + apps/api/tests/test_log_cache_governance.py",
+      "paths": [
+        ".runtime-cache/automation/pytest-profile-resolve-*/",
+        ".runtime-cache/automation/pytest-recon-*/"
+      ],
+      "kind": "runtime"
+    },
+    {
+      "id": "ci-test-output-artifacts",
+      "owner": "scripts/ci/run-in-container.sh + scripts/run-frontend-e2e-nonstub.sh + scripts/run-e2e.sh + apps/web/tests/ct/playwright-ct.config.ts + apps/automation-runner/playwright.config.ts + apps/api/tests/conftest.py",
+      "paths": [
+        ".runtime-cache/artifacts/ci/test-output/",
+        ".runtime-cache/artifacts/test-results/"
+      ],
+      "kind": "ci-evidence"
+    },
+    {
+      "id": "managed-python-env",
+      "owner": "scripts/setup.sh",
+      "paths": [
+        ".runtime-cache/toolchains/python/.venv/"
+      ],
+      "kind": "toolchain"
+    }
+  ]
+}

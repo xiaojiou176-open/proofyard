@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "v1",
+  "status": "no-active-customizations",
+  "requiredFields": [
+    "id",
+    "upstream_id",
+    "local_paths",
+    "why_diverged",
+    "upstream_mapping",
+    "sync_strategy",
+    "owner",
+    "last_verified_at",
+    "rollback_conditions",
+    "evidence_refs",
+    "status"
+  ],
+  "customizations": []
+}

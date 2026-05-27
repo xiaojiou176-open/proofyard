@@ -1,0 +1,93 @@
+{
+  "schemaVersion": "v1",
+  "mode": "strict-hallway",
+  "allowedTrackedRoots": [
+    ".npmrc",
+    ".devcontainer",
+    ".env.example",
+    ".github",
+    ".gitignore",
+    ".secrets.baseline",
+    "AGENTS.md",
+    "CHANGELOG.md",
+    "CLAUDE.md",
+    "CODE_OF_CONDUCT.md",
+    "CITATION.cff",
+    "CONTRIBUTING.md",
+    "LICENSE",
+    "README.md",
+    "SECURITY.md",
+    "SUPPORT.md",
+    "index.html",
+    "apps",
+    "configs",
+    "contracts",
+    "docker",
+    "docker-compose.yml",
+    "docs",
+    "ISSUE_TEMPLATE",
+    "justfile",
+    "package.json",
+    "packages",
+    "pnpm-lock.yaml",
+    "pnpm-workspace.yaml",
+    "pyproject.toml",
+    "assets",
+    "scripts",
+    "tests",
+    "tsconfig.json",
+    "turbo.json",
+    "uv.lock"
+  ],
+  "allowedLocalRuntimeRoots": [
+    ".git",
+    ".runtime-cache",
+    "reports",
+    "test-results"
+  ],
+  "allowedLocalToolingRoots": [
+    ".agents",
+    ".codex",
+    ".cursorrules",
+    ".env",
+    ".opencode",
+    "node_modules",
+    "proofyard.egg-info"
+  ],
+  "forbiddenRootNames": [
+    ".coverage",
+    ".hypothesis",
+    ".pnpm-store",
+    ".pytest_cache",
+    ".ruff_cache",
+    "artifacts",
+    "automation",
+    "backend",
+    "coverage",
+    "frontend",
+    "mutants",
+    "playwright-report",
+    "setup.cfg",
+    "tsconfig.stryker.json",
+    "tmp"
+  ],
+  "forbiddenRootGlobs": [
+    ".coverage.*"
+  ],
+  "archiveTargets": {
+    "plans": "docs/archive/plans",
+    "reports": "docs/archive/reports"
+  },
+  "requiredDocs": [
+    "docs/reference/generated/governance/dependency-baselines.md",
+    "docs/reference/generated/governance/repo-map.md",
+    "docs/reference/generated/governance/root-allowlist.md",
+    "docs/reference/generated/governance/runtime-live-policy.md",
+    "docs/reference/generated/governance/runtime-output-registry.md",
+    "docs/reference/generated/governance/log-event-schema.md",
+    "docs/reference/generated/governance/module-boundaries.md",
+    "docs/reference/generated/governance/upstream-registry.md",
+    "docs/reference/generated/governance/upstream-compat-matrix.md",
+    "docs/reference/generated/governance/upstream-customizations.md"
+  ]
+}

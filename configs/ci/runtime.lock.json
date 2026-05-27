@@ -1,0 +1,41 @@
+{
+  "platform": "linux/amd64",
+  "base_images": {
+    "node": {
+      "reference": "docker.io/library/node:20-bookworm-slim@sha256:eef3816042c0f522a2ca9655c1947ca6f97c908b0c227aa50e19432646342ab7",
+      "index_digest": "sha256:a82f40540f5959e0003fb7b3c0f80490def2927be8bdbee7e3e0ac65cce3be92"
+    },
+    "python": {
+      "reference": "docker.io/library/python:3.11-slim-bookworm@sha256:8404ed8464ae7275b5c13a00c6edd2e027c6560a1f74bd4c7dee39f5d00f9352",
+      "index_digest": "sha256:97b0eafb29f5ebfba254be840115b2f3bc24ff6ff3de9b905e04b74ee7227ba6"
+    },
+    "nginx": {
+      "reference": "docker.io/library/nginx:1.27-alpine@sha256:62223d644fa234c3a1cc785ee14242ec47a77364226f1c811d2f669f96dc2ac8",
+      "index_digest": "sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10"
+    },
+    "postgres": {
+      "reference": "docker.io/library/postgres:16-alpine@sha256:60b180625695e90b6e450405d5f0bcb74bc8c52c65d1cd11aeb3da46cac06dd8",
+      "index_digest": "sha256:20edbde7749f822887a1a022ad526fde0a47d6b2be9a8364433605cf65099416"
+    },
+    "redis": {
+      "reference": "docker.io/library/redis:7-alpine@sha256:4bfd9eca23339865dc14fe75f6d9ae643f714924623978dd2798f1a673b08f43",
+      "index_digest": "sha256:8b81dd37ff027bec4e516d41acfbe9fe2460070dc6d4a4570a2ac5b9d59df065"
+    }
+  },
+  "toolchain": {
+    "node": "20.20.1",
+    "python": "3.11.15",
+    "pnpm": "10.22.0",
+    "uv": "0.8.15"
+  },
+  "browsers": {
+    "playwright": "1.59.1",
+    "browser_channel": "chromium"
+  },
+  "security_tools": {
+    "actionlint": "1.7.11",
+    "gitleaks": "8.24.2",
+    "k6": "0.49.0",
+    "semgrep": "1.118.0"
+  }
+}

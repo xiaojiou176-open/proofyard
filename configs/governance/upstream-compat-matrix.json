@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "v1",
+  "groups": [
+    {
+      "id": "ci-base-toolchain",
+      "supported": [
+        "ci-node-base-image",
+        "ci-python-base-image",
+        "uv-binary",
+        "actionlint-binary",
+        "gitleaks-binary",
+        "semgrep-cli"
+      ],
+      "upgradeValidation": ["lint", "docs", "preflight", "security-scan"],
+      "policy": "required-in-ci",
+      "requiredProofArtifact": ".runtime-cache/artifacts/ci/<run_id>/ci-base-toolchain-proof.json"
+    },
+    {
+      "id": "thirdparty-wrapper-tooling",
+      "supported": [
+        "curlconverter-cli",
+        "har-to-k6-cli"
+      ],
+      "upgradeValidation": ["runtime-reachability", "wrapper-help-smoke"],
+      "policy": "required-before-release",
+      "requiredProofArtifact": ".runtime-cache/artifacts/ci/<run_id>/thirdparty-wrapper-tooling-proof.json"
+    },
+    {
+      "id": "browser-and-load-tooling",
+      "supported": [
+        "playwright-cli",
+        "k6-binary"
+      ],
+      "upgradeValidation": ["test:matrix", "frontend-e2e", "authenticity-gate"],
+      "policy": "required-in-ci-and-local-strict",
+      "requiredProofArtifact": ".runtime-cache/artifacts/ci/<run_id>/browser-and-load-tooling-proof.json"
+    },
+    {
+      "id": "mcp-runtime",
+      "supported": [
+        "mcp-sdk"
+      ],
+      "upgradeValidation": ["mcp:test", "mcp:doc:contract"],
+      "policy": "required-before-release",
+      "requiredProofArtifact": ".runtime-cache/artifacts/ci/<run_id>/mcp-runtime-proof.json"
+    },
+    {
+      "id": "automation-ai",
+      "supported": [
+        "gemini-sdk"
+      ],
+      "upgradeValidation": ["automation-regression", "gemini-live-smoke"],
+      "policy": "required-before-release",
+      "requiredProofArtifact": ".runtime-cache/artifacts/ci/<run_id>/automation-ai-proof.json"
+    },
+    {
+      "id": "upstream-audit",
+      "supported": [
+        "upstream-repo-binding"
+      ],
+      "upgradeValidation": ["upstream-drift-audit"],
+      "policy": "required-when-upstream-enabled",
+      "requiredProofArtifact": ".runtime-cache/artifacts/ci/<run_id>/upstream-audit-proof.json"
+    }
+  ]
+}

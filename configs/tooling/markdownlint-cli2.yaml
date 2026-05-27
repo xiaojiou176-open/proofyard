@@ -1,0 +1,22 @@
+config:
+  default: true
+  MD013: false
+  MD022: false
+  MD029: false
+  MD031: false
+  MD032: false
+  MD056: false
+  MD058: false
+  MD060: false
+
+ignores:
+  - ".codex/**"
+  - ".runtime-cache/**"
+  - ".venv/**"
+  - "**/.venv/**"
+  - "node_modules/**"
+  - "**/node_modules/**"
+  - "coverage/**"
+  - "dist/**"
+  - "build/**"
+  - "artifacts/**"

@@ -1,0 +1,162 @@
+{
+  "schemaVersion": "v1",
+  "canonicalRoots": [
+    {
+      "id": "api",
+      "path": "apps/api",
+      "displayName": "API/backend",
+      "kind": "module",
+      "entrypoints": [
+        "just dev-backend",
+        "uv run --extra dev pytest -q apps/api/tests"
+      ]
+    },
+    {
+      "id": "web",
+      "path": "apps/web",
+      "displayName": "Web UI",
+      "kind": "module",
+      "entrypoints": [
+        "pnpm --dir apps/web dev",
+        "pnpm --dir apps/web test"
+      ]
+    },
+    {
+      "id": "automation-runner",
+      "path": "apps/automation-runner",
+      "displayName": "Automation runner",
+      "kind": "module",
+      "entrypoints": [
+        "pnpm --dir apps/automation-runner test",
+        "pnpm --dir apps/automation-runner run automation:convert:curl -- --help",
+        "pnpm --dir apps/automation-runner run automation:har:k6 -- --help"
+      ]
+    },
+    {
+      "id": "mcp-server",
+      "path": "apps/mcp-server",
+      "displayName": "MCP server",
+      "kind": "module",
+      "entrypoints": [
+        "pnpm --filter @proofyard/mcp-server start",
+        "pnpm mcp:test"
+      ]
+    },
+    {
+      "id": "packages",
+      "path": "packages",
+      "displayName": "Shared packages",
+      "kind": "shared",
+      "entrypoints": [
+        "pnpm typecheck",
+        "pnpm test:orchestrator"
+      ]
+    },
+    {
+      "id": "contracts",
+      "path": "contracts",
+      "displayName": "Contracts",
+      "kind": "contract",
+      "entrypoints": [
+        "pnpm contracts:generate",
+        "pnpm test:contract"
+      ]
+    },
+    {
+      "id": "configs",
+      "path": "configs",
+      "displayName": "Configuration",
+      "kind": "governance",
+      "entrypoints": [
+        "pnpm env:generate",
+        "pnpm env:check"
+      ]
+    },
+    {
+      "id": "tests",
+      "path": "tests",
+      "displayName": "Cross-module tests",
+      "kind": "test",
+      "entrypoints": [
+        "pnpm test:e2e:frontend",
+        "pnpm test:matrix"
+      ]
+    },
+    {
+      "id": "docs",
+      "path": "docs",
+      "displayName": "Documentation",
+      "kind": "docs",
+      "entrypoints": [
+        "bash scripts/docs-gate.sh"
+      ]
+    },
+    {
+      "id": "scripts",
+      "path": "scripts",
+      "displayName": "Repo scripts",
+      "kind": "tooling",
+      "entrypoints": [
+        "bash scripts/ci/governance-final-gate.sh"
+      ]
+    },
+    {
+      "id": "docker",
+      "path": "docker",
+      "displayName": "Container assets",
+      "kind": "infra",
+      "entrypoints": [
+        "bash scripts/ci/build-ci-image.sh --help"
+      ]
+    }
+  ],
+  "legacyRootAliases": [
+    {
+      "legacy": "backend",
+      "canonical": "apps/api"
+    },
+    {
+      "legacy": "frontend",
+      "canonical": "apps/web"
+    },
+    {
+      "legacy": "automation",
+      "canonical": "apps/automation-runner"
+    }
+  ],
+  "forbiddenLegacyRootRefs": [
+    "backend/",
+    "frontend/",
+    "automation/"
+  ],
+  "forbiddenRuntimeTokens": [],
+  "forbiddenFloatingToolCommands": [
+    "pnpm dlx curlconverter",
+    "pnpm dlx har-to-k6"
+  ],
+  "semanticScan": {
+    "include": [
+      "AGENTS.md",
+      "CLAUDE.md",
+      "package.json",
+      "justfile",
+      ".github",
+      "apps",
+      "configs",
+      "docs",
+      "packages",
+      "scripts"
+    ],
+    "exclude": [
+      ".git",
+      ".runtime-cache",
+      "build",
+      "coverage",
+      "dist",
+      "docs/archive",
+      "docs/history",
+      "docs/quality",
+      "node_modules"
+    ]
+  }
+}

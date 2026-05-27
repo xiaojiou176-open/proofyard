@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uiq.local/schemas/governance/log-event.schema.json",
+  "title": "UIQ Governance Log Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "timestamp",
+    "level",
+    "kind",
+    "service",
+    "component",
+    "channel",
+    "run_id",
+    "event_code",
+    "message",
+    "attrs",
+    "redaction_state",
+    "source_kind"
+  ],
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "level": {
+      "type": "string",
+      "enum": ["debug", "info", "warning", "error", "critical"]
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["runtime", "test", "ci", "audit"]
+    },
+    "service": {
+      "type": "string",
+      "minLength": 1
+    },
+    "component": {
+      "type": "string",
+      "minLength": 1
+    },
+    "channel": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_id": {
+      "type": ["string", "null"]
+    },
+    "trace_id": {
+      "type": ["string", "null"]
+    },
+    "request_id": {
+      "type": ["string", "null"]
+    },
+    "test_id": {
+      "type": ["string", "null"]
+    },
+    "event_code": {
+      "type": "string",
+      "pattern": "^[a-z0-9._-]+$"
+    },
+    "message": {
+      "type": "string",
+      "minLength": 1
+    },
+    "attrs": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "redaction_state": {
+      "type": "string",
+      "enum": ["unknown", "raw-safe", "redacted", "secret-free"]
+    },
+    "source_kind": {
+      "type": "string",
+      "enum": ["app", "process", "test", "infra", "wrapper"]
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "v1",
+  "responsibilityMap": [
+    {
+      "root": "apps/web",
+      "role": "primary-product-ui",
+      "mayDependOn": ["packages", "contracts", "configs"],
+      "mustNotDependOn": ["tests", "docs", ".runtime-cache"]
+    },
+    {
+      "root": "apps/mcp-server",
+      "role": "adapters-and-harnesses",
+      "mayDependOn": ["packages", "contracts", "configs", "apps/api"],
+      "mustNotDependOn": ["tests", "docs", ".runtime-cache"]
+    },
+    {
+      "root": "apps/api",
+      "role": "api-and-runtime-services",
+      "mayDependOn": ["contracts", "configs"],
+      "mustNotDependOn": ["apps/web", "apps/automation-runner", "tests", "docs", ".runtime-cache"]
+    },
+    {
+      "root": "apps/automation-runner",
+      "role": "automation-pipeline",
+      "mayDependOn": ["contracts", "configs", "packages"],
+      "mustNotDependOn": ["tests", "docs", ".runtime-cache"]
+    },
+    {
+      "root": "packages",
+      "role": "shared-public-libraries",
+      "mayDependOn": ["contracts", "configs"],
+      "mustNotDependOn": ["apps/web", "apps/api", "apps/automation-runner", "apps/mcp-server", "tests", "docs", ".runtime-cache"]
+    },
+    {
+      "root": "tests",
+      "role": "validation-only",
+      "mayDependOn": ["apps/web", "apps/mcp-server", "apps/api", "apps/automation-runner", "packages", "contracts", "configs"],
+      "mustNotDependOn": [".runtime-cache"]
+    }
+  ],
+  "forbiddenImportRootsForSource": [
+    "docs",
+    "tests",
+    ".runtime-cache"
+  ],
+  "contractOnlyRoots": [
+    "contracts",
+    "configs/schemas"
+  ],
+  "publicSurfacePackages": [
+    {
+      "packageName": "@uiq/ai-prompts",
+      "manifestPath": "packages/ai-prompts/package.json",
+      "allowedImporters": ["apps/web", "apps/mcp-server", "apps/automation-runner", "packages", "tests"]
+    },
+    {
+      "packageName": "@uiq/ui",
+      "manifestPath": "packages/ui/package.json",
+      "allowedImporters": ["apps/web", "tests", "scripts"]
+    }
+  ],
+  "publicSurfaceHints": [
+    "packages/*",
+    "contracts/openapi",
+    "configs/schemas"
+  ]
+}

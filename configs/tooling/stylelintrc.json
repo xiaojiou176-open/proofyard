@@ -1,0 +1,16 @@
+{
+  "ignoreFiles": [
+    "**/dist/**",
+    "**/coverage/**",
+    "**/.runtime-cache/**",
+    "**/artifacts/**"
+  ],
+  "extends": ["stylelint-config-standard", "stylelint-config-standard-scss"],
+  "rules": {
+    "declaration-no-important": true,
+    "color-no-hex": [true, { "severity": "warning" }],
+    "custom-property-pattern": "^(?:[a-z0-9]+(?:-[a-z0-9]+)*)$",
+    "selector-max-id": 0,
+    "no-descending-specificity": null
+  }
+}

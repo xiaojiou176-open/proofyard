@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "generatedAt": "2026-02-21",
+  "exceptions": [
+    {
+      "id": "GHSA-m7jm-9gc2-mpf2",
+      "package": "fast-xml-parser",
+      "severity": "critical",
+      "ticket": "SEC-2147",
+      "expiresOn": "2026-03-31",
+      "reason": "Transitive via artillery; waiting upstream dependency chain remediation."
+    },
+    {
+      "id": "GHSA-jmr7-xgp7-cmfj",
+      "package": "fast-xml-parser",
+      "severity": "high",
+      "ticket": "SEC-2147",
+      "expiresOn": "2026-03-31",
+      "reason": "Transitive via artillery; waiting upstream dependency chain remediation."
+    },
+    {
+      "id": "GHSA-3ppc-4f35-3m26",
+      "package": "minimatch",
+      "severity": "high",
+      "ticket": "SEC-2148",
+      "expiresOn": "2026-03-31",
+      "reason": "Transitive via @lhci/cli and artillery; scheduled for replacement with builtin+k6 only path."
+    },
+    {
+      "id": "GHSA-fjxv-7rqg-78g4",
+      "package": "form-data",
+      "severity": "critical",
+      "ticket": "SEC-2152",
+      "expiresOn": "2026-03-31",
+      "reason": "Transitive tooling-only path; blocked from runtime and tracked for upstream replacement."
+    },
+    {
+      "id": "GHSA-jr5f-v2jv-69x6",
+      "package": "axios",
+      "severity": "high",
+      "ticket": "SEC-2152",
+      "expiresOn": "2026-03-31",
+      "reason": "Transitive tooling-only path; blocked from runtime and tracked for upstream replacement."
+    },
+    {
+      "id": "GHSA-4hjh-wcwx-xvwj",
+      "package": "axios",
+      "severity": "high",
+      "ticket": "SEC-2152",
+      "expiresOn": "2026-03-31",
+      "reason": "Transitive tooling-only path; blocked from runtime and tracked for upstream replacement."
+    },
+    {
+      "id": "GHSA-43fc-jf86-j433",
+      "package": "axios",
+      "severity": "high",
+      "ticket": "SEC-2152",
+      "expiresOn": "2026-03-31",
+      "reason": "Transitive tooling-only path; blocked from runtime and tracked for upstream replacement."
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+remoteName: upstream
+branch: main
+required: false
+mode: none

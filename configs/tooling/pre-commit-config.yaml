@@ -1,0 +1,320 @@
+fail_fast: true
+default_language_version:
+  python: python3
+default_install_hook_types:
+  - pre-commit
+  - pre-push
+  - commit-msg
+default_stages:
+  - pre-commit
+
+exclude: |
+  (?x)^(
+    mutants/|
+    .*\.tsbuildinfo$|
+    apps/web/src/api-gen/|
+    apps/automation-runner/tests/generated/|
+    \.runtime-cache/|
+    playwright/\.cache/
+  )
+
+repos:
+  - repo: local
+    hooks:
+      - id: uiq-required-gates-pre-commit
+        name: UIQ required gates (pre-commit lightweight)
+        entry: >-
+          bash -lc 'UIQ_PRECOMMIT_REQUIRED_REPO_WIDE_GATES="${UIQ_PRECOMMIT_REQUIRED_REPO_WIDE_GATES:-false}" UIQ_PRECOMMIT_REQUIRED_ENV_DOCS_GATES="${UIQ_PRECOMMIT_REQUIRED_ENV_DOCS_GATES:-false}" UIQ_PRECOMMIT_REQUIRED_HEAVY_GATES="${UIQ_PRECOMMIT_REQUIRED_HEAVY_GATES:-false}" bash scripts/ci/pre-commit-required-gates.sh'
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+      - id: uiq-commitlint-commit-msg
+        name: UIQ commitlint (commit-msg)
+        entry: pnpm exec commitlint --edit
+        language: system
+        stages: [commit-msg]
+      - id: uiq-docs-link-gate-pre-commit
+        name: UIQ docs link gate (pre-commit)
+        entry: node scripts/ci/check-doc-links.mjs
+        language: system
+        pass_filenames: true
+        stages: [pre-commit]
+      - id: uiq-test-truth-gate-pre-push
+        name: UIQ required gates (pre-push balanced)
+        entry: >-
+          bash -lc 'UIQ_PREPUSH_REQUIRED_MODE="${UIQ_PREPUSH_REQUIRED_MODE:-balanced}" UIQ_PREPUSH_RUN_HEAVY_GATES="${UIQ_PREPUSH_RUN_HEAVY_GATES:-false}" bash scripts/ci/pre-push-required-gates.sh'
+        language: system
+        pass_filenames: false
+        stages: [pre-push]
+      - id: uiq-commitizen-branch-pre-push
+        name: UIQ branch naming gate (pre-push)
+        entry: >-
+          bash -lc 'branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo detached)"; if [[ "$branch" == "HEAD" || "$branch" == "detached" ]]; then echo "[branch-gate] detached HEAD; skip"; exit 0; fi; if [[ "$branch" =~ ^(main|master|develop|dev|codex/.+|release/.+|hotfix/.+|feat/.+|fix/.+|chore/.+|docs/.+|refactor/.+|test/.+) ]]; then echo "[branch-gate] ok: $branch"; exit 0; fi; echo "[branch-gate] invalid branch name: $branch"; echo "[branch-gate] expected prefixes: codex/, feat/, fix/, chore/, docs/, refactor/, test/, release/, hotfix/"; exit 1'
+        language: system
+        pass_filenames: false
+        stages: [pre-push]
+      - id: check-ai-context-files
+        name: Check AI context files (AGENTS/CLAUDE)
+        entry: >-
+          bash -lc 'set -euo pipefail; missing=0; for f in AGENTS.md CLAUDE.md; do if [[ ! -f "$f" ]]; then echo "missing required file: $f" >&2; missing=1; fi; done; exit "$missing"'
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+      - id: check-no-real-dotenv-committed
+        name: Check no real dotenv committed
+        entry: >-
+          bash -lc 'set -euo pipefail; bad="$(git ls-files | grep -E "^\\.env(\\..+)?$" | grep -Ev "^\\.env\\.example$" || true)"; if [[ -n "${bad}" ]]; then echo "tracked real .env files are forbidden:" >&2; echo "${bad}" >&2; exit 1; fi'
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+      - id: uiq-env-contract-example
+        name: UIQ env example contract check
+        entry: pnpm env:contract:check
+        language: system
+        pass_filenames: false
+        files: '(^|/)\\.env\\.example$|(^|/)configs/env/contract\\.yaml$'
+        stages: [pre-commit]
+      - id: check-iac-exists
+        name: Check IaC baseline files exist
+        entry: bash scripts/ci/check-iac-exists.sh
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+      - id: check-no-direct-env-access
+        name: Check no new direct env access in staged changes
+        entry: bash scripts/ci/check-no-direct-env-access.sh
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+      - id: no-todo
+        name: Block TODO/FIXME in first-party source
+        entry: '\b(?:TODO|FIXME|XXX)\b'
+        language: pygrep
+        files: '^(backend|frontend|automation|apps|packages|scripts)/.*\.(py|ts|tsx|js|mjs|cjs|sh)$'
+      - id: no-console
+        name: Block console statements in app source
+        entry: 'console\.(log|debug|info|warn|error)\('
+        language: pygrep
+        files: '^(apps/web/src|apps/web/src)/.*\.(ts|tsx|js|mjs|cjs)$'
+        exclude: '(^|/)(tests?|__tests__|fixtures?|mocks?)/|\.test\.|\.spec\.'
+      - id: uiq-design-token-guard
+        name: UIQ design token guard (apps/web/app UI files)
+        entry: node scripts/ci/check-design-token-usage.mjs
+        language: system
+        files: '^(apps/web|packages)/.*\.(css|scss|sass|less|ts|tsx|js|jsx)$'
+        exclude: '(^|/)(tests?|__tests__|fixtures?|mocks?|dist|build|coverage|node_modules|\.runtime-cache|artifacts)/'
+        stages: [pre-commit]
+      - id: uiq-uiux-gemini-audit-pre-commit
+        name: UIQ Gemini UI/UX audit (manual advisory)
+        entry: node scripts/ci/uiq-gemini-uiux-audit.mjs --strict false --model gemini-3.0-flash
+        language: system
+        files: '^(apps/web|packages)/.*\.(css|scss|sass|less|ts|tsx|js|jsx|html)$'
+        exclude: '(^|/)(tests?|__tests__|fixtures?|mocks?|dist|build|coverage|node_modules|\.runtime-cache|artifacts)/'
+        stages: [manual]
+      - id: uiq-uiux-gemini-audit-pre-push
+        name: UIQ Gemini UI/UX audit (manual strict)
+        entry: >-
+          bash -lc 'node scripts/ci/uiq-gemini-uiux-audit.mjs --strict "${UIQ_PREPUSH_UIUX_STRICT:-true}" --model gemini-3.0-flash'
+        language: system
+        files: '^(apps/web|packages)/.*\.(css|scss|sass|less|ts|tsx|js|jsx|html)$'
+        exclude: '(^|/)(tests?|__tests__|fixtures?|mocks?|dist|build|coverage|node_modules|\.runtime-cache|artifacts)/'
+        stages: [manual]
+      - id: check-pre-commit-outdated
+        name: Check pre-commit config health/outdated hint
+        entry: >-
+          bash -lc 'set -euo pipefail; pre-commit validate-config; pre-commit validate-manifest >/dev/null 2>&1 || true; echo "hint: run pre-commit autoupdate --freeze periodically to keep hooks current"'
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+      - id: uiq-shebang-executable-parity
+        name: UIQ shebang scripts are executable
+        entry: >-
+          python3 -c "import os,sys,pathlib; bad=[]; files=sys.argv[1:];
+          [bad.append(f) for f in files if (lambda p: (p.is_file() and p.open('rb').readline().startswith(b'#!') and not os.access(p,os.X_OK)))(pathlib.Path(f))];
+          print('\\n'.join(bad)) if bad else None; sys.exit(1 if bad else 0)"
+        language: system
+        pass_filenames: true
+        stages: [pre-commit]
+      - id: jscpd-pre-push
+        name: jscpd duplicate detection (pre-push)
+        entry: bash scripts/ci/run-jscpd-gate.sh
+        language: system
+        pass_filenames: false
+        stages: [pre-push]
+      - id: gofumpt
+        name: gofumpt
+        entry: gofumpt -w
+        language: system
+        types: [go]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-ast
+      - id: check-case-conflict
+      - id: check-docstring-first
+      - id: check-executables-have-shebangs
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-toml
+      - id: check-xml
+      - id: check-yaml
+      - id: debug-statements
+      - id: check-byte-order-marker
+      - id: check-illegal-windows-names
+      - id: check-vcs-permalinks
+      - id: destroyed-symlinks
+      - id: detect-private-key
+        exclude: '(^|/)\.codex/'
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.4
+    hooks:
+      - id: gitleaks
+        args:
+          - --config=configs/security/gitleaks.toml
+        stages: [pre-commit, pre-push]
+
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        args:
+          - --baseline
+          - .secrets.baseline
+          - --exclude-files
+          - '(^|/)\.codex/|(^|/)docs/|(^|/)artifacts/|(^|/)(tests?|__tests__|fixtures?)/|(^|/)(pnpm-lock\.yaml|package-lock\.json|yarn\.lock|uv\.lock)$|(^|/)README\.md$|(^|/)\.env\.example$|(^|/)docker-compose\.ya?ml$|(^|/)configs/env/contract\.yaml$|(^|/)apps/api/app/core/settings\.py$|(^|/)scripts/|(^|/)apps/automation-runner/'
+        files: '^(apps/api/app|config)/.*\.(py|ya?ml|json|toml)$|(^|/)\.env(\..+)?$'
+        stages: [pre-commit, pre-push]
+
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.13.9
+    hooks:
+      - id: commitizen
+
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.43.5
+    hooks:
+      - id: typos
+        args: [--force-exclude]
+        files: '^(backend|frontend|automation|apps|packages|scripts|docs)/'
+
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.21.0
+    hooks:
+      - id: markdownlint-cli2
+        entry: markdownlint-cli2
+        files: '^(README\.md|AGENTS\.md|CLAUDE\.md|docs/.*\.md)$'
+        exclude: '(^|/)(\.venv|node_modules|dist|build|coverage|artifacts|\.runtime-cache|\.codex)/|^docs/reference/generated/governance/.*\.md$|^docs/reference/configuration\.md$'
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.9
+    hooks:
+      - id: ruff
+        args: [--config=pyproject.toml]
+        files: '^(backend|scripts|tests)/.*\.py$'
+      - id: ruff-format
+        args: [--config=pyproject.toml]
+        files: '^(backend|scripts|tests)/.*\.py$'
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.19.1
+    hooks:
+      - id: mypy
+        args:
+          - --config-file=pyproject.toml
+          - --ignore-missing-imports
+          - --namespace-packages
+          - --explicit-package-bases
+        files: '^apps/api/app/core/settings\.py$'
+        pass_filenames: false
+        entry: mypy apps/api/app/core/settings.py
+        additional_dependencies:
+          - sqlalchemy>=2.0.36
+          - types-PyYAML>=6.0.12
+
+  - repo: https://github.com/biomejs/pre-commit
+    rev: v2.4.4
+    hooks:
+      - id: biome-check
+        entry: biome check
+        pass_filenames: true
+        args: [--config-path=configs/ci/biome.json]
+        files: '^(apps|packages|scripts|\.github)/.*\.(js|jsx|ts|tsx|mjs|cjs)$|^package\.json$'
+
+  - repo: https://github.com/thibaudcolas/pre-commit-stylelint
+    rev: v16.26.0
+    hooks:
+      - id: stylelint
+        args: [--fix, --allow-empty-input]
+        additional_dependencies:
+          - stylelint@16.26.0
+          - stylelint-config-standard@37.0.0
+          - stylelint-config-standard-scss@14.0.0
+        files: '^(apps/web|packages)/.*\.(css|scss|sass|less)$'
+        exclude: '(^|/)(dist|build|coverage|node_modules|\.runtime-cache|artifacts)/'
+
+  - repo: https://github.com/shssoichiro/oxipng
+    rev: v9.1.5
+    hooks:
+      - id: oxipng
+        args: ["-o", "4", "--strip", "safe", "--alpha"]
+        files: '\.png$'
+
+  - repo: https://github.com/golangci/golangci-lint
+    rev: v2.10.1
+    hooks:
+      - id: golangci-lint
+        files: '\.go$'
+
+  - repo: https://github.com/doublify/pre-commit-rust
+    rev: v1.0
+    hooks:
+      - id: fmt
+        files: '\.rs$'
+      - id: cargo-check
+        files: '(^|/)Cargo\.toml$|\.rs$'
+
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1
+    hooks:
+      - id: shellcheck
+        args: [-x]
+        files: '\.sh$'
+
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.14.0
+    hooks:
+      - id: hadolint
+        files: '(^|/)(Dockerfile|Dockerfile\.[^/]+)$'
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.11
+    hooks:
+      - id: actionlint
+        files: '^\.github/workflows/.*\.ya?ml$'
+
+  - repo: https://github.com/sqlfluff/sqlfluff
+    rev: 4.0.4
+    hooks:
+      - id: sqlfluff-lint
+        files: '\.sql$'
+
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.105.0
+    hooks:
+      - id: terraform_fmt
+        files: '\.(tf|tofu|tfvars|(tftest|tofutest|tfmock|tfquery)\.hcl)$'
+      - id: terraform_validate
+        files: '\.(tf|tofu|tfvars|terraform\.lock\.hcl)$'
+
+  - repo: https://github.com/stackrox/kube-linter
+    rev: v0.8.2
+    hooks:
+      - id: kube-linter
+        files: '(^|/)(k8s|kubernetes|helm|charts|deploy|manifests?)/.*\.ya?ml$|(^|/)kustomization\.ya?ml$'

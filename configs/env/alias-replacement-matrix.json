@@ -1,0 +1,87 @@
+{
+  "generated_at": "2026-02-26",
+  "source": "phase-b-pr1-canonical-only",
+  "entries": [
+    {
+      "domain": "API_key_family",
+      "canonical": "GEMINI_API_KEY",
+      "aliases": ["GOOGLE_API_KEY", "RECON_GEMINI_API_KEY"],
+      "status": "forbidden_alias_removed",
+      "risk": "high",
+      "owner_scope": "configs|scripts|apps|packages|docs",
+      "evidence": ["configs/env/contract.yaml", ".env.example", "docs/reference/configuration.md"]
+    },
+    {
+      "domain": "GEMINI_model_family",
+      "canonical": "GEMINI_MODEL_PRIMARY",
+      "aliases": ["GEMINI_MODEL", "GEMINI_PRIMARY_MODEL", "RECON_GEMINI_MODEL"],
+      "status": "forbidden_alias_removed",
+      "risk": "high",
+      "owner_scope": "configs|scripts|apps|packages|docs",
+      "evidence": ["configs/env/contract.yaml", ".env.example", "docs/reference/configuration.md"]
+    },
+    {
+      "domain": "GEMINI_model_family",
+      "canonical": "GEMINI_MODEL_FLASH",
+      "aliases": ["GEMINI_FAST_MODEL", "VIDEO_RECON_MODEL"],
+      "status": "forbidden_alias_removed",
+      "risk": "high",
+      "owner_scope": "configs|scripts|apps|packages|docs",
+      "evidence": ["configs/env/contract.yaml", ".env.example", "docs/reference/configuration.md"]
+    },
+    {
+      "domain": "GEMINI_model_family",
+      "canonical": "GEMINI_EMBED_MODEL",
+      "aliases": ["GEMINI_EMBEDDING_MODEL"],
+      "status": "forbidden_alias_removed",
+      "risk": "high",
+      "owner_scope": "configs|scripts|apps|packages|docs",
+      "evidence": ["configs/env/contract.yaml", ".env.example", "docs/reference/configuration.md"]
+    },
+    {
+      "domain": "GEMINI_runtime_policy",
+      "canonical": "GEMINI_THINKING_LEVEL",
+      "aliases": ["RECON_GEMINI_THINKING_LEVEL"],
+      "status": "forbidden_alias_removed",
+      "risk": "medium",
+      "owner_scope": "configs|scripts|apps|packages|docs",
+      "evidence": ["configs/env/contract.yaml", ".env.example", "docs/reference/configuration.md"]
+    },
+    {
+      "domain": "GEMINI_runtime_policy",
+      "canonical": "GEMINI_INCLUDE_THOUGHTS",
+      "aliases": ["RECON_GEMINI_INCLUDE_THOUGHTS", "AI_REVIEW_GEMINI_INCLUDE_THOUGHTS"],
+      "status": "forbidden_alias_removed",
+      "risk": "medium",
+      "owner_scope": "configs|scripts|apps|packages|docs",
+      "evidence": ["configs/env/contract.yaml", ".env.example", "docs/reference/configuration.md"]
+    },
+    {
+      "domain": "runtime_url",
+      "canonical": "UIQ_BASE_URL",
+      "aliases": ["BASE_URL"],
+      "status": "forbidden_alias_removed",
+      "risk": "high",
+      "owner_scope": "configs|scripts|apps|packages|docs",
+      "evidence": ["configs/env/contract.yaml", ".env.example", "docs/reference/configuration.md"]
+    },
+    {
+      "domain": "runtime_retention",
+      "canonical": "RUNTIME_GC_KEEP_RUNS",
+      "aliases": ["RUNTIME_GC_MAX_RUNS"],
+      "status": "forbidden_alias_removed",
+      "risk": "medium",
+      "owner_scope": "configs|scripts|apps|packages|docs",
+      "evidence": ["configs/env/contract.yaml", ".env.example", "docs/reference/configuration.md"]
+    },
+    {
+      "domain": "runtime_retention",
+      "canonical": "RUNTIME_GC_RETENTION_DAYS",
+      "aliases": ["LOG_RETENTION_DAYS"],
+      "status": "forbidden_alias_removed",
+      "risk": "medium",
+      "owner_scope": "configs|scripts|apps|packages|docs",
+      "evidence": ["configs/env/contract.yaml", ".env.example", "docs/reference/configuration.md"]
+    }
+  ]
+}
