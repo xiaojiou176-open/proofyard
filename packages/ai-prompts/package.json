@@ -1,0 +1,14 @@
+{
+  "name": "@uiq/ai-prompts",
+  "version": "0.1.0",
+  "description": "Proofyard AI prompt contracts for reconstruction, review, and operator guidance",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "node --import tsx --test src/*.test.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  }
+}
