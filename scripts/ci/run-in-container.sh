@@ -483,7 +483,7 @@ uv sync --frozen --extra dev >/dev/null 2>&1
 uv lock --check
 mkdir -p .runtime-cache/artifacts/ci/test-output
 DATABASE_URL="sqlite+pysqlite:///./.runtime-cache/artifacts/ci/test-output/backend-tests-main.sqlite3" uv run alembic -c apps/api/alembic.ini upgrade heads
-uv run pip freeze | grep -Ev '^(#|-e )|^prooftrail==' > /tmp/requirements-audit.txt
+uv run pip freeze | grep -Ev '^(#|-e )|^proofyard==' > /tmp/requirements-audit.txt
 uvx --from pip-audit pip-audit --strict --no-deps --disable-pip -r /tmp/requirements-audit.txt
 uvx --from bandit bandit -ll -r apps/api/app
 uv run python scripts/check-openapi-doc-contract.py

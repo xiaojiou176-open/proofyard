@@ -10,8 +10,8 @@ const surfaces = {
   readme: read("README.md"),
   docsReadme: read("docs/README.md"),
   docsIndex: read("docs/index.md"),
-  aiAgents: read("docs/how-to/prooftrail-for-ai-agents.md"),
-  codingAgents: read("docs/how-to/prooftrail-for-coding-agents.md"),
+  aiAgents: read("docs/how-to/proofyard-for-ai-agents.md"),
+  codingAgents: read("docs/how-to/proofyard-for-coding-agents.md"),
   api: read("docs/reference/universal-api.md"),
   mcp: read("apps/mcp-server/README.md"),
   webIndex: read("apps/web/index.html"),
@@ -25,7 +25,7 @@ requireIncludes("README.md", surfaces.readme, "OpenCode")
 requireIncludes("README.md", surfaces.readme, "OpenClaw")
 requireIncludes("README.md", surfaces.readme, "not claiming")
 
-requireIncludes("docs/README.md", surfaces.docsReadme, "prooftrail-for-coding-agents.md")
+requireIncludes("docs/README.md", surfaces.docsReadme, "proofyard-for-coding-agents.md")
 requireIncludes("docs/index.md", surfaces.docsIndex, "ProofTrail for Coding Agents and Agent Ecosystems")
 requireIncludes("docs/index.md", surfaces.docsIndex, "Codex")
 requireIncludes("docs/index.md", surfaces.docsIndex, "Claude Code")
@@ -33,18 +33,18 @@ requireIncludes("docs/index.md", surfaces.docsIndex, "OpenHands")
 requireIncludes("docs/index.md", surfaces.docsIndex, "OpenCode")
 requireIncludes("docs/index.md", surfaces.docsIndex, "OpenClaw")
 
-requireIncludes("docs/how-to/prooftrail-for-ai-agents.md", surfaces.aiAgents, "browser automation for Codex")
-requireIncludes("docs/how-to/prooftrail-for-ai-agents.md", surfaces.aiAgents, "OpenHands")
-requireIncludes("docs/how-to/prooftrail-for-ai-agents.md", surfaces.aiAgents, "OpenCode")
-requireIncludes("docs/how-to/prooftrail-for-ai-agents.md", surfaces.aiAgents, "OpenClaw")
-requireIncludes("docs/how-to/prooftrail-for-ai-agents.md", surfaces.aiAgents, "not claiming")
-requireIncludes("docs/how-to/prooftrail-for-coding-agents.md", surfaces.codingAgents, "Codex")
-requireIncludes("docs/how-to/prooftrail-for-coding-agents.md", surfaces.codingAgents, "Claude Code")
-requireIncludes("docs/how-to/prooftrail-for-coding-agents.md", surfaces.codingAgents, "OpenHands")
-requireIncludes("docs/how-to/prooftrail-for-coding-agents.md", surfaces.codingAgents, "OpenCode")
-requireIncludes("docs/how-to/prooftrail-for-coding-agents.md", surfaces.codingAgents, "OpenClaw")
-requireIncludes("docs/how-to/prooftrail-for-coding-agents.md", surfaces.codingAgents, "Most truthful fit")
-requireIncludes("docs/how-to/prooftrail-for-coding-agents.md", surfaces.codingAgents, "not claiming")
+requireIncludes("docs/how-to/proofyard-for-ai-agents.md", surfaces.aiAgents, "browser automation for Codex")
+requireIncludes("docs/how-to/proofyard-for-ai-agents.md", surfaces.aiAgents, "OpenHands")
+requireIncludes("docs/how-to/proofyard-for-ai-agents.md", surfaces.aiAgents, "OpenCode")
+requireIncludes("docs/how-to/proofyard-for-ai-agents.md", surfaces.aiAgents, "OpenClaw")
+requireIncludes("docs/how-to/proofyard-for-ai-agents.md", surfaces.aiAgents, "not claiming")
+requireIncludes("docs/how-to/proofyard-for-coding-agents.md", surfaces.codingAgents, "Codex")
+requireIncludes("docs/how-to/proofyard-for-coding-agents.md", surfaces.codingAgents, "Claude Code")
+requireIncludes("docs/how-to/proofyard-for-coding-agents.md", surfaces.codingAgents, "OpenHands")
+requireIncludes("docs/how-to/proofyard-for-coding-agents.md", surfaces.codingAgents, "OpenCode")
+requireIncludes("docs/how-to/proofyard-for-coding-agents.md", surfaces.codingAgents, "OpenClaw")
+requireIncludes("docs/how-to/proofyard-for-coding-agents.md", surfaces.codingAgents, "Most truthful fit")
+requireIncludes("docs/how-to/proofyard-for-coding-agents.md", surfaces.codingAgents, "not claiming")
 
 requireIncludes("docs/reference/universal-api.md", surfaces.api, "Codex")
 requireIncludes("docs/reference/universal-api.md", surfaces.api, "Claude Code")

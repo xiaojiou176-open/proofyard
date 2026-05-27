@@ -1,5 +1,5 @@
 {
-  "app_name": "prooftrail",
+  "app_name": "proofyard",
   "environment": "development",
   "backend": {
     "host": "127.0.0.1",

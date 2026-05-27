@@ -158,7 +158,7 @@ It only claims what the repo already supports:
 ## Suggested reading order
 
 1. [README.md](../../README.md)
-2. [ProofTrail for AI Agents](prooftrail-for-ai-agents.md)
+2. [ProofTrail for AI Agents](proofyard-for-ai-agents.md)
 3. this page
 4. [MCP for Browser Automation](mcp-quickstart-1pager.md)
 5. [Universal API Reference](../reference/universal-api.md)

@@ -63,7 +63,7 @@ if [[ -z "$IMAGE_REPO" ]]; then
   if [[ -n "${GITHUB_REPOSITORY:-}" ]]; then
     IMAGE_REPO="ghcr.io/${GITHUB_REPOSITORY,,}/ci"
   else
-    IMAGE_REPO="ghcr.io/local/prooftrail/ci"
+    IMAGE_REPO="ghcr.io/local/proofyard/ci"
   fi
 fi
 IMAGE_REF="${IMAGE_REPO}:${LOCK_HASH}"

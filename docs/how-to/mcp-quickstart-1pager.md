@@ -49,7 +49,7 @@ Use this page if all three statements are already true:
 - you still want the browser, evidence, and recovery substrate to stay governed
 
 If you are still deciding whether ProofTrail itself fits your category, read
-[ProofTrail vs Generic Browser Agents](../compare/prooftrail-vs-generic-browser-agents.md)
+[ProofTrail vs Generic Browser Agents](../compare/proofyard-vs-generic-browser-agents.md)
 first.
 
 This page is also a truthful landing point if your search intent looked like:
@@ -172,10 +172,10 @@ Example configuration:
 ```json
 {
   "mcpServers": {
-    "prooftrail": {
+    "proofyard": {
       "command": "pnpm",
       "args": ["mcp:start"],
-      "cwd": "/absolute/path/to/prooftrail"
+      "cwd": "/absolute/path/to/proofyard"
     }
   }
 }
@@ -186,10 +186,10 @@ Optional backend token forwarding example:
 ```json
 {
   "mcpServers": {
-    "prooftrail": {
+    "proofyard": {
       "command": "pnpm",
       "args": ["mcp:start"],
-      "cwd": "/absolute/path/to/prooftrail",
+      "cwd": "/absolute/path/to/proofyard",
       "env": {
         "UIQ_MCP_API_BASE_URL": "http://127.0.0.1:18080",
         "UIQ_MCP_AUTOMATION_TOKEN": "optional-backend-token"
@@ -211,17 +211,17 @@ Protocol and auth boundary:
 The following surfaces are part of the public contract now, but they are
 **not usable today** because they are not yet published:
 
-- npm package: `@prooftrail/mcp-server`
-- Docker image: `ghcr.io/xiaojiou176-open/prooftrail-mcp-server:0.1.1`
+- npm package: `@proofyard/mcp-server`
+- Docker image: `ghcr.io/xiaojiou176-open/proofyard-mcp-server:0.1.1`
 
 Future package example (**not yet published**):
 
 ```json
 {
   "mcpServers": {
-    "prooftrail": {
+    "proofyard": {
       "command": "npx",
-      "args": ["-y", "@prooftrail/mcp-server@0.1.1"]
+      "args": ["-y", "@proofyard/mcp-server@0.1.1"]
     }
   }
 }
@@ -232,17 +232,17 @@ Future Docker example (**not yet published**):
 ```json
 {
   "mcpServers": {
-    "prooftrail": {
+    "proofyard": {
       "command": "docker",
       "args": [
         "run",
         "--rm",
         "-i",
         "-v",
-        "/absolute/path/to/prooftrail:/workspace",
+        "/absolute/path/to/proofyard:/workspace",
         "-e",
         "UIQ_MCP_WORKSPACE_ROOT=/workspace",
-        "ghcr.io/xiaojiou176-open/prooftrail-mcp-server:0.1.1"
+        "ghcr.io/xiaojiou176-open/proofyard-mcp-server:0.1.1"
       ]
     }
   }
@@ -251,8 +251,8 @@ Future Docker example (**not yet published**):
 
 ## Suggested reading path
 
-1. [ProofTrail for AI Agents](prooftrail-for-ai-agents.md)
-2. [ProofTrail for Coding Agents and Agent Ecosystems](prooftrail-for-coding-agents.md)
+1. [ProofTrail for AI Agents](proofyard-for-ai-agents.md)
+2. [ProofTrail for Coding Agents and Agent Ecosystems](proofyard-for-coding-agents.md)
 3. [Evidence, Recovery, and Review Workspace](evidence-recovery-review-workspace.md)
 4. [API Builder Quickstart](api-builder-quickstart.md)
 5. [ProofTrail MCP Server README](../../apps/mcp-server/README.md)

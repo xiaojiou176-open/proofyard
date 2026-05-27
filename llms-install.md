@@ -31,10 +31,10 @@ pnpm mcp:start
 ```json
 {
   "mcpServers": {
-    "prooftrail": {
+    "proofyard": {
       "command": "pnpm",
       "args": ["mcp:start"],
-      "cwd": "/absolute/path/to/prooftrail"
+      "cwd": "/absolute/path/to/proofyard"
     }
   }
 }
@@ -45,10 +45,10 @@ Optional live-backend forwarding:
 ```json
 {
   "mcpServers": {
-    "prooftrail": {
+    "proofyard": {
       "command": "pnpm",
       "args": ["mcp:start"],
-      "cwd": "/absolute/path/to/prooftrail",
+      "cwd": "/absolute/path/to/proofyard",
       "env": {
         "UIQ_MCP_API_BASE_URL": "http://127.0.0.1:18080",
         "UIQ_MCP_AUTOMATION_TOKEN": "optional-backend-token"
@@ -71,7 +71,7 @@ pnpm mcp:smoke
 
 - usable today: **local checkout + stdio**
 - publish-ready but blocked upstream today:
-  - `@prooftrail/mcp-server`
+  - `@proofyard/mcp-server`
   - Official MCP Registry listing
 - not evidenced today:
   - public GHCR listing

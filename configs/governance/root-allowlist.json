@@ -52,7 +52,7 @@
     ".env",
     ".opencode",
     "node_modules",
-    "prooftrail.egg-info"
+    "proofyard.egg-info"
   ],
   "forbiddenRootNames": [
     ".coverage",

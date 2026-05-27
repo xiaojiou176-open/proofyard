@@ -15,8 +15,8 @@ It separates:
 - `Official MCP Registry`
   - status: `exact blocker`
   - exact blocker:
-    `npm publish` for `@prooftrail/mcp-server@0.1.1` returned
-    `404 Not Found - PUT https://registry.npmjs.org/@prooftrail%2fmcp-server`.
+    `npm publish` for `@proofyard/mcp-server@0.1.1` returned
+    `404 Not Found - PUT https://registry.npmjs.org/@proofyard%2fmcp-server`.
     The narrow blocker is npm scope/package ownership under the active
     `xiaojiou176` account.
 - `Cline MCP Marketplace`
@@ -52,7 +52,7 @@ It separates:
 ## Live Packet Receipts
 
 - ClawHub discovery page:
-  - `https://clawhub.ai/skills/prooftrail-mcp`
+  - `https://clawhub.ai/skills/proofyard-mcp`
 - repo-native MCP install docs:
   - `llms-install.md`
   - `apps/mcp-server/README.md`
@@ -61,9 +61,9 @@ It separates:
 ## Cline Packet
 
 - repo URL:
-  - `https://github.com/xiaojiou176-open/prooftrail`
+  - `https://github.com/xiaojiou176-open/proofyard`
 - logo URL:
-  - `https://raw.githubusercontent.com/xiaojiou176-open/prooftrail/docs/prooftrail-publication-receipt-bundle/assets/storefront/prooftrail-social-preview.png`
+  - `https://raw.githubusercontent.com/xiaojiou176-open/proofyard/docs/proofyard-publication-receipt-bundle/assets/storefront/proofyard-social-preview.png`
 - install doc:
   - `llms-install.md`
 - tested repo-owned path:
@@ -86,7 +86,7 @@ It separates:
 - `Title / Project Name`
   - `ProofTrail MCP`
 - `Link to GitHub Repository`
-  - `https://github.com/xiaojiou176-open/prooftrail`
+  - `https://github.com/xiaojiou176-open/proofyard`
 - `Short Description`
   - Governed stdio MCP surface for ProofTrail browser-evidence,
     retained proof, and recovery workflows.
@@ -98,13 +98,13 @@ It separates:
   - It does not claim a hosted HTTP MCP endpoint or a live npm-installed
     registry package today.
 - `Project Homepage`
-  - `https://xiaojiou176-open.github.io/prooftrail/`
+  - `https://xiaojiou176-open.github.io/proofyard/`
 - `Documentation URL`
-  - `https://xiaojiou176-open.github.io/prooftrail/`
+  - `https://xiaojiou176-open.github.io/proofyard/`
 - `Listing Category`
   - `Developer Tools`
 - `Tags`
-  - `mcp, prooftrail, browser-automation, evidence, recovery, coding-agents`
+  - `mcp, proofyard, browser-automation, evidence, recovery, coding-agents`
 - `Platform`
   - `macOS, Linux`
 - `Programming Language`
@@ -121,17 +121,17 @@ It separates:
 - `Name`
   - `ProofTrail MCP`
 - `URL`
-  - `https://github.com/xiaojiou176-open/prooftrail`
+  - `https://github.com/xiaojiou176-open/proofyard`
 - `Server Config`
   - see the JSON snippet below
 
 ```json
 {
   "mcpServers": {
-    "prooftrail": {
+    "proofyard": {
       "command": "pnpm",
       "args": ["mcp:start"],
-      "cwd": "/absolute/path/to/prooftrail"
+      "cwd": "/absolute/path/to/proofyard"
     }
   }
 }
@@ -140,7 +140,7 @@ It separates:
 ### LobeHub MCP Marketplace
 
 - `GitHub Repository URL`
-  - `https://github.com/xiaojiou176-open/prooftrail`
+  - `https://github.com/xiaojiou176-open/proofyard`
 - `Title`
   - `ProofTrail MCP`
 - `One-liner`
@@ -153,12 +153,12 @@ It separates:
   - The honest install road today is repo checkout + stdio, with optional
     local backend forwarding; it is not a hosted HTTP MCP runtime.
 - `Docs / homepage`
-  - `https://xiaojiou176-open.github.io/prooftrail/`
+  - `https://xiaojiou176-open.github.io/proofyard/`
 - `Suggested logo`
-  - `assets/storefront/prooftrail-social-preview.png`
+  - `assets/storefront/proofyard-social-preview.png`
 - `Suggested screenshots`
-  - `assets/storefront/prooftrail-studio-preview.svg`
-  - `assets/storefront/prooftrail-hero.png`
+  - `assets/storefront/proofyard-studio-preview.svg`
+  - `assets/storefront/proofyard-hero.png`
 
 ## Owner Last Click
 

@@ -57,7 +57,7 @@ function writeRun(rootDir: string, runId: string, correlationId?: string): void 
 }
 
 test("evidence run read-model exposes retention and provenance", () => {
-  const rootDir = mkdtempSync(join(tmpdir(), "prooftrail-evidence-runs-"))
+  const rootDir = mkdtempSync(join(tmpdir(), "proofyard-evidence-runs-"))
   writeRun(rootDir, "run-older")
   writeRun(rootDir, "run-latest", "corr-1")
 

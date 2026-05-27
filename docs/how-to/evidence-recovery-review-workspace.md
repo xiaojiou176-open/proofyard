@@ -137,11 +137,11 @@ keeps evidence, judgment, and handoff connected.
 
 Use the current public matrix in this order:
 
-1. [ProofTrail for AI Agents](prooftrail-for-ai-agents.md) for audience fit
-2. [ProofTrail for Coding Agents and Agent Ecosystems](prooftrail-for-coding-agents.md) for coding-agent fit
+1. [ProofTrail for AI Agents](proofyard-for-ai-agents.md) for audience fit
+2. [ProofTrail for Coding Agents and Agent Ecosystems](proofyard-for-coding-agents.md) for coding-agent fit
 3. [MCP for Browser Automation](mcp-quickstart-1pager.md) for the governed tool road
 4. [AI Reconstruction Side Road](ai-reconstruction-side-road.md) for the downstream AI helper lane
-5. [ProofTrail vs Generic Browser Agents](../compare/prooftrail-vs-generic-browser-agents.md) for category fit
+5. [ProofTrail vs Generic Browser Agents](../compare/proofyard-vs-generic-browser-agents.md) for category fit
 6. this page for the deepest current product proof after a run already exists
 
 If you only need the shortest evidence-and-handoff route, use this tighter

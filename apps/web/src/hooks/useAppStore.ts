@@ -74,7 +74,7 @@ const FIRST_USE_DONE_KEY = "ab_first_use_done"
 const FIRST_USE_STAGE_KEY = "ab_first_use_stage"
 const FIRST_USE_PROGRESS_KEY = "ab_first_use_progress"
 const AUTOMATION_CLIENT_ID_KEY = "ab_automation_client_id"
-const LOCALE_PREFERENCE_KEY = "prooftrail_locale"
+const LOCALE_PREFERENCE_KEY = "proofyard_locale"
 const VISUAL_DETERMINISTIC_CLIENT_ID = "client-visual-ci"
 const LEGACY_DEFAULT_BASE_URL = "http://127.0.0.1:17380"
 

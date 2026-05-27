@@ -21,12 +21,12 @@ Use it when you need the shortest truthful summary of:
 
 | Field | Value |
 | --- | --- |
-| Name | `@prooftrail/mcp-server` |
-| Registry server name | `io.github.xiaojiou176-open/prooftrail-mcp` |
+| Name | `@proofyard/mcp-server` |
+| Registry server name | `io.github.xiaojiou176-open/proofyard-mcp` |
 | Description | `Governed MCP access to ProofTrail runs, proof, and workflows` |
 | Version | `0.1.1` |
-| Homepage | `https://xiaojiou176-open.github.io/prooftrail/` |
-| Repository | `https://github.com/xiaojiou176-open/prooftrail` |
+| Homepage | `https://xiaojiou176-open.github.io/proofyard/` |
+| Repository | `https://github.com/xiaojiou176-open/proofyard` |
 | License | `MIT` |
 | Protocol | `stdio` |
 | Transport | `stdio` |
@@ -63,10 +63,10 @@ Example configuration:
 ```json
 {
   "mcpServers": {
-    "prooftrail": {
+    "proofyard": {
       "command": "pnpm",
       "args": ["mcp:start"],
-      "cwd": "/absolute/path/to/prooftrail"
+      "cwd": "/absolute/path/to/proofyard"
     }
   }
 }
@@ -77,10 +77,10 @@ Optional backend token forwarding example:
 ```json
 {
   "mcpServers": {
-    "prooftrail": {
+    "proofyard": {
       "command": "pnpm",
       "args": ["mcp:start"],
-      "cwd": "/absolute/path/to/prooftrail",
+      "cwd": "/absolute/path/to/proofyard",
       "env": {
         "UIQ_MCP_API_BASE_URL": "http://127.0.0.1:18080",
         "UIQ_MCP_AUTOMATION_TOKEN": "optional-backend-token"
@@ -98,16 +98,16 @@ Truth boundary:
 - the repo-owned skill packet is separate from generic cross-host
   skill-registry publication
 - the GHCR image name
-  `ghcr.io/xiaojiou176-open/prooftrail-mcp-server:0.1.1` is part of the
+  `ghcr.io/xiaojiou176-open/proofyard-mcp-server:0.1.1` is part of the
   repo-defined container contract, but today
-  `https://github.com/orgs/xiaojiou176-open/packages/container/package/prooftrail-mcp-server`
+  `https://github.com/orgs/xiaojiou176-open/packages/container/package/proofyard-mcp-server`
   returns `404` and
-  `https://github.com/orgs/xiaojiou176-open/packages?repo_name=prooftrail`
+  `https://github.com/orgs/xiaojiou176-open/packages?repo_name=proofyard`
   reports `0 packages`
 - backend token forwarding is optional
 - OAuth is not part of the current MCP contract
 - npm and Official MCP Registry are still blocked upstream because
-  `@prooftrail/mcp-server` is not yet published on npm
+  `@proofyard/mcp-server` is not yet published on npm
 - Goose and agent-skill.co are `review-pending`, not live listings
 - OpenHands/extensions is `closed-not-accepted`, not a live listing
 
@@ -117,10 +117,10 @@ The following names are the current discovery, review, package, and container
 surfaces for this repository:
 
 - ClawHub skill page
-  - identifier: `https://clawhub.ai/skills/prooftrail-mcp`
+  - identifier: `https://clawhub.ai/skills/proofyard-mcp`
   - current state: listed-live packet discovery page
 - Repo-owned skill packet
-  - identifier: `skills/prooftrail-mcp/`
+  - identifier: `skills/proofyard-mcp/`
   - current state: materialized in repo / generic registry not evidenced
 - OpenHands/extensions lane
   - identifier: `OpenHands/extensions#161`
@@ -132,7 +132,7 @@ surfaces for this repository:
   - identifier: `heilcheng/awesome-agent-skills#182`
   - current state: review-pending / not live
 - npm package
-  - identifier: `@prooftrail/mcp-server`
+  - identifier: `@proofyard/mcp-server`
   - current state: ready / **not published**
 - Docker image
   - identifier: `ghcr.io/...:0.1.1`
@@ -146,9 +146,9 @@ Future package example (**not usable today**):
 ```json
 {
   "mcpServers": {
-    "prooftrail": {
+    "proofyard": {
       "command": "npx",
-      "args": ["-y", "@prooftrail/mcp-server@0.1.1"]
+      "args": ["-y", "@proofyard/mcp-server@0.1.1"]
     }
   }
 }
@@ -159,19 +159,19 @@ Future container example (**not publicly evidenced today**):
 ```json
 {
   "mcpServers": {
-    "prooftrail": {
+    "proofyard": {
       "command": "docker",
       "args": [
         "run",
         "--rm",
         "-i",
         "-v",
-        "/absolute/path/to/prooftrail:/workspace",
+        "/absolute/path/to/proofyard:/workspace",
         "-e",
         "UIQ_MCP_API_BASE_URL=http://host.docker.internal:18080",
         "-e",
         "UIQ_MCP_WORKSPACE_ROOT=/workspace",
-        "ghcr.io/xiaojiou176-open/prooftrail-mcp-server:0.1.1"
+        "ghcr.io/xiaojiou176-open/proofyard-mcp-server:0.1.1"
       ]
     }
   }
@@ -206,4 +206,4 @@ pnpm mcp:container:smoke
 - [MCP for Browser Automation](../how-to/mcp-quickstart-1pager.md)
 - [Distribution Status](../../DISTRIBUTION.md)
 - [Integration Boundaries](../../INTEGRATIONS.md)
-- [ProofTrail MCP Skill](../../skills/prooftrail-mcp/SKILL.md)
+- [ProofTrail MCP Skill](../../skills/proofyard-mcp/SKILL.md)

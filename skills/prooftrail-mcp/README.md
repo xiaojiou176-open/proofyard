@@ -50,11 +50,11 @@ Use it when you want one portable skill folder that teaches:
   it is not `review-pending`, and the maintainer pointed contributors to a
   custom `marketplace.json` distribution instead
 - the GHCR Docker image
-  `ghcr.io/xiaojiou176-open/prooftrail-mcp-server:0.1.1` is part of the
+  `ghcr.io/xiaojiou176-open/proofyard-mcp-server:0.1.1` is part of the
   repo-defined container contract, but today
-  `https://github.com/orgs/xiaojiou176-open/packages/container/package/prooftrail-mcp-server`
+  `https://github.com/orgs/xiaojiou176-open/packages/container/package/proofyard-mcp-server`
   returns `404` and
-  `https://github.com/orgs/xiaojiou176-open/packages?repo_name=prooftrail`
+  `https://github.com/orgs/xiaojiou176-open/packages?repo_name=proofyard`
   reports `0 packages`
 - npm is still not published, and Official MCP Registry is still not live
   because it depends on that missing npm package

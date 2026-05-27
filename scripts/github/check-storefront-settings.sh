@@ -4,12 +4,12 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
-repo="${1:-xiaojiou176-open/prooftrail}"
+repo="${1:-xiaojiou176-open/proofyard}"
 output_json=0
 
 if [[ "${1:-}" == "--json" ]]; then
   output_json=1
-  repo="${2:-xiaojiou176-open/prooftrail}"
+  repo="${2:-xiaojiou176-open/proofyard}"
 fi
 
 if ! command -v gh >/dev/null 2>&1; then
@@ -38,7 +38,7 @@ pages_build_status="$(jq -r '.status // ""' <<<"$pages_json")"
 pages_https_enforced="$(jq -r '.https_enforced // false' <<<"$pages_json")"
 pages_http_status="$(curl -fsS -o /dev/null -w '%{http_code}' "$expected_homepage")"
 
-social_preview_asset="assets/storefront/prooftrail-social-preview.png"
+social_preview_asset="assets/storefront/proofyard-social-preview.png"
 social_preview_exists="false"
 if [[ -f "$social_preview_asset" ]]; then
   social_preview_exists="true"
@@ -125,10 +125,10 @@ if [[ "${releases_count}" == "0" ]]; then
 fi
 
 social_preview_status="manual_required"
-social_preview_reason="verify GitHub Social Preview uses assets/storefront/prooftrail-social-preview.png"
+social_preview_reason="verify GitHub Social Preview uses assets/storefront/proofyard-social-preview.png"
 if [[ "$social_preview_exists" != "true" ]]; then
   social_preview_status="fail"
-  social_preview_reason="missing repo social preview asset assets/storefront/prooftrail-social-preview.png"
+  social_preview_reason="missing repo social preview asset assets/storefront/proofyard-social-preview.png"
 elif [[ "$(jq -r '.open_graph_image_url // ""' <<<"$json")" == "" ]]; then
   social_preview_status="manual_required"
   social_preview_reason="GitHub does not expose a stable API proof for Social Preview; confirm the UI state with manual evidence"

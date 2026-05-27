@@ -100,7 +100,7 @@ today, not in imagined future positioning.
 
 ## Reading path after this page
 
-- go to [ProofTrail for AI Agents](../how-to/prooftrail-for-ai-agents.md) if you are still testing audience fit
+- go to [ProofTrail for AI Agents](../how-to/proofyard-for-ai-agents.md) if you are still testing audience fit
 - go to [MCP for Browser Automation](../how-to/mcp-quickstart-1pager.md) if your next question is AI-client tool integration
 - go to [AI Reconstruction Side Road](../how-to/ai-reconstruction-side-road.md) if your next question is artifact-driven AI help
 - go to [Evidence, Recovery, and Review Workspace](../how-to/evidence-recovery-review-workspace.md) if you want the deepest current product proof

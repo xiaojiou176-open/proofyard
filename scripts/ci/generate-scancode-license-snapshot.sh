@@ -49,10 +49,10 @@ resolve_scancode_cmd() {
 
 tmp_root="${TMPDIR:-/tmp}"
 mkdir -p "${tmp_root%/}"
-snapshot_tmp="$(mktemp "${tmp_root%/}/prooftrail-scancode-snapshot.XXXXXX")"
+snapshot_tmp="$(mktemp "${tmp_root%/}/proofyard-scancode-snapshot.XXXXXX")"
 rm -f "$snapshot_tmp"
 snapshot_tmp="${snapshot_tmp}.json"
-work_dir="$(mktemp -d "${tmp_root%/}/prooftrail-scancode-targets.XXXXXX")"
+work_dir="$(mktemp -d "${tmp_root%/}/proofyard-scancode-targets.XXXXXX")"
 trap 'rm -f "$snapshot_tmp"; rm -rf "$work_dir"' EXIT
 
 run_target_with_timeout() {
@@ -102,7 +102,7 @@ reason = sys.argv[3]
 payload = {
     "headers": [
         {
-            "tool_name": "prooftrail-manifest-fallback",
+            "tool_name": "proofyard-manifest-fallback",
             "tool_version": "1",
             "options": {"input": [target.as_posix()]},
             "notice": "Generated from repo-owned manifest metadata fallback when bounded ScanCode scanning is not viable.",

@@ -10,7 +10,7 @@
 /tmp/
 mutants/
 .lighthouseci/
-prooftrail.egg-info/
+proofyard.egg-info/
 
 # Python
 __pycache__/

@@ -5,22 +5,22 @@ storefront.
 
 ## Current asset set
 
-- `../../assets/storefront/prooftrail-social-preview.svg`
+- `../../assets/storefront/proofyard-social-preview.svg`
   - Purpose: GitHub social preview source asset
   - Message: one public command, one evidence trail, one recovery story
-- `../../assets/storefront/prooftrail-social-preview.png`
+- `../../assets/storefront/proofyard-social-preview.png`
   - Purpose: GitHub-upload-ready social preview asset derived from a real product view
   - Message: the operator UI, evidence-first workflow, and parameter rail are visible in one frame
-- `../../assets/storefront/prooftrail-hero.png`
+- `../../assets/storefront/proofyard-hero.png`
   - Purpose: README hero asset based on the real product UI
   - Message: start from the canonical run path, keep the parameter rail visible, and move into evidence review without leaving the product shell
-- `../../assets/storefront/prooftrail-hero.svg`
+- `../../assets/storefront/proofyard-hero.svg`
   - Purpose: legacy concept-art hero retained as a reviewable storefront draft
   - Message: original synthetic storefront concept before the real UI screenshot replaced it in README
-- `../../assets/storefront/prooftrail-readme-hero.svg`
+- `../../assets/storefront/proofyard-readme-hero.svg`
   - Purpose: current README and docs-hub proof-loop visual
   - Message: `just run -> retained evidence bundle -> recover exact failed step`
-- `../../assets/storefront/prooftrail-agent-ecosystem-map.svg`
+- `../../assets/storefront/proofyard-agent-ecosystem-map.svg`
   - Purpose: README ecosystem-fit visual for coding-agent and agent-stack discovery
   - Message: which named ecosystems are MCP-first, API-first, or hybrid while ProofTrail stays the browser-evidence layer
 
@@ -42,6 +42,6 @@ The copy is grounded in:
 
 ## Replacement slots
 
-- Upload `../../assets/storefront/prooftrail-social-preview.png` in GitHub
+- Upload `../../assets/storefront/proofyard-social-preview.png` in GitHub
   Settings while keeping the SVG as the reviewable source of truth.
 - Keep filenames stable unless the README and Settings references change.

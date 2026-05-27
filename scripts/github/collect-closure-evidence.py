@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 
-REPO_DEFAULT = "xiaojiou176-open/prooftrail"
+REPO_DEFAULT = "xiaojiou176-open/proofyard"
 SCRIPT_DIR = Path(__file__).resolve().parent
 ROOT_DIR = SCRIPT_DIR.parents[1]
 STORE_FRONTEND_SCRIPT = ROOT_DIR / "scripts" / "github" / "check-storefront-settings.sh"

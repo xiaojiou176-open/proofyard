@@ -1,5 +1,5 @@
 {
-  "name": "@prooftrail/web",
+  "name": "@proofyard/web",
   "version": "0.1.0",
   "description": "ProofTrail command center for evidence-first browser automation, recovery, and guided operator workflows",
   "private": true,

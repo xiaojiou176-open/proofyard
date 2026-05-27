@@ -33,7 +33,7 @@ This page is also the right landing page if your search sounded like:
 - `MCP browser automation for AI agents`
 
 If that is your exact search intent, continue with
-[ProofTrail for Coding Agents and Agent Ecosystems](prooftrail-for-coding-agents.md)
+[ProofTrail for Coding Agents and Agent Ecosystems](proofyard-for-coding-agents.md)
 after this page.
 
 If you are still asking "can this repo produce one truthful baseline run at
@@ -247,7 +247,7 @@ repo reality:
 3. [Evidence, Recovery, and Review Workspace](evidence-recovery-review-workspace.md)
 4. [MCP for Browser Automation](mcp-quickstart-1pager.md)
 5. [AI Reconstruction Side Road](ai-reconstruction-side-road.md)
-6. [ProofTrail vs Generic Browser Agents](../compare/prooftrail-vs-generic-browser-agents.md)
+6. [ProofTrail vs Generic Browser Agents](../compare/proofyard-vs-generic-browser-agents.md)
 
 ## Honest boundary
 

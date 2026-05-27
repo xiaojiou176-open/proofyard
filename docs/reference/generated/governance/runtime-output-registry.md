@@ -27,14 +27,14 @@ Generated from `configs/governance/runtime-output-registry.json`. Do not edit th
 
 | ID | Path | Kind | Cleanup Class | Owner |
 | --- | --- | --- | --- | --- |
-| `pnpm-prooftrail-store` | `${HOME}/.cache/pnpm/prooftrail/store` | `dependency-store` | `reclaim` | `.npmrc` |
+| `pnpm-proofyard-store` | `${HOME}/.cache/pnpm/proofyard/store` | `dependency-store` | `reclaim` | `.npmrc` |
 
 ## Reclaim Scopes
 
 | ID | Path | Kind | Cleanup Class | Rebuild Command | Risk |
 | --- | --- | --- | --- | --- | --- |
 | `root-venv` | `.venv` | `legacy-python-env` | `reclaim` | `just setup` | `high` |
-| `repo-pnpm-store` | `${HOME}/.cache/pnpm/prooftrail/store` | `repo-exclusive-dependency-store` | `reclaim` | `just setup` | `medium` |
+| `repo-pnpm-store` | `${HOME}/.cache/pnpm/proofyard/store` | `repo-exclusive-dependency-store` | `reclaim` | `just setup` | `medium` |
 | `automation-runner-node-modules` | `apps/automation-runner/node_modules` | `isolated-app-dependency-layer` | `reclaim` | `just setup` | `medium` |
 | `mcp-server-node-modules` | `apps/mcp-server/node_modules` | `isolated-app-dependency-layer` | `reclaim` | `just setup` | `medium` |
 

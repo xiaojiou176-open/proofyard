@@ -18,7 +18,7 @@ const sbom = {
   format: "placeholder-json",
   verificationStatus: "non-verifiable-placeholder",
   generatedAt,
-  repo: "prooftrail",
+  repo: "proofyard",
   sha,
   ref,
   warning:
@@ -47,7 +47,7 @@ const attestation = {
   kind: "attestation",
   generatedAt,
   subject: {
-    repo: "prooftrail",
+    repo: "proofyard",
     sha,
     ref,
   },
@@ -78,7 +78,7 @@ const subjectManifest = {
     "This subject manifest is a repository-generated digest summary for consumer inspection. It is not itself a signed attestation.",
   digestAlgorithm: "sha256",
   source: {
-    repo: "prooftrail",
+    repo: "proofyard",
     sha,
     ref,
     workflow: "release-candidate",

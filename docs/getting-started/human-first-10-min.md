@@ -94,11 +94,11 @@ The rule is simple: default path first, advanced workshop controls later.
 
 If you need the broader category story after the first run, continue with:
 
-- [docs/how-to/prooftrail-for-ai-agents.md](../how-to/prooftrail-for-ai-agents.md)
+- [docs/how-to/proofyard-for-ai-agents.md](../how-to/proofyard-for-ai-agents.md)
 - [docs/reference/run-evidence-example.md](../reference/run-evidence-example.md)
 - [docs/how-to/ai-reconstruction-side-road.md](../how-to/ai-reconstruction-side-road.md)
 - [docs/how-to/mcp-quickstart-1pager.md](../how-to/mcp-quickstart-1pager.md)
-- [docs/compare/prooftrail-vs-generic-browser-agents.md](../compare/prooftrail-vs-generic-browser-agents.md)
+- [docs/compare/proofyard-vs-generic-browser-agents.md](../compare/proofyard-vs-generic-browser-agents.md)
 
 When the Web command center is open, the product-side troubleshooting order is:
 
