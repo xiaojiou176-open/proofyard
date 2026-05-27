@@ -3,7 +3,7 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "proofyard"
+name = "webaudit"
 version = "0.1.1"
 description = "Evidence-first browser automation platform with auditable and replayable workflows"
 readme = "README.md"

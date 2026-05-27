@@ -12,7 +12,7 @@ Start with:
 
 If you need help choosing the right path, use GitHub Discussions first:
 
-- `https://github.com/xiaojiou176-open/proofyard/discussions`
+- `https://github.com/xiaojiou176-open/webaudit/discussions`
 
 ## Bug reports
 

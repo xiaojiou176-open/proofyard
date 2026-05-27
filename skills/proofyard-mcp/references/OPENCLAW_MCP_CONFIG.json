@@ -1,12 +1,12 @@
 {
   "mcp": {
     "servers": {
-      "proofyard": {
+      "webaudit": {
         "command": "pnpm",
         "args": [
           "mcp:start"
         ],
-        "cwd": "/absolute/path/to/proofyard"
+        "cwd": "/absolute/path/to/webaudit"
       }
     }
   }

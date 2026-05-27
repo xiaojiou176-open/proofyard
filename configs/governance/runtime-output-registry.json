@@ -215,14 +215,14 @@
   ],
   "repoExclusiveExternalLayers": [
     {
-      "id": "pnpm-proofyard-store",
-      "path": "${HOME}/.cache/pnpm/proofyard/store",
+      "id": "pnpm-webaudit-store",
+      "path": "${HOME}/.cache/pnpm/webaudit/store",
       "kind": "dependency-store",
       "owner": ".npmrc",
       "cleanupClass": "reclaim",
       "sizeBudgetMb": 2048,
       "mustKeepLatest": true,
-      "notes": "Repo-scoped host pnpm store and virtual-store namespace for Proofyard."
+      "notes": "Repo-scoped host pnpm store and virtual-store namespace for Webaudit."
     }
   ],
   "reclaimScopes": [
@@ -242,7 +242,7 @@
     },
     {
       "id": "repo-pnpm-store",
-      "path": "${HOME}/.cache/pnpm/proofyard/store",
+      "path": "${HOME}/.cache/pnpm/webaudit/store",
       "kind": "repo-exclusive-dependency-store",
       "owner": "scripts/space-clean-reclaim.py",
       "cleanupClass": "reclaim",
@@ -252,7 +252,7 @@
         "Workspace install must remain the only supported dependency restore path.",
         "No repo-owned mainline script may recreate isolated installs with pnpm install --ignore-workspace."
       ],
-      "notes": "Repo-exclusive host pnpm store and virtual-store namespace for Proofyard."
+      "notes": "Repo-exclusive host pnpm store and virtual-store namespace for Webaudit."
     },
     {
       "id": "automation-runner-node-modules",

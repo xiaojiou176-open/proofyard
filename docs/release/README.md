@@ -1,6 +1,6 @@
 # Release Guide
 
-Proofyard does not treat the GitHub Releases tab as decorative metadata.
+Webaudit does not treat the GitHub Releases tab as decorative metadata.
 
 Use releases to answer one public question clearly: what changed, what broke,
 what should an evaluator subscribe to, and what proof can they inspect.

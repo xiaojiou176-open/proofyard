@@ -1,7 +1,7 @@
 {
-  "name": "@proofyard/automation-runner",
+  "name": "@webaudit/automation-runner",
   "version": "0.1.0",
-  "description": "Proofyard automation runner for recording, replay, and artifact-based reconstruction side roads",
+  "description": "Webaudit automation runner for recording, replay, and artifact-based reconstruction side roads",
   "private": true,
   "type": "module",
   "scripts": {

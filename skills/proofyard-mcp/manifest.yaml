@@ -1,6 +1,6 @@
-name: proofyard-mcp
+name: webaudit-mcp
 version: 0.1.1
-description: Portable public skill packet for Proofyard's governed stdio MCP browser-evidence surface.
+description: Portable public skill packet for Webaudit's governed stdio MCP browser-evidence surface.
 protocol: stdio
 transport: stdio
 auth: local-with-optional-backend-token
@@ -10,25 +10,25 @@ registry_targets:
   clawhub:
     status: listed-live
     package_shape: skill-folder
-    listing_url: https://clawhub.ai/skills/proofyard-mcp
+    listing_url: https://clawhub.ai/skills/webaudit-mcp
     note: Fresh 2026-04-08 America/Los_Angeles read-back confirmed this live ClawHub discovery page for the repo-owned skill folder.
-    submit_via: clawhub publish . --slug proofyard-mcp --name "Proofyard MCP Skill" --version 0.1.1 --tags browser-evidence,mcp,recovery,proofyard
+    submit_via: clawhub publish . --slug webaudit-mcp --name "Webaudit MCP Skill" --version 0.1.1 --tags browser-evidence,mcp,recovery,webaudit
   goose-skills-marketplace:
     status: review-pending
     package_shape: skill-folder
     submission_url: https://github.com/block/agent-skills/pull/26
-    note: Fresh 2026-04-12 read-back confirms the standalone proofyard-mcp skill is now in upstream review at block/Agent-Skills.
+    note: Fresh 2026-04-12 read-back confirms the standalone webaudit-mcp skill is now in upstream review at block/Agent-Skills.
   agent-skill-index:
     status: review-pending
     package_shape: index-entry
     submission_url: https://github.com/heilcheng/awesome-agent-skills/pull/182
-    note: Fresh 2026-04-12 read-back confirms the proofyard-mcp context-engineering entry is now in upstream review.
+    note: Fresh 2026-04-12 read-back confirms the webaudit-mcp context-engineering entry is now in upstream review.
   openhands-extensions:
     status: closed-not-accepted
     package_shape: skill-folder
     submission_url: https://github.com/OpenHands/extensions/pull/161
     note: Fresh 2026-04-12 read-back confirms PR #161 was closed with maintainer guidance to distribute a custom marketplace.json instead of expecting an upstream listing.
-    submit_via: submit this folder as skills/proofyard-mcp/ in OpenHands/extensions
+    submit_via: submit this folder as skills/webaudit-mcp/ in OpenHands/extensions
 surfaces:
   - repo-native MCP package
   - repo-owned install skill

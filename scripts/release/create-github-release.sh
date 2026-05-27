@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-repo="${GH_REPO:-xiaojiou176-open/proofyard}"
+repo="${GH_REPO:-xiaojiou176-open/webaudit}"
 tag="${1:-}"
 
 if [[ -z "$tag" ]]; then

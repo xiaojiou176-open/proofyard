@@ -63,7 +63,7 @@ For the adjacent side roads, continue with:
 - [Evidence, Recovery, and Review Workspace](../how-to/evidence-recovery-review-workspace.md)
 - [AI reconstruction side road](../how-to/ai-reconstruction-side-road.md)
 - [MCP for Browser Automation](../how-to/mcp-quickstart-1pager.md)
-- [Proofyard vs generic browser agents](../compare/proofyard-vs-generic-browser-agents.md)
+- [Webaudit vs generic browser agents](../compare/webaudit-vs-generic-browser-agents.md)
 
 When the UI talks about evidence state, read it this way:
 

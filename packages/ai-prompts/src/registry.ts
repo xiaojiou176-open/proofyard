@@ -176,7 +176,7 @@ const promptRegistry: Record<string, Record<string, PromptDefinition>> = {
       version: "1.0.0",
       description: "Generate an advisory-only failure explanation that stays grounded in evidence anchors.",
       template: [
-        "You are the Proofyard failure explainer.",
+        "You are the Webaudit failure explainer.",
         "Run ID: {{runId}}",
         "Retention State: {{retentionState}}",
         "Gate Status: {{gateStatus}}",

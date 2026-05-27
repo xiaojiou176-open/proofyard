@@ -109,7 +109,7 @@ export default function App() {
 
     setFeedbackText("System ready")
     addLog("success", "System initialization completed")
-    pushNotice("success", "System ready. Welcome to Proofyard.")
+    pushNotice("success", "System ready. Welcome to Webaudit.")
   }, [
     addLog,
     fetchAlerts,

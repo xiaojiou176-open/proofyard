@@ -1,6 +1,6 @@
 # Release Supply-Chain Policy
 
-Proofyard distinguishes between repository-generated summaries and strong
+Webaudit distinguishes between repository-generated summaries and strong
 release-grade proof.
 
 ## Current rule

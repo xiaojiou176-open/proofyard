@@ -1,10 +1,10 @@
-# Install And Attach Proofyard MCP
+# Install And Attach Webaudit MCP
 
 ## Local repo setup
 
 ```bash
-git clone https://github.com/xiaojiou176-open/proofyard.git
-cd proofyard
+git clone https://github.com/xiaojiou176-open/webaudit.git
+cd webaudit
 pnpm install
 ```
 
@@ -15,7 +15,7 @@ pnpm mcp:start
 ```
 
 Before loading the host config snippets in this folder, replace
-`/absolute/path/to/proofyard` with the real path to your local clone.
+`/absolute/path/to/webaudit` with the real path to your local clone.
 
 ## Verification commands
 

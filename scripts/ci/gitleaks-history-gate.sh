@@ -7,7 +7,7 @@ cd "$ROOT_DIR"
 ARTIFACT_DIR="${UIQ_GITLEAKS_ARTIFACT_DIR:-.runtime-cache/artifacts/ci}"
 REPORT_FORMAT="${UIQ_GITLEAKS_REPORT_FORMAT:-json}"
 REPORT_PATH="${UIQ_GITLEAKS_REPORT_PATH:-$ARTIFACT_DIR/gitleaks-history.${REPORT_FORMAT}}"
-tmpdir="$(mktemp -d "${TMPDIR:-/tmp}/proofyard-gitleaks.XXXXXX")"
+tmpdir="$(mktemp -d "${TMPDIR:-/tmp}/webaudit-gitleaks.XXXXXX")"
 trap 'rm -rf "$tmpdir"' EXIT
 
 gitleaks_version="$(python3 - <<'PY'

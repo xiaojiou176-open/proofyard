@@ -1,5 +1,5 @@
 {
-  "name": "proofyard",
+  "name": "webaudit",
   "description": "Evidence-first browser automation with recovery and MCP for AI agents and human operators",
   "version": "0.1.1",
   "private": true,
@@ -69,16 +69,16 @@
     "gate:e2e:authenticity": "node scripts/ci/e2e-authenticity-gate.mjs",
     "gate:e2e:nightly-release": "node scripts/ci/nightly-release-e2e-gate.mjs",
     "uiq": "node --import tsx packages/orchestrator/src/cli.ts",
-    "mcp:start": "pnpm --filter @proofyard/mcp-server start",
-    "mcp:build": "pnpm --filter @proofyard/mcp-server build",
-    "mcp:check": "pnpm --filter @proofyard/mcp-server check",
+    "mcp:start": "pnpm --filter @webaudit/mcp-server start",
+    "mcp:build": "pnpm --filter @webaudit/mcp-server build",
+    "mcp:check": "pnpm --filter @webaudit/mcp-server check",
     "mcp:doc:contract": "node --import tsx scripts/mcp/sync-doc-contract.ts",
-    "mcp:pack:dry-run": "pnpm --filter @proofyard/mcp-server pack:dry-run",
+    "mcp:pack:dry-run": "pnpm --filter @webaudit/mcp-server pack:dry-run",
     "mcp:container:smoke": "bash scripts/ci/mcp-container-smoke.sh",
     "mcp:smoke": "node --import tsx --test apps/mcp-server/tests/mcp-smoke.test.ts",
     "mcp:test": "node --import tsx --test apps/mcp-server/tests/mcp-success.test.ts apps/mcp-server/tests/mcp-failure.test.ts apps/mcp-server/tests/mcp-auth.test.ts apps/mcp-server/tests/mcp-advanced-visibility.test.ts apps/mcp-server/tests/mcp-timeout-semantic.test.ts apps/mcp-server/tests/mcp-doc-tool-contract.test.ts apps/mcp-server/tests/mcp-description-contract.test.ts apps/mcp-server/tests/core.tool-metadata.test.ts apps/mcp-server/tests/mcp-smoke.test.ts",
     "mcp:test:mutation": "node --import tsx --test apps/mcp-server/tests/mcp-auth.test.ts apps/mcp-server/tests/mcp-timeout-semantic.test.ts apps/mcp-server/tests/core.registry.test.ts apps/mcp-server/tests/core.constants.test.ts apps/mcp-server/tests/core.types.test.ts",
-    "skill:proofyard-mcp:check": "node scripts/ci/check-skill-surface-contract.mjs",
+    "skill:webaudit-mcp:check": "node scripts/ci/check-skill-surface-contract.mjs",
     "test:orchestrator": "node --import tsx --test packages/orchestrator/src/commands/run.base-url.test.ts packages/orchestrator/src/commands/target-runtime.test.ts packages/orchestrator/src/commands/run.proof.test.ts packages/orchestrator/src/commands/report.contract.test.ts packages/orchestrator/src/commands/perf.gate.test.ts packages/orchestrator/src/commands/visual.gate.test.ts packages/orchestrator/src/commands/explore.url-normalize.test.ts packages/orchestrator/src/commands/desktop-e2e.test.ts packages/orchestrator/src/commands/desktop-soak.test.ts",
     "test:repo:pii": "node --test scripts/ci/check-repo-high-signal-pii.test.mjs",
     "check:host-safety": "bash scripts/ci/host-safety-gate.sh",
@@ -216,7 +216,8 @@
       "tmp": "0.2.5",
       "underscore": "1.13.8",
       "undici": "7.24.5",
-      "rollup": "4.59.0"
+      "rollup": "4.59.0",
+      "protobufjs": "^7.6.1"
     }
   },
   "packageManager": "pnpm@10.22.0+sha512.bf049efe995b28f527fd2b41ae0474ce29186f7edcb3bf545087bd61fbbebb2bf75362d1307fda09c2d288e1e499787ac12d4fcb617a974718a6051f2eee741c"

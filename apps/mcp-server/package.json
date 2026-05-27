@@ -1,20 +1,20 @@
 {
-  "name": "@proofyard/mcp-server",
+  "name": "@webaudit/mcp-server",
   "version": "0.1.1",
-  "mcpName": "io.github.xiaojiou176-open/proofyard-mcp",
-  "description": "Proofyard MCP adapter for governed AI-client access to runs, proof, and workflow operations",
-  "homepage": "https://xiaojiou176-open.github.io/proofyard/",
+  "mcpName": "io.github.xiaojiou176-open/webaudit-mcp",
+  "description": "Webaudit MCP adapter for governed AI-client access to runs, proof, and workflow operations",
+  "homepage": "https://xiaojiou176-open.github.io/webaudit/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xiaojiou176-open/proofyard.git",
+    "url": "git+https://github.com/xiaojiou176-open/webaudit.git",
     "directory": "apps/mcp-server"
   },
   "bugs": {
-    "url": "https://github.com/xiaojiou176-open/proofyard/issues"
+    "url": "https://github.com/xiaojiou176-open/webaudit/issues"
   },
   "license": "MIT",
   "keywords": [
-    "proofyard",
+    "webaudit",
     "mcp",
     "browser-automation",
     "evidence",
@@ -30,7 +30,7 @@
     ".": "./dist/server.cjs"
   },
   "bin": {
-    "proofyard-mcp": "./dist/server.cjs"
+    "webaudit-mcp": "./dist/server.cjs"
   },
   "files": [
     "dist",

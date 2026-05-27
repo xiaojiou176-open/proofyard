@@ -1,12 +1,12 @@
-# Proofyard MCP Install For Agent Shells
+# Webaudit MCP Install For Agent Shells
 
 This file is the shortest honest install path for agent shells that want the
-repo-native Proofyard MCP surface.
+repo-native Webaudit MCP surface.
 
 ## What This Installs
 
 - a governed stdio MCP surface
-- backed by the local Proofyard checkout
+- backed by the local Webaudit checkout
 - optional live backend token forwarding
 - **not** a hosted HTTP endpoint
 - **not** a published npm install today
@@ -31,10 +31,10 @@ pnpm mcp:start
 ```json
 {
   "mcpServers": {
-    "proofyard": {
+    "webaudit": {
       "command": "pnpm",
       "args": ["mcp:start"],
-      "cwd": "/absolute/path/to/proofyard"
+      "cwd": "/absolute/path/to/webaudit"
     }
   }
 }
@@ -45,10 +45,10 @@ Optional live-backend forwarding:
 ```json
 {
   "mcpServers": {
-    "proofyard": {
+    "webaudit": {
       "command": "pnpm",
       "args": ["mcp:start"],
-      "cwd": "/absolute/path/to/proofyard",
+      "cwd": "/absolute/path/to/webaudit",
       "env": {
         "UIQ_MCP_API_BASE_URL": "http://127.0.0.1:18080",
         "UIQ_MCP_AUTOMATION_TOKEN": "optional-backend-token"
@@ -71,7 +71,7 @@ pnpm mcp:smoke
 
 - usable today: **local checkout + stdio**
 - publish-ready but blocked upstream today:
-  - `@proofyard/mcp-server`
+  - `@webaudit/mcp-server`
   - Official MCP Registry listing
 - not evidenced today:
   - public GHCR listing

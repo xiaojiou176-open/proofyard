@@ -31,7 +31,7 @@ pwTest("@frontend-nonstub @nonstub real ui shell loads commands and navigates ta
 
   await page.goto("/")
 
-  await expect(page.getByRole("heading", { level: 1, name: "Proofyard" })).toBeVisible()
+  await expect(page.getByRole("heading", { level: 1, name: "Webaudit" })).toBeVisible()
   await expect(page.getByRole("tablist", { name: "Primary navigation" })).toBeVisible()
   await expect(page.getByRole("tablist", { name: "Command categories" })).toBeVisible()
   await expect(page.locator(".command-card").first()).toBeVisible()

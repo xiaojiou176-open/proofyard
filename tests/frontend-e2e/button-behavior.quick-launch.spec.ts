@@ -22,14 +22,14 @@ buttonBehaviorCase(
   async ({ page }) => {
     await bootstrapButtonBehaviorApp(page, {
       localStorage: {
-        proofyard_locale: 'zh-CN',
+        webaudit_locale: 'zh-CN',
       },
     })
 
     await page.getByRole('button', { name: 'EN', exact: true }).click()
 
     await expect.poll(() =>
-      page.evaluate(() => window.localStorage.getItem('proofyard_locale'))
+      page.evaluate(() => window.localStorage.getItem('webaudit_locale'))
     ).toBe('en')
     await expect(page.getByRole('button', { name: 'EN', exact: true })).toHaveAttribute('aria-pressed', 'true')
   },
@@ -43,7 +43,7 @@ buttonBehaviorCase(
     await page.getByRole('button', { name: '中文', exact: true }).click()
 
     await expect.poll(() =>
-      page.evaluate(() => window.localStorage.getItem('proofyard_locale'))
+      page.evaluate(() => window.localStorage.getItem('webaudit_locale'))
     ).toBe('zh-CN')
     await expect(page.getByRole('button', { name: '中文', exact: true })).toHaveAttribute('aria-pressed', 'true')
   },

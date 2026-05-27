@@ -10,8 +10,8 @@ COPY scripts/mcp scripts/mcp
 
 RUN corepack enable \
   && pnpm install --frozen-lockfile \
-  && pnpm --filter @proofyard/mcp-server build \
-  && pnpm deploy --legacy --filter @proofyard/mcp-server --prod /opt/proofyard-mcp
+  && pnpm --filter @webaudit/mcp-server build \
+  && pnpm deploy --legacy --filter @webaudit/mcp-server --prod /opt/webaudit-mcp
 
 FROM docker.io/library/node:20-bookworm-slim@sha256:eef3816042c0f522a2ca9655c1947ca6f97c908b0c227aa50e19432646342ab7
 
@@ -20,6 +20,6 @@ ENV UIQ_MCP_WORKSPACE_ROOT=/workspace
 
 WORKDIR /workspace
 
-COPY --from=build /opt/proofyard-mcp /opt/proofyard-mcp
+COPY --from=build /opt/webaudit-mcp /opt/webaudit-mcp
 
-ENTRYPOINT ["node", "/opt/proofyard-mcp/dist/server.cjs"]
+ENTRYPOINT ["node", "/opt/webaudit-mcp/dist/server.cjs"]

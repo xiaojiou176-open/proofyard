@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 
-REPO_DEFAULT = "xiaojiou176-open/proofyard"
+REPO_DEFAULT = "xiaojiou176-open/webaudit"
 SCRIPT_DIR = Path(__file__).resolve().parent
 ROOT_DIR = SCRIPT_DIR.parents[1]
 STORE_FRONTEND_SCRIPT = ROOT_DIR / "scripts" / "github" / "check-storefront-settings.sh"
@@ -198,7 +198,7 @@ def overall_status(sections: list[dict[str, Any]]) -> str:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Collect GitHub closure evidence for Proofyard.")
+    parser = argparse.ArgumentParser(description="Collect GitHub closure evidence for Webaudit.")
     parser.add_argument("--repo", default=REPO_DEFAULT, help="GitHub repo in owner/name form.")
     parser.add_argument(
         "--manual-evidence",

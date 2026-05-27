@@ -60,8 +60,8 @@ const zhCNMessages: Record<string, string> = {
   "The backend could not load canonical evidence runs.": "后端当前无法加载 canonical evidence runs。",
   "No canonical evidence surface yet": "还没有 canonical evidence surface",
   "No retained evidence runs yet": "还没有保留的 evidence runs",
-  "Proofyard cannot find the canonical runs directory in this checkout yet. Start with the canonical run first so the manifest-backed evidence surface can exist.":
-    "Proofyard 还没有在当前 checkout 中找到 canonical runs 目录。先跑 canonical run，manifest-backed evidence surface 才会真正存在。",
+  "Webaudit cannot find the canonical runs directory in this checkout yet. Start with the canonical run first so the manifest-backed evidence surface can exist.":
+    "Webaudit 还没有在当前 checkout 中找到 canonical runs 目录。先跑 canonical run，manifest-backed evidence surface 才会真正存在。",
   "The canonical runs directory exists, but there are no retained evidence runs to inspect yet. Run the canonical path first, then come back here to explain, share, or compare the result.":
     "canonical runs 目录已经存在，但目前还没有可检查的 retained evidence run。先跑 canonical path，再回来解释、分享或比对结果。",
   "This tab becomes useful after the first canonical run creates the manifest, summary, and proof reports.":
@@ -524,7 +524,7 @@ const zhCNMessages: Record<string, string> = {
   retention: "保留",
   compare: "对比",
   "promotion state": "promotion 状态",
-  "Proofyard Command Center": "Proofyard 控制台",
+  "Webaudit Command Center": "Webaudit 控制台",
   "Evidence-first browser automation with recovery and MCP": "以证据为先的浏览器自动化，内置恢复与 MCP",
   "Start from one canonical run, confirm the result in Task Center, and only then open template reuse, AI reconstruction, or MCP side roads. This is for AI agents, Codex, Claude Code, OpenHands, OpenCode, OpenClaw, and human operators who need inspectable runs instead of guesswork.":
     "先完成一次 canonical run，再到任务中心确认结果，之后才打开模板复用、AI 重建或 MCP 侧路。这套产品面向 AI agents、Codex、Claude Code、OpenHands、OpenCode、OpenClaw，以及需要可检查运行证据的人工操作员。",

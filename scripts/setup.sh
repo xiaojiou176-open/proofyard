@@ -38,7 +38,7 @@ fi
 # install through the workspace root instead of pretending apps/web is isolated.
 CI="${CI:-true}" pnpm install --frozen-lockfile || CI="${CI:-true}" pnpm install --no-frozen-lockfile
 
-CI="${CI:-true}" pnpm --filter @proofyard/automation-runner exec playwright install chromium
+CI="${CI:-true}" pnpm --filter @webaudit/automation-runner exec playwright install chromium
 
 if command -v pre-commit >/dev/null 2>&1; then
   bash scripts/install-hooks.sh

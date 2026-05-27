@@ -75,6 +75,6 @@ describe("useAppStore runtime defaults", () => {
       setLocale?.("zh-CN")
     })
 
-    expect(localStorage.getItem("proofyard_locale")).toBe("zh-CN")
+    expect(localStorage.getItem("webaudit_locale")).toBe("zh-CN")
   })
 })

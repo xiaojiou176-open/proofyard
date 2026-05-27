@@ -102,7 +102,7 @@ pnpm public:artifacts:check
 echo "[security 11/14] python dependency audit"
 mkdir -p .runtime-cache/security
 REQ_FILE=".runtime-cache/security/pip-freeze.txt"
-uv pip freeze --python "$(project_python_bin)" | grep -Ev '^(#|-e )|^proofyard==' > "$REQ_FILE"
+uv pip freeze --python "$(project_python_bin)" | grep -Ev '^(#|-e )|^webaudit==' > "$REQ_FILE"
 
 PYTHON_AUDIT_EXCEPTIONS_FILE="configs/security/python-audit-exceptions.json"
 PYTHON_AUDIT_IGNORE_FILE=".runtime-cache/security/python-audit-ignore.txt"

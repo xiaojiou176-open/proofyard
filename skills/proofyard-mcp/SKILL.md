@@ -1,25 +1,25 @@
 ---
-name: proofyard-mcp
-description: Teach an agent to install Proofyard's governed stdio MCP server, use the safest read and proof tools first, and keep future package or listing claims honest.
+name: webaudit-mcp
+description: Teach an agent to install Webaudit's governed stdio MCP server, use the safest read and proof tools first, and keep future package or listing claims honest.
 author: xiaojiou176
 version: "0.1.1"
 tags:
   - mcp
   - browser-evidence
   - recovery
-  - proofyard
+  - webaudit
   - local-first
 triggers:
-  - proofyard
-  - proofyard mcp
+  - webaudit
+  - webaudit mcp
   - browser evidence
   - governed recovery
   - uiq proof
 ---
 
-# Proofyard MCP Skill
+# Webaudit MCP Skill
 
-Teach the agent how to install, connect, and use Proofyard's governed MCP
+Teach the agent how to install, connect, and use Webaudit's governed MCP
 surface as a browser-evidence and recovery layer.
 
 ## Use this skill when
@@ -31,15 +31,15 @@ surface as a browser-evidence and recovery layer.
 
 ## What this package teaches
 
-- how to launch Proofyard's current repo-native MCP server
-- how to choose the safest Proofyard tool families first
+- how to launch Webaudit's current repo-native MCP server
+- how to choose the safest Webaudit tool families first
 - how to move from catalog and read tools into governed run or proof tools
 - how to talk about future npm, Docker, or registry surfaces without
   overclaiming publication
 
-## What Proofyard is
+## What Webaudit is
 
-Proofyard is an evidence-first browser automation and recovery layer.
+Webaudit is an evidence-first browser automation and recovery layer.
 
 It helps AI agents and human operators:
 
@@ -70,7 +70,7 @@ It helps AI agents and human operators:
 
 ## Suggested first prompt
 
-Use Proofyard as a governed browser-evidence layer. Start with `uiq_catalog`
+Use Webaudit as a governed browser-evidence layer. Start with `uiq_catalog`
 to confirm the MCP surface is attached. Then use `uiq_read` or
 `uiq_quality_read` to inspect one existing run or failure surface. If a real run
 is already present, follow with `uiq_proof` or `uiq_run_and_report` to show the
@@ -80,7 +80,7 @@ retained evidence and summarize the most important next action.
 
 Current install path:
 
-1. clone the Proofyard repo
+1. clone the Webaudit repo
 2. run `pnpm install`
 3. point your MCP client at the repo-local stdio command
 4. start the MCP bridge with `pnpm mcp:start`
@@ -91,9 +91,9 @@ Protocol and auth truth:
 
 ## Live public discovery lane
 
-- the ClawHub page at `https://clawhub.ai/skills/proofyard-mcp` is live
+- the ClawHub page at `https://clawhub.ai/skills/webaudit-mcp` is live
 - that page is a public discovery page for this repo-owned skill packet
-- it does **not** turn Proofyard into a hosted MCP endpoint, official plugin,
+- it does **not** turn Webaudit into a hosted MCP endpoint, official plugin,
   or generic cross-host skill-registry publication
 
 ## Repo-owned packet and review lanes
@@ -113,8 +113,8 @@ Protocol and auth truth:
 
 The following install surfaces are planned and not yet published:
 
-- npm package: `@proofyard/mcp-server`
-- Docker image: `ghcr.io/xiaojiou176-open/proofyard-mcp-server:0.1.1`
+- npm package: `@webaudit/mcp-server`
+- Docker image: `ghcr.io/xiaojiou176-open/webaudit-mcp-server:0.1.1`
 
 Do not describe either surface as live until the package or image is actually
 published.
@@ -129,11 +129,11 @@ published.
 ## Boundaries
 
 - this packet is not an official plugin
-- Proofyard is not a hosted service
-- Proofyard is not a hosted SaaS service
-- Proofyard is not a hosted MCP endpoint
+- Webaudit is not a hosted service
+- Webaudit is not a hosted SaaS service
+- Webaudit is not a hosted MCP endpoint
 - this packet may appear as a live ClawHub skill page, but that does not turn
-  Proofyard into an official plugin or hosted MCP endpoint
+  Webaudit into an official plugin or hosted MCP endpoint
 - this packet does not claim a live OpenHands/extensions listing
 - this packet does not claim a live Goose, agent-skill.co, or awesome-opencode
   listing without fresh read-back

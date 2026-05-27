@@ -1,15 +1,15 @@
-# Proofyard for AI Agents
+# Webaudit for AI Agents
 
-Proofyard matters to AI-agent builders for one practical reason:
+Webaudit matters to AI-agent builders for one practical reason:
 
 > it gives an agent stack a governed browser execution layer with retained
 > evidence, guided recovery, and MCP, instead of only a one-shot browser bot.
 
-This page is intentionally narrow. It does **not** claim that Proofyard is a
+This page is intentionally narrow. It does **not** claim that Webaudit is a
 generic AI agent platform. It explains why an AI-agent team would still care
 about this repo.
 
-It is also the right page when your team is evaluating Proofyard as the
+It is also the right page when your team is evaluating Webaudit as the
 browser-evidence layer behind Codex, Claude Code, OpenHands, OpenCode,
 OpenClaw, or another AI-agent shell.
 
@@ -19,7 +19,7 @@ You are trying to answer one of these questions:
 
 - how can an AI agent use browser automation without losing proof?
 - where does MCP fit if the browser layer still needs retained evidence?
-- why would I use Proofyard instead of wiring a raw browser bot into my agent
+- why would I use Webaudit instead of wiring a raw browser bot into my agent
   loop?
 
 This page is also the right landing page if your search sounded like:
@@ -33,7 +33,7 @@ This page is also the right landing page if your search sounded like:
 - `MCP browser automation for AI agents`
 
 If that is your exact search intent, continue with
-[Proofyard for Coding Agents and Agent Ecosystems](proofyard-for-coding-agents.md)
+[Webaudit for Coding Agents and Agent Ecosystems](webaudit-for-coding-agents.md)
 after this page.
 
 If you are still asking "can this repo produce one truthful baseline run at
@@ -45,7 +45,7 @@ all?", start with the canonical evaluation path first:
 
 ## What an AI agent actually gets here
 
-AI agents do not get a magic autonomy shell from Proofyard.
+AI agents do not get a magic autonomy shell from Webaudit.
 
 They get four concrete things:
 
@@ -57,35 +57,35 @@ They get four concrete things:
 3. **Recovery and review surfaces**
    - explain, share, compare, and review the run before widening handoff
 4. **A governed MCP road**
-   - let an external AI client consume tools without turning Proofyard into a
+   - let an external AI client consume tools without turning Webaudit into a
      hidden second backend
 
 ## If you are using coding-agent or agent-stack workflows
 
-Proofyard does **not** claim a dedicated first-class Codex integration or a
+Webaudit does **not** claim a dedicated first-class Codex integration or a
 Claude-only runtime, and it does not claim first-party OpenHands, OpenCode, or
 OpenClaw adapters either.
 
 The truthful fit is narrower and still useful:
 
-- a coding agent plans and reasons outside Proofyard
-- Proofyard handles browser execution, retained evidence, and recovery
+- a coding agent plans and reasons outside Webaudit
+- Webaudit handles browser execution, retained evidence, and recovery
 - the same system can be consumed through either API or MCP
 
 That means the most honest search-intent mapping is:
 
 | If you searched for... | The truthful fit here |
 | --- | --- |
-| browser automation for Codex | Proofyard can be the browser-evidence layer behind a Codex-style agent loop |
-| browser automation for Claude Code | Proofyard can be the browser execution and evidence layer behind Claude Code style workflows |
-| browser automation for OpenHands | Proofyard can sit behind an OpenHands-style runtime as the browser-evidence and recovery subsystem |
-| browser automation for OpenCode | Proofyard can provide a governed browser tool layer beneath an OpenCode-style shell |
-| browser automation for OpenClaw | Proofyard can act as the browser workflow backend behind an OpenClaw-style gateway or tool router |
-| MCP server for coding agents | Proofyard exposes a governed MCP surface on top of the same backend and artifacts |
-| browser automation API for AI agents | Proofyard exposes a contract-first API for direct integration |
+| browser automation for Codex | Webaudit can be the browser-evidence layer behind a Codex-style agent loop |
+| browser automation for Claude Code | Webaudit can be the browser execution and evidence layer behind Claude Code style workflows |
+| browser automation for OpenHands | Webaudit can sit behind an OpenHands-style runtime as the browser-evidence and recovery subsystem |
+| browser automation for OpenCode | Webaudit can provide a governed browser tool layer beneath an OpenCode-style shell |
+| browser automation for OpenClaw | Webaudit can act as the browser workflow backend behind an OpenClaw-style gateway or tool router |
+| MCP server for coding agents | Webaudit exposes a governed MCP surface on top of the same backend and artifacts |
+| browser automation API for AI agents | Webaudit exposes a contract-first API for direct integration |
 
 This is a strong fit for **Codex-, Claude Code-, OpenHands-, OpenCode-, and
-OpenClaw-style agent stacks** without pretending that Proofyard is the whole
+OpenClaw-style agent stacks** without pretending that Webaudit is the whole
 coding agent.
 
 That combination matters because most agent systems eventually hit the same
@@ -126,24 +126,24 @@ Many builders land here with a very direct search intent:
 
 The truthful answer is:
 
-- yes, Proofyard can fit those workflows well
-- no, Proofyard is not claiming an official Codex integration
-- no, Proofyard is not claiming an official Claude Code integration
-- no, Proofyard is not claiming official OpenHands, OpenCode, or OpenClaw integrations
-- yes, Proofyard can still be the browser-execution, retained-evidence, and
+- yes, Webaudit can fit those workflows well
+- no, Webaudit is not claiming an official Codex integration
+- no, Webaudit is not claiming an official Claude Code integration
+- no, Webaudit is not claiming official OpenHands, OpenCode, or OpenClaw integrations
+- yes, Webaudit can still be the browser-execution, retained-evidence, and
   governed MCP/API layer underneath those agent shells
 
 That means the practical fit is:
 
 - **Codex, Claude Code, OpenHands, OpenCode, or OpenClaw as the outer shell**
-- **Proofyard as the browser-evidence and recovery substrate**
+- **Webaudit as the browser-evidence and recovery substrate**
 
 If you need a vendor-specific plugin or a generic AI copilot shell, this repo is
 not pretending to be that.
 
 ## The category fit in one paragraph
 
-Proofyard is not trying to beat generic browser agents at open-ended roaming.
+Webaudit is not trying to beat generic browser agents at open-ended roaming.
 
 It is trying to win on:
 
@@ -184,12 +184,12 @@ REST calls.
 The role split stays clean:
 
 - the agent shell stays external
-- Proofyard stays the browser, evidence, and recovery layer
+- Webaudit stays the browser, evidence, and recovery layer
 
 Continue here:
 
 - [MCP for Browser Automation](mcp-quickstart-1pager.md)
-- [Proofyard MCP Server README](../../apps/mcp-server/README.md)
+- [Webaudit MCP Server README](../../apps/mcp-server/README.md)
 
 ### 3. AI reconstruction after artifacts exist
 
@@ -208,19 +208,19 @@ Continue here:
 
 ## Where this fits in a real agent stack
 
-Proofyard fits best as the browser execution and evidence layer inside a
+Webaudit fits best as the browser execution and evidence layer inside a
 larger system.
 
 Think of the stack like this:
 
-| Layer | What stays outside Proofyard | What Proofyard contributes |
+| Layer | What stays outside Webaudit | What Webaudit contributes |
 | --- | --- | --- |
 | Agent shell | planning, tool choice, multi-step reasoning | governed browser-facing capability |
 | Browser execution | raw browser scripts or helper-only replay | canonical run lane and retained evidence |
 | Recovery and judgment | ad-hoc human debugging | explain, share, compare, and review packet surfaces |
 | Integration | direct tool consumption by external AI clients | MCP surface over the same trusted backend and evidence model |
 
-This is why Proofyard can matter to AI agents without claiming to be the whole
+This is why Webaudit can matter to AI agents without claiming to be the whole
 agent platform.
 
 ## Builder path after the audience fit is clear
@@ -247,7 +247,7 @@ repo reality:
 3. [Evidence, Recovery, and Review Workspace](evidence-recovery-review-workspace.md)
 4. [MCP for Browser Automation](mcp-quickstart-1pager.md)
 5. [AI Reconstruction Side Road](ai-reconstruction-side-road.md)
-6. [Proofyard vs Generic Browser Agents](../compare/proofyard-vs-generic-browser-agents.md)
+6. [Webaudit vs Generic Browser Agents](../compare/webaudit-vs-generic-browser-agents.md)
 
 ## Honest boundary
 

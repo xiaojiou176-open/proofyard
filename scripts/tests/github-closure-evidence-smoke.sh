@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
-tmp_dir="$(mktemp -d "${TMPDIR:-/tmp}/proofyard-github-closure-XXXXXX")"
+tmp_dir="$(mktemp -d "${TMPDIR:-/tmp}/webaudit-github-closure-XXXXXX")"
 trap 'rm -rf "$tmp_dir"' EXIT
 
 fake_bin="$tmp_dir/bin"
@@ -24,9 +24,9 @@ endpoint="$1"
 shift || true
 
 case "$endpoint" in
-  repos/xiaojiou176-open/proofyard)
+  repos/xiaojiou176-open/webaudit)
     cat <<'JSON'
-{"name":"proofyard","description":"Evidence-first browser automation for AI agents and operators, with recovery and MCP.","homepage":"https://github.com/xiaojiou176-open/proofyard/blob/main/docs/index.md","has_discussions":true,"topics":["ai-agents","coding-agents","codex","browser-automation","developer-tools","e2e-testing","fastapi","mcp","model-context-protocol","openapi","playwright","reproducibility","workflow-automation"],"default_branch":"main","open_issues_count":0,"owner":{"login":"xiaojiou176-open","type":"Organization"}}
+{"name":"webaudit","description":"Evidence-first browser automation for AI agents and operators, with recovery and MCP.","homepage":"https://github.com/xiaojiou176-open/webaudit/blob/main/docs/index.md","has_discussions":true,"topics":["ai-agents","coding-agents","codex","browser-automation","developer-tools","e2e-testing","fastapi","mcp","model-context-protocol","openapi","playwright","reproducibility","workflow-automation"],"default_branch":"main","open_issues_count":0,"owner":{"login":"xiaojiou176-open","type":"Organization"}}
 JSON
     ;;
   orgs/xiaojiou176-open)
@@ -34,7 +34,7 @@ JSON
 {"login":"xiaojiou176-open","plan":{"name":"free"}}
 JSON
     ;;
-  repos/xiaojiou176-open/proofyard/releases)
+  repos/xiaojiou176-open/webaudit/releases)
     if [[ "${1:-}" == "--jq" ]]; then
       echo "1"
     else
@@ -43,18 +43,18 @@ JSON
 JSON
     fi
     ;;
-  repos/xiaojiou176-open/proofyard/community/profile)
+  repos/xiaojiou176-open/webaudit/community/profile)
     cat <<'JSON'
 {"health_percentage":87,"content_reports_enabled":false,"files":{"issue_template":{"url":"https://example.com/issue-template"},"pull_request_template":{"url":"https://example.com/pr-template"},"readme":{"url":"https://example.com/readme"},"license":{"url":"https://example.com/license"},"contributing":{"url":"https://example.com/contributing"},"code_of_conduct":{"url":"https://example.com/coc"}}}
 JSON
     ;;
-  "repos/xiaojiou176-open/proofyard/code-scanning/alerts?state=open")
+  "repos/xiaojiou176-open/webaudit/code-scanning/alerts?state=open")
     echo "0"
     ;;
-  "repos/xiaojiou176-open/proofyard/secret-scanning/alerts?state=open")
+  "repos/xiaojiou176-open/webaudit/secret-scanning/alerts?state=open")
     echo "0"
     ;;
-  "repos/xiaojiou176-open/proofyard/dependabot/alerts?state=open")
+  "repos/xiaojiou176-open/webaudit/dependabot/alerts?state=open")
     echo "0"
     ;;
   *)
@@ -95,7 +95,7 @@ assert section["checked_at"]
 assert section["evidence"] == ["screenshots/github-social-preview.png"]
 PY
 
-storefront_output="$(PATH="$fake_bin:$PATH" bash scripts/github/check-storefront-settings.sh --json xiaojiou176-open/proofyard)"
+storefront_output="$(PATH="$fake_bin:$PATH" bash scripts/github/check-storefront-settings.sh --json xiaojiou176-open/webaudit)"
 STORE="$storefront_output" python3 - <<'PY'
 import json, os
 payload = json.loads(os.environ["STORE"])
@@ -105,7 +105,7 @@ assert payload["checks"]["community_profile"]["status"] == "manual_required"
 assert payload["checks"]["community_profile"]["classification"] == "platform_setting_required"
 PY
 
-report_output="$(PATH="$fake_bin:$PATH" python3 -B scripts/github/collect-closure-evidence.py --repo xiaojiou176-open/proofyard)"
+report_output="$(PATH="$fake_bin:$PATH" python3 -B scripts/github/collect-closure-evidence.py --repo xiaojiou176-open/webaudit)"
 REPORT="$report_output" python3 - <<'PY'
 import json, os
 payload = json.loads(os.environ["REPORT"])
@@ -135,9 +135,9 @@ endpoint="$1"
 shift || true
 
 case "$endpoint" in
-  repos/xiaojiou176-open/proofyard)
+  repos/xiaojiou176-open/webaudit)
     cat <<'JSON'
-{"name":"proofyard","description":"Evidence-first browser automation for AI agents and operators, with recovery and MCP.","homepage":"https://github.com/xiaojiou176-open/proofyard/blob/main/docs/index.md","has_discussions":true,"topics":["ai-agents","coding-agents","codex","browser-automation","developer-tools","e2e-testing","fastapi","mcp","model-context-protocol","openapi","playwright","reproducibility","workflow-automation"],"default_branch":"main","open_issues_count":0,"owner":{"login":"xiaojiou176-open","type":"Organization"}}
+{"name":"webaudit","description":"Evidence-first browser automation for AI agents and operators, with recovery and MCP.","homepage":"https://github.com/xiaojiou176-open/webaudit/blob/main/docs/index.md","has_discussions":true,"topics":["ai-agents","coding-agents","codex","browser-automation","developer-tools","e2e-testing","fastapi","mcp","model-context-protocol","openapi","playwright","reproducibility","workflow-automation"],"default_branch":"main","open_issues_count":0,"owner":{"login":"xiaojiou176-open","type":"Organization"}}
 JSON
     ;;
   orgs/xiaojiou176-open)
@@ -145,7 +145,7 @@ JSON
 {"login":"xiaojiou176-open","plan":{"name":"free"}}
 JSON
     ;;
-  repos/xiaojiou176-open/proofyard/releases)
+  repos/xiaojiou176-open/webaudit/releases)
     if [[ "${1:-}" == "--jq" ]]; then
       echo "1"
     else
@@ -154,18 +154,18 @@ JSON
 JSON
     fi
     ;;
-  repos/xiaojiou176-open/proofyard/community/profile)
+  repos/xiaojiou176-open/webaudit/community/profile)
     cat <<'JSON'
 {"health_percentage":100,"content_reports_enabled":true,"files":{"issue_template":{"url":"https://example.com/issue-template"},"pull_request_template":{"url":"https://example.com/pr-template"},"readme":{"url":"https://example.com/readme"},"license":{"url":"https://example.com/license"},"contributing":{"url":"https://example.com/contributing"},"code_of_conduct":{"url":"https://example.com/coc"}}}
 JSON
     ;;
-  "repos/xiaojiou176-open/proofyard/code-scanning/alerts?state=open")
+  "repos/xiaojiou176-open/webaudit/code-scanning/alerts?state=open")
     echo "0"
     ;;
-  "repos/xiaojiou176-open/proofyard/secret-scanning/alerts?state=open")
+  "repos/xiaojiou176-open/webaudit/secret-scanning/alerts?state=open")
     echo "0"
     ;;
-  "repos/xiaojiou176-open/proofyard/dependabot/alerts?state=open")
+  "repos/xiaojiou176-open/webaudit/dependabot/alerts?state=open")
     echo "0"
     ;;
   *)
@@ -176,7 +176,7 @@ esac
 EOF
 chmod +x "$tmp_dir/manual/gh"
 
-pass_output="$(PATH="$tmp_dir/manual:$PATH" python3 -B scripts/github/collect-closure-evidence.py --repo xiaojiou176-open/proofyard)"
+pass_output="$(PATH="$tmp_dir/manual:$PATH" python3 -B scripts/github/collect-closure-evidence.py --repo xiaojiou176-open/webaudit)"
 PASS_REPORT="$pass_output" python3 - <<'PY'
 import json, os
 payload = json.loads(os.environ["PASS_REPORT"])
@@ -206,7 +206,7 @@ cat > "$manual_evidence_path" <<'JSON'
 }
 JSON
 
-resolved_output="$(PATH="$tmp_dir/manual:$PATH" python3 -B scripts/github/collect-closure-evidence.py --repo xiaojiou176-open/proofyard --manual-evidence "$manual_evidence_path")"
+resolved_output="$(PATH="$tmp_dir/manual:$PATH" python3 -B scripts/github/collect-closure-evidence.py --repo xiaojiou176-open/webaudit --manual-evidence "$manual_evidence_path")"
 RESOLVED_REPORT="$resolved_output" python3 - <<'PY'
 import json, os
 payload = json.loads(os.environ["RESOLVED_REPORT"])
@@ -230,7 +230,7 @@ cat > "$invalid_manual_evidence_path" <<'JSON'
 }
 JSON
 
-invalid_output="$(PATH="$tmp_dir/manual:$PATH" python3 -B scripts/github/collect-closure-evidence.py --repo xiaojiou176-open/proofyard --manual-evidence "$invalid_manual_evidence_path")"
+invalid_output="$(PATH="$tmp_dir/manual:$PATH" python3 -B scripts/github/collect-closure-evidence.py --repo xiaojiou176-open/webaudit --manual-evidence "$invalid_manual_evidence_path")"
 INVALID_REPORT="$invalid_output" python3 - <<'PY'
 import json, os
 payload = json.loads(os.environ["INVALID_REPORT"])
@@ -254,9 +254,9 @@ endpoint="$1"
 shift || true
 
 case "$endpoint" in
-  repos/xiaojiou176-open/proofyard)
+  repos/xiaojiou176-open/webaudit)
     cat <<'JSON'
-{"name":"proofyard","description":"Evidence-first browser automation for AI agents and operators, with recovery and MCP.","homepage":"https://github.com/xiaojiou176-open/proofyard/blob/main/docs/index.md","has_discussions":true,"topics":["ai-agents","coding-agents","codex","browser-automation","developer-tools","e2e-testing","fastapi","mcp","model-context-protocol","openapi","playwright","reproducibility","workflow-automation"],"default_branch":"main","open_issues_count":0,"owner":{"login":"xiaojiou176-open","type":"Organization"}}
+{"name":"webaudit","description":"Evidence-first browser automation for AI agents and operators, with recovery and MCP.","homepage":"https://github.com/xiaojiou176-open/webaudit/blob/main/docs/index.md","has_discussions":true,"topics":["ai-agents","coding-agents","codex","browser-automation","developer-tools","e2e-testing","fastapi","mcp","model-context-protocol","openapi","playwright","reproducibility","workflow-automation"],"default_branch":"main","open_issues_count":0,"owner":{"login":"xiaojiou176-open","type":"Organization"}}
 JSON
     ;;
   orgs/xiaojiou176-open)
@@ -264,7 +264,7 @@ JSON
 {"login":"xiaojiou176-open","plan":{}}
 JSON
     ;;
-  repos/xiaojiou176-open/proofyard/releases)
+  repos/xiaojiou176-open/webaudit/releases)
     if [[ "${1:-}" == "--jq" ]]; then
       echo "1"
     else
@@ -273,18 +273,18 @@ JSON
 JSON
     fi
     ;;
-  repos/xiaojiou176-open/proofyard/community/profile)
+  repos/xiaojiou176-open/webaudit/community/profile)
     cat <<'JSON'
 {"health_percentage":100,"content_reports_enabled":true,"files":{"issue_template":{"url":"https://example.com/issue-template"},"pull_request_template":{"url":"https://example.com/pr-template"},"readme":{"url":"https://example.com/readme"},"license":{"url":"https://example.com/license"},"contributing":{"url":"https://example.com/contributing"},"code_of_conduct":{"url":"https://example.com/coc"}}}
 JSON
     ;;
-  "repos/xiaojiou176-open/proofyard/code-scanning/alerts?state=open")
+  "repos/xiaojiou176-open/webaudit/code-scanning/alerts?state=open")
     echo "0"
     ;;
-  "repos/xiaojiou176-open/proofyard/secret-scanning/alerts?state=open")
+  "repos/xiaojiou176-open/webaudit/secret-scanning/alerts?state=open")
     echo "0"
     ;;
-  "repos/xiaojiou176-open/proofyard/dependabot/alerts?state=open")
+  "repos/xiaojiou176-open/webaudit/dependabot/alerts?state=open")
     echo "0"
     ;;
   *)
@@ -295,7 +295,7 @@ esac
 EOF
 chmod +x "$tmp_dir/missing-plan/gh"
 
-missing_plan_output="$(PATH="$tmp_dir/missing-plan:$PATH" python3 -B scripts/github/collect-closure-evidence.py --repo xiaojiou176-open/proofyard)"
+missing_plan_output="$(PATH="$tmp_dir/missing-plan:$PATH" python3 -B scripts/github/collect-closure-evidence.py --repo xiaojiou176-open/webaudit)"
 MISSING_PLAN_REPORT="$missing_plan_output" python3 - <<'PY'
 import json, os
 payload = json.loads(os.environ["MISSING_PLAN_REPORT"])
