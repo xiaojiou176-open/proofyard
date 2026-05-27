@@ -1,0 +1,131 @@
+name: Workspace Sanitize
+description: Guard workspace paths and keep tool/tmp state out of the checkout directory.
+inputs:
+  mode:
+    description: pre or post
+    required: false
+    default: pre
+runs:
+  using: composite
+  steps:
+    - name: Sanitize workspace
+      env:
+        INPUT_MODE: ${{ inputs.mode }}
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        mode="$INPUT_MODE"
+        workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+        runner_temp="${RUNNER_TEMP:?RUNNER_TEMP is required}"
+        home_dir="${HOME:-}"
+        have_passwordless_sudo() {
+          command -v sudo >/dev/null 2>&1 && sudo -n true >/dev/null 2>&1
+        }
+
+        assert_safe_path() {
+          local label="$1"
+          local path_value="$2"
+          if [[ -z "$path_value" ]]; then
+            echo "::error::${label} is empty"
+            exit 1
+          fi
+          case "$path_value" in
+            /|/.|/..)
+              echo "::error::refusing dangerous ${label}: $path_value"
+              exit 1
+              ;;
+          esac
+          if [[ "$path_value" == "$home_dir" ]]; then
+            echo "::error::refusing ${label} equal to HOME: $path_value"
+            exit 1
+          fi
+        }
+
+        assert_safe_path "workspace" "$workspace"
+        assert_safe_path "runner temp" "$runner_temp"
+
+        tool_cache_dir="$runner_temp/toolcache"
+        tmp_dir="$runner_temp/tmp"
+        precommit_home="$runner_temp/pre-commit"
+        sanitize_tmp_dir="$runner_temp/workspace-sanitize"
+        playwright_cache_dir="$runner_temp/ms-playwright"
+        uv_home_cache="${home_dir}/.cache/uv"
+
+        free_kb() {
+          df -Pk "$runner_temp" | awk 'NR==2 { print $4 }'
+        }
+
+        cleanup_dir_if_present() {
+          local path_value="$1"
+          if [[ -e "$path_value" ]]; then
+            rm -rf -- "$path_value" || true
+          fi
+        }
+
+        write_env_var() {
+          local key="$1"
+          local value="$2"
+          local marker="EOF_${key}_$(date +%s%N)"
+          {
+            printf '%s<<%s\n' "$key" "$marker"
+            printf '%s\n' "$value"
+            printf '%s\n' "$marker"
+          } >> "$GITHUB_ENV"
+        }
+
+        case "$mode" in
+          pre)
+            mkdir -p \
+              "$tool_cache_dir" \
+              "$tmp_dir" \
+              "$playwright_cache_dir" \
+              "$precommit_home" \
+              "$sanitize_tmp_dir"
+            if have_passwordless_sudo; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+            fi
+            free_before_kb="$(free_kb)"
+            if [[ "$free_before_kb" =~ ^[0-9]+$ ]] && (( free_before_kb < 2097152 )); then
+              echo "::warning::low disk detected before job (${free_before_kb} KB free); pruning transient caches"
+              cleanup_dir_if_present "$playwright_cache_dir"
+              cleanup_dir_if_present "$tmp_dir"
+              cleanup_dir_if_present "$precommit_home"
+              cleanup_dir_if_present "$sanitize_tmp_dir"
+              cleanup_dir_if_present "$uv_home_cache"
+              if command -v docker >/dev/null 2>&1; then
+                docker system prune -af --volumes >/dev/null 2>&1 || true
+              fi
+              mkdir -p \
+                "$tool_cache_dir" \
+                "$tmp_dir" \
+                "$playwright_cache_dir" \
+                "$precommit_home" \
+                "$sanitize_tmp_dir"
+            fi
+            {
+              write_env_var "RUNNER_TOOL_CACHE" "$tool_cache_dir"
+              write_env_var "AGENT_TOOLSDIRECTORY" "$tool_cache_dir"
+              write_env_var "TMPDIR" "$tmp_dir"
+              write_env_var "TMP" "$tmp_dir"
+              write_env_var "TEMP" "$tmp_dir"
+              write_env_var "PRE_COMMIT_HOME" "$precommit_home"
+              write_env_var "PLAYWRIGHT_BROWSERS_PATH" "$playwright_cache_dir"
+            }
+            ;;
+          post)
+            cleanup_paths=(
+              "$sanitize_tmp_dir"
+              "$tmp_dir"
+              "$precommit_home"
+              "$playwright_cache_dir"
+            )
+            for path_value in "${cleanup_paths[@]}"; do
+              cleanup_dir_if_present "$path_value"
+            done
+            ;;
+          *)
+            echo "::error::unsupported workspace sanitize mode: $mode"
+            exit 1
+            ;;
+        esac

@@ -1,0 +1,637 @@
+name: PR Gate
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-gate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+      automation: ${{ steps.filter.outputs.automation }}
+      docs: ${{ steps.filter.outputs.docs }}
+      apps: ${{ steps.filter.outputs.apps }}
+      packages: ${{ steps.filter.outputs.packages }}
+      scripts: ${{ steps.filter.outputs.scripts }}
+      shared: ${{ steps.filter.outputs.shared }}
+      ci: ${{ steps.filter.outputs.ci }}
+      is_untrusted_fork: ${{ steps.runner_lane.outputs.is_untrusted_fork }}
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - id: filter
+        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3
+        with:
+          filters: |
+            ci:
+              - '.github/workflows/**'
+            backend:
+              - 'apps/api/**'
+            frontend:
+              - 'apps/web/**'
+            automation:
+              - 'apps/automation-runner/**'
+            docs:
+              - 'docs/**'
+              - '**/*.md'
+              - '**/*.mdx'
+              - 'AGENTS.md'
+              - 'CLAUDE.md'
+              - 'apps/api/AGENTS.md'
+              - 'apps/api/CLAUDE.md'
+              - 'apps/web/AGENTS.md'
+              - 'apps/web/CLAUDE.md'
+              - 'apps/automation-runner/AGENTS.md'
+              - 'apps/automation-runner/CLAUDE.md'
+              - 'apps/AGENTS.md'
+              - 'apps/CLAUDE.md'
+              - 'packages/AGENTS.md'
+              - 'packages/CLAUDE.md'
+            apps:
+              - 'apps/**'
+            packages:
+              - 'packages/**'
+            scripts:
+              - 'scripts/**'
+            shared:
+              - 'pnpm-lock.yaml'
+              - 'package.json'
+              - 'pnpm-workspace.yaml'
+              - 'pyproject.toml'
+              - 'uv.lock'
+              - 'apps/api/alembic.ini'
+      - name: Resolve PR trust boundary
+        id: runner_lane
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" != "pull_request" ]]; then
+            echo 'is_untrusted_fork=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [[ "${{ github.event.pull_request.head.repo.fork }}" == "true" ]]; then
+            echo 'is_untrusted_fork=true' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo 'is_untrusted_fork=false' >> "$GITHUB_OUTPUT"
+
+  dependency-review:
+    needs: changes
+    if: ${{ github.event_name == 'pull_request' && needs.changes.outputs.is_untrusted_fork != 'true' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - name: Check dependency graph support
+        id: dep_graph
+        shell: bash
+        run: |
+          set -euo pipefail
+          if curl -fsS \
+            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/dependency-graph/sbom" \
+            >/dev/null; then
+            echo "supported=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::dependency graph unsupported on this repository; skipping dependency review"
+            echo "supported=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Dependency review
+        if: ${{ steps.dep_graph.outputs.supported == 'true' }}
+        uses: actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48 # v4.9.0
+
+  build_ci_image:
+    needs: changes
+    if: ${{ needs.changes.outputs.is_untrusted_fork != 'true' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image_ref: ${{ steps.build_ref_only.outputs.image_ref || steps.build.outputs.image_ref }}
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - name: Resolve repo-owned CI image ref without push for canonical owner
+        if: ${{ github.repository_owner == 'xiaojiou176-open' }}
+        id: build_ref_only
+        run: |
+          set -euo pipefail
+          image_ref="$(bash scripts/ci/build-ci-image.sh --print-ref)"
+          echo "image_ref=${image_ref}" >> "$GITHUB_OUTPUT"
+      - name: Login to GHCR
+        if: ${{ github.repository_owner != 'xiaojiou176-open' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUNNER_TEMP: ${{ runner.temp }}
+        run: |
+          set -euo pipefail
+          export HOME="${RUNNER_TEMP}/docker-home"
+          export DOCKER_CONFIG="${HOME}/.docker"
+          mkdir -p "${HOME}"
+          mkdir -p "${DOCKER_CONFIG}"
+          printf '%s\n' '{"auths":{},"credsStore":"","credHelpers":{}}' > "${DOCKER_CONFIG}/config.json"
+          printf '%s' "$GITHUB_TOKEN" | docker login ghcr.io -u "${GITHUB_ACTOR}" --password-stdin
+      - name: Build repo-owned CI image
+        id: build
+        if: ${{ github.repository_owner != 'xiaojiou176-open' }}
+        env:
+          RUNNER_TEMP: ${{ runner.temp }}
+        run: |
+          set -euo pipefail
+          export HOME="${RUNNER_TEMP}/docker-home"
+          export DOCKER_CONFIG="${HOME}/.docker"
+          image_ref="$(bash scripts/ci/build-ci-image.sh --push | tail -n 1)"
+          echo "image_ref=${image_ref}" >> "$GITHUB_OUTPUT"
+
+  pr-lint-backend:
+    needs: [changes, build_ci_image]
+    if: ${{ needs.changes.outputs.is_untrusted_fork != 'true' && (github.event_name == 'workflow_dispatch' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.shared == 'true' || needs.changes.outputs.ci == 'true') }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      - name: Backend lint (ruff)
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/ci/run-in-container.sh --task backend-lint --gate pr-backend-lint
+
+  pr-lint-frontend:
+    needs: [changes, build_ci_image]
+    if: ${{ needs.changes.outputs.is_untrusted_fork != 'true' && (github.event_name == 'workflow_dispatch' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.automation == 'true' || needs.changes.outputs.shared == 'true' || needs.changes.outputs.ci == 'true') }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      - name: Frontend + automation lint
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/ci/run-in-container.sh --task pr-lint-frontend --gate pr-frontend-lint
+
+  openai-residue-gate:
+    needs: changes
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - name: OpenAI residue hard gate
+        run: bash scripts/ci/gate-openai-residue.sh
+
+  pr-gitleaks-history:
+    needs: changes
+    if: ${{ needs.changes.outputs.is_untrusted_fork != 'true' && (github.event_name == 'workflow_dispatch' || needs.changes.outputs.docs == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.automation == 'true' || needs.changes.outputs.apps == 'true' || needs.changes.outputs.packages == 'true' || needs.changes.outputs.scripts == 'true' || needs.changes.outputs.shared == 'true' || needs.changes.outputs.ci == 'true') }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - name: Gitleaks history gate
+        run: bash scripts/ci/gitleaks-history-gate.sh
+      - name: Upload gitleaks history artifact
+        if: ${{ always() }}
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: uiq-pr-gitleaks-history
+          path: .runtime-cache/artifacts/ci/gitleaks-history.json
+          retention-days: 7
+          if-no-files-found: warn
+
+  pr-trivy-fs:
+    needs: changes
+    if: ${{ needs.changes.outputs.is_untrusted_fork != 'true' && (github.event_name == 'workflow_dispatch' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.automation == 'true' || needs.changes.outputs.apps == 'true' || needs.changes.outputs.packages == 'true' || needs.changes.outputs.shared == 'true' || needs.changes.outputs.ci == 'true') }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - name: Trivy filesystem scan
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # v0.35.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: table
+          exit-code: "1"
+          ignore-unfixed: true
+          vuln-type: library
+          severity: HIGH,CRITICAL
+
+  public-readiness-deep:
+    needs: changes
+    if: ${{ github.event_name == 'workflow_dispatch' && needs.changes.outputs.is_untrusted_fork != 'true' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup-deps
+        with:
+          pnpm-cache: "false"
+          node-version: "20"
+          python-version: "3.11"
+          enable-playwright: "false"
+          uv-sync-command: uv sync --frozen --extra dev
+      - name: Public readiness deep check
+        run: pnpm public:readiness:deep-check
+
+  upstream-mode-check:
+    needs: changes
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    outputs:
+      repo_upstream_mode: ${{ steps.mode.outputs.repo_upstream_mode }}
+      repo_upstream_applicability: ${{ steps.mode.outputs.repo_upstream_applicability }}
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - name: Validate upstream mode semantics
+        id: mode
+        run: node scripts/ci/check-upstream-mode-consistency.mjs --github-output
+
+  upstream-binding-check:
+    needs: [changes, upstream-mode-check]
+    if: ${{ needs.changes.outputs.is_untrusted_fork != 'true' && github.event_name == 'workflow_dispatch' && needs.upstream-mode-check.outputs.repo_upstream_mode != 'none' }}
+    runs-on: ubuntu-24.04
+    environment: owner-approved-sensitive
+    env:
+      UIQ_UPSTREAM_REPO_URL: ${{ vars.UIQ_UPSTREAM_REPO_URL || secrets.UIQ_UPSTREAM_REPO_URL || '' }}
+      UIQ_UPSTREAM_BRANCH: ${{ vars.UIQ_UPSTREAM_BRANCH || 'main' }}
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - name: Bootstrap upstream remote binding (strict)
+        run: bash scripts/upstream/bootstrap.sh --strict
+      - name: Audit upstream remote state
+        run: |
+          set -euo pipefail
+          mkdir -p .runtime-cache/artifacts/ci
+          audit_json="$(bash scripts/git-sync-audit.sh --fetch --json --upstream-branch "${UIQ_UPSTREAM_BRANCH}")"
+          printf '%s\n' "$audit_json" > .runtime-cache/artifacts/ci/upstream-audit-pr.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          data = json.loads(Path(".runtime-cache/artifacts/ci/upstream-audit-pr.json").read_text(encoding="utf-8"))
+          upstream = data.get("upstream", {})
+          if not upstream.get("configured"):
+              raise SystemExit("upstream remote not configured after bootstrap")
+          if not upstream.get("ref_present"):
+              raise SystemExit("upstream branch ref missing after bootstrap fetch")
+          print("upstream binding audit passed")
+          PY
+
+  pr-static-gate:
+    needs: [changes, build_ci_image]
+    if: ${{ needs.changes.outputs.is_untrusted_fork != 'true' && (github.event_name == 'workflow_dispatch' || needs.changes.outputs.docs == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.automation == 'true' || needs.changes.outputs.apps == 'true' || needs.changes.outputs.packages == 'true' || needs.changes.outputs.scripts == 'true' || needs.changes.outputs.shared == 'true' || needs.changes.outputs.ci == 'true') }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - name: PR static gate
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+          UIQ_COMMITLINT_FROM: ${{ format('origin/{0}', github.base_ref) }}
+          UIQ_COMMITLINT_TO: ${{ github.sha }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/ci/run-in-container.sh --task pr-static-gate --gate pr-static-gate
+      - name: Upload test truthiness gate artifacts (always)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: uiq-pr-test-truth-gate
+          path: |
+            .runtime-cache/artifacts/ci/uiq-test-truth-gate-pr.json
+            .runtime-cache/artifacts/ci/uiq-test-truth-gate-pr.md
+          retention-days: 7
+          if-no-files-found: warn
+      - name: Upload Python test truthiness gate artifacts (always)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: uiq-pr-pytest-truth-gate
+          path: |
+            .runtime-cache/artifacts/ci/uiq-pytest-truth-gate-pr.json
+            .runtime-cache/artifacts/ci/uiq-pytest-truth-gate-pr.md
+          retention-days: 7
+          if-no-files-found: warn
+
+  pr-mcp-gate:
+    needs: [changes, build_ci_image]
+    if: ${{ needs.changes.outputs.is_untrusted_fork != 'true' && (github.event_name == 'workflow_dispatch' || needs.changes.outputs.automation == 'true' || needs.changes.outputs.apps == 'true' || needs.changes.outputs.packages == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.shared == 'true' || needs.changes.outputs.ci == 'true') }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - name: PR MCP gate
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/ci/run-in-container.sh --task pr-mcp-gate --gate pr-mcp-gate
+      - name: Upload MCP stress gate artifacts (always)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: uiq-pr-mcp-stress-gate
+          path: |
+            .runtime-cache/artifacts/ci/uiq-mcp-stress-gate-pr.json
+            .runtime-cache/artifacts/ci/uiq-mcp-stress-gate-pr.md
+          retention-days: 7
+          if-no-files-found: warn
+  pr-run-gate:
+    needs: [changes, build_ci_image]
+    if: ${{ needs.changes.outputs.is_untrusted_fork != 'true' && (github.event_name == 'workflow_dispatch' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.automation == 'true' || needs.changes.outputs.apps == 'true' || needs.changes.outputs.packages == 'true' || needs.changes.outputs.shared == 'true') }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+      packages: read
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - name: PR run profile
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/ci/run-in-container.sh --task pr-run-profile --gate pr-run-profile
+      - name: Upload AI review artifacts (always)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: uiq-pr-ai-review
+          path: |
+            .runtime-cache/artifacts/ci/uiq-ai-review-pr.json
+            .runtime-cache/artifacts/ci/uiq-ai-review-pr.md
+          retention-days: 7
+          if-no-files-found: warn
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: uiq-pr-run
+          path: |
+            .runtime-cache/artifacts/runs/
+            .runtime-cache/artifacts/ci/
+            .runtime-cache/artifacts/perf/
+            .runtime-cache/artifacts/api/
+          retention-days: 7
+
+  pr-frontend-e2e-behavior:
+    needs: [changes, build_ci_image]
+    if: ${{ needs.changes.outputs.is_untrusted_fork != 'true' && github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-24.04
+    environment: owner-approved-sensitive
+    permissions:
+      contents: read
+      packages: read
+    strategy:
+      fail-fast: false
+      matrix:
+        shard_index: [1, 2]
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - name: frontend authenticity gate (required)
+        id: e2e_authenticity_gate
+        if: ${{ matrix.shard_index == 1 }}
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/ci/run-in-container.sh --task frontend-authenticity --gate pr-frontend-authenticity
+      - name: frontend-e2e non-stub bootstrap gate (required)
+        if: ${{ matrix.shard_index == 1 }}
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/ci/run-in-container.sh --task frontend-nonstub --gate pr-frontend-nonstub
+      - name: Upload counterfactual audit report (always, shard1)
+        if: ${{ always() && matrix.shard_index == 1 }}
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: uiq-pr-counterfactual-report
+          path: |
+            .runtime-cache/artifacts/ci/counterfactual-report.json
+            .runtime-cache/artifacts/ci/counterfactual-report.md
+          retention-days: 7
+          if-no-files-found: warn
+      - name: frontend critical e2e gate (required)
+        if: ${{ matrix.shard_index == 1 }}
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/ci/run-in-container.sh --task frontend-critical --gate pr-frontend-critical
+      - name: frontend-e2e-behavior-suite (shard)
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+          UIQ_E2E_SHARD_INDEX: ${{ matrix.shard_index }}
+          UIQ_E2E_SHARD_TOTAL: "2"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/ci/run-in-container.sh --task pr-frontend-e2e-shard --gate pr-frontend-e2e-shard
+
+  pr-quality-gate:
+    needs: [changes, build_ci_image]
+    if: ${{ needs.changes.outputs.is_untrusted_fork != 'true' && github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-24.04
+    environment: owner-approved-sensitive
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      - name: PR quality gate
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/ci/run-in-container.sh --task pr-quality-gate --gate pr-quality-gate
+      - name: Upload mutation reports (always)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: uiq-pr-mutation-reports
+          path: |
+            .runtime-cache/reports/mutation/
+            .mutmut-cache/
+          retention-days: 7
+          if-no-files-found: warn
+
+  fork-readonly-governance:
+    needs: changes
+    if: ${{ needs.changes.outputs.is_untrusted_fork == 'true' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup-node-pnpm
+        with:
+          node-version: "20"
+      - name: Install root dependencies (fork readonly lane)
+        run: pnpm install --frozen-lockfile
+      - name: OpenAI residue hard gate
+        run: bash scripts/ci/gate-openai-residue.sh
+      - name: Workflow hygiene gate
+        run: bash scripts/ci/check-workflow-hygiene.sh
+      - name: Docs governance gate
+        run: bash scripts/docs-gate.sh
+
+  pr_truth_gate:
+    name: pr truth deterministic gate (aggregate)
+    runs-on: ubuntu-24.04
+    if: ${{ always() }}
+    needs:
+      - changes
+      - build_ci_image
+      - pr-lint-backend
+      - pr-lint-frontend
+      - openai-residue-gate
+      - upstream-mode-check
+      - upstream-binding-check
+      - pr-static-gate
+      - pr-mcp-gate
+      - pr-run-gate
+      - pr-frontend-e2e-behavior
+      - pr-quality-gate
+      - fork-readonly-governance
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      - uses: ./.github/actions/setup-node-pnpm
+        with:
+          node-version: "20"
+      - name: Install root dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Aggregate deterministic PR truth gates
+        run: |
+          set -euo pipefail
+          require_success() {
+            local name="$1"
+            local result="$2"
+            if [[ "$result" != "success" ]]; then
+              echo "${name} must be success, got: ${result}"
+              exit 1
+            fi
+          }
+          allow_skipped() {
+            local name="$1"
+            local result="$2"
+            if [[ "$result" != "success" && "$result" != "skipped" ]]; then
+              echo "${name} did not pass (allowed: success/skipped), got: ${result}"
+              exit 1
+            fi
+          }
+          require_success "changes" "${{ needs.changes.result }}"
+          allow_skipped "pr-lint-backend" "${{ needs.pr-lint-backend.result }}"
+          allow_skipped "pr-lint-frontend" "${{ needs.pr-lint-frontend.result }}"
+          require_success "openai-residue-gate" "${{ needs.openai-residue-gate.result }}"
+          require_success "upstream-mode-check" "${{ needs.upstream-mode-check.result }}"
+          allow_skipped "upstream-binding-check" "${{ needs.upstream-binding-check.result }}"
+          if [[ "${{ needs.changes.outputs.is_untrusted_fork }}" == "true" ]]; then
+            require_success "fork-readonly-governance" "${{ needs.fork-readonly-governance.result }}"
+            allow_skipped "pr-static-gate" "${{ needs.pr-static-gate.result }}"
+            allow_skipped "pr-mcp-gate" "${{ needs.pr-mcp-gate.result }}"
+            allow_skipped "pr-run-gate" "${{ needs.pr-run-gate.result }}"
+            allow_skipped "pr-frontend-e2e-behavior" "${{ needs.pr-frontend-e2e-behavior.result }}"
+            allow_skipped "pr-quality-gate" "${{ needs.pr-quality-gate.result }}"
+            exit 0
+          fi
+
+          require_success "build_ci_image" "${{ needs.build_ci_image.result }}"
+
+          pr_static_required="${{ (github.event_name == 'workflow_dispatch' || needs.changes.outputs.docs == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.automation == 'true' || needs.changes.outputs.apps == 'true' || needs.changes.outputs.packages == 'true' || needs.changes.outputs.scripts == 'true' || needs.changes.outputs.shared == 'true' || needs.changes.outputs.ci == 'true') && '1' || '0' }}"
+          pr_mcp_required="${{ (github.event_name == 'workflow_dispatch' || needs.changes.outputs.automation == 'true' || needs.changes.outputs.apps == 'true' || needs.changes.outputs.packages == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.shared == 'true' || needs.changes.outputs.ci == 'true') && '1' || '0' }}"
+          pr_run_required="${{ (github.event_name == 'workflow_dispatch' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.automation == 'true' || needs.changes.outputs.apps == 'true' || needs.changes.outputs.packages == 'true' || needs.changes.outputs.shared == 'true') && '1' || '0' }}"
+          pr_frontend_e2e_required="${{ github.event_name == 'workflow_dispatch' && '1' || '0' }}"
+          pr_quality_required="${{ github.event_name == 'workflow_dispatch' && '1' || '0' }}"
+
+          if [[ "$pr_static_required" == "1" ]]; then
+            require_success "pr-static-gate" "${{ needs.pr-static-gate.result }}"
+          else
+            allow_skipped "pr-static-gate" "${{ needs.pr-static-gate.result }}"
+          fi
+
+          if [[ "$pr_mcp_required" == "1" ]]; then
+            require_success "pr-mcp-gate" "${{ needs.pr-mcp-gate.result }}"
+          else
+            allow_skipped "pr-mcp-gate" "${{ needs.pr-mcp-gate.result }}"
+          fi
+
+          if [[ "$pr_run_required" == "1" ]]; then
+            require_success "pr-run-gate" "${{ needs.pr-run-gate.result }}"
+          else
+            allow_skipped "pr-run-gate" "${{ needs.pr-run-gate.result }}"
+          fi
+
+          if [[ "$pr_frontend_e2e_required" == "1" ]]; then
+            require_success "pr-frontend-e2e-behavior" "${{ needs.pr-frontend-e2e-behavior.result }}"
+          else
+            allow_skipped "pr-frontend-e2e-behavior" "${{ needs.pr-frontend-e2e-behavior.result }}"
+          fi
+
+          if [[ "$pr_quality_required" == "1" ]]; then
+            require_success "pr-quality-gate" "${{ needs.pr-quality-gate.result }}"
+          else
+            allow_skipped "pr-quality-gate" "${{ needs.pr-quality-gate.result }}"
+          fi
+      - name: Generate PR true-green manifest
+        run: |
+          node scripts/ci/generate-true-green-manifest.mjs \
+            --layer pr \
+            --run-id "${{ github.run_id }}-${{ github.run_attempt }}-pr-truth-gate" \
+            --out .runtime-cache/artifacts/ci/true-green-manifest-pr.json \
+            --decision passed \
+            --reason-codes gate.true_green.passed.pr.truth_gate
+      - name: Validate PR true-green manifest
+        run: |
+          node scripts/ci/validate-true-green-manifest.mjs \
+            --schema contracts/true-green-manifest.schema.json \
+            --input .runtime-cache/artifacts/ci/true-green-manifest-pr.json
+      - name: Upload PR true-green manifest
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: uiq-pr-true-green-manifest
+          path: .runtime-cache/artifacts/ci/true-green-manifest-pr.json
+          retention-days: 7
+          if-no-files-found: error

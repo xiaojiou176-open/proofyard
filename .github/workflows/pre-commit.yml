@@ -1,0 +1,176 @@
+name: Pre-commit Gate
+
+on:
+  push:
+    paths:
+      - ".github/workflows/**"
+      - "configs/tooling/pre-commit-config.yaml"
+      - "scripts/ci/pre-commit-required-gates.sh"
+      - "scripts/ci/pre-push-required-gates.sh"
+      - "scripts/ci/hooks-equivalence-gate.sh"
+  pull_request:
+    paths:
+      - ".github/workflows/**"
+      - "configs/tooling/pre-commit-config.yaml"
+      - "scripts/ci/pre-commit-required-gates.sh"
+      - "scripts/ci/pre-push-required-gates.sh"
+      - "scripts/ci/hooks-equivalence-gate.sh"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pre-commit-${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  workflow-hygiene:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 2
+      - uses: ./.github/actions/repo-checkout
+        with:
+          fetch-depth: 2
+      - name: Workflow hygiene gate
+        shell: bash
+        run: bash scripts/ci/check-workflow-hygiene.sh
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  actionlint:
+    needs: [workflow-hygiene]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 2
+      - uses: ./.github/actions/repo-checkout
+        with:
+          fetch-depth: 2
+      - name: Install pinned actionlint binary
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          runtime_lock = json.loads(Path("configs/ci/runtime.lock.json").read_text())
+          print(runtime_lock["security_tools"]["actionlint"])
+          PY
+          )"
+          archive="actionlint_${version}_linux_amd64.tar.gz"
+          url="https://github.com/rhysd/actionlint/releases/download/v${version}/${archive}"
+          tmpdir="$(mktemp -d)"
+          trap 'rm -rf "$tmpdir"' EXIT
+          curl -fsSL "$url" -o "$tmpdir/$archive"
+          tar -xzf "$tmpdir/$archive" -C "$tmpdir" actionlint
+          mkdir -p "$HOME/.local/bin"
+          install "$tmpdir/actionlint" "$HOME/.local/bin/actionlint"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Run pinned actionlint
+        shell: bash
+        run: |
+          set -euo pipefail
+          actionlint -color
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  zizmor:
+    needs: [workflow-hygiene]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Run zizmor
+        uses: zizmorcore/zizmor-action@71321a20a9ded102f6e9ce5718a2fcec2c4f70d8 # v0.5.2
+        with:
+          advanced-security: false
+          online-audits: false
+          min-severity: high
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  precommit-config-contract:
+    needs: [workflow-hygiene]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/repo-checkout
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup-python-uv
+        with:
+          python-version: "3.11"
+          uv-cache: "false"
+      - name: Validate pre-commit config and key hooks
+        shell: bash
+        run: |
+          set -euo pipefail
+          unset SKIP || true
+          uvx pre-commit validate-config configs/tooling/pre-commit-config.yaml
+          uvx pre-commit validate-manifest
+          uvx pre-commit run --config configs/tooling/pre-commit-config.yaml check-pre-commit-outdated --all-files --verbose
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  hooks-equivalence-gate:
+    needs: [workflow-hygiene]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/repo-checkout
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup-python-uv
+        with:
+          python-version: "3.11"
+          uv-cache: "false"
+      - uses: ./.github/actions/setup-node-pnpm
+        with:
+          node-version: "20"
+          enable-cache: "false"
+      - name: Run hooks equivalence gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          export CI=true
+          unset SKIP || true
+          bash scripts/ci/hooks-equivalence-gate.sh
+      - name: Upload hooks equivalence artifacts
+        if: always()
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: hooks-equivalence-gate-artifacts
+          path: |
+            .runtime-cache/artifacts/ci/hooks-equivalence-gate.json
+            .runtime-cache/artifacts/ci/hooks-equivalence-gate.md
+            .runtime-cache/artifacts/ci/pre-push-required-balanced.dryrun.log
+            .runtime-cache/artifacts/ci/pre-push-required-strict.dryrun.log
+            .runtime-cache/artifacts/ci/pre-commit-required-canonical.dryrun.log
+            .runtime-cache/artifacts/ci/pre-commit-required-strict.dryrun.log
+          if-no-files-found: warn
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post

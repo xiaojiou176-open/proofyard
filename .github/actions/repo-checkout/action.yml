@@ -1,0 +1,44 @@
+name: Repo Checkout
+description: Prepare a clean GitHub Actions workspace before checkout, then run the standard workspace sanitize action.
+inputs:
+  fetch-depth:
+    description: Fetch depth passed to actions/checkout.
+    required: false
+    default: "0"
+runs:
+  using: composite
+  steps:
+    - name: Pre-checkout workspace sanitize
+      shell: bash
+      run: |
+        set -euo pipefail
+        workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+        home_dir="${HOME:-}"
+        have_passwordless_sudo() {
+          command -v sudo >/dev/null 2>&1 && sudo -n true >/dev/null 2>&1
+        }
+        case "$workspace" in
+          /|/.|/..|"")
+            echo "::error::refusing dangerous workspace path: $workspace"
+            exit 1
+            ;;
+        esac
+        if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+          echo "::error::refusing workspace equal to HOME: $workspace"
+          exit 1
+        fi
+        if [[ -d "$workspace" ]]; then
+          if have_passwordless_sudo; then
+            sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+            sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+            sudo mkdir -p "$workspace" || true
+            sudo chown "$(id -u):$(id -g)" "$workspace" || true
+          else
+            chmod -R u+rwX "$workspace" || true
+            find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+          fi
+        fi
+    - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      with:
+        fetch-depth: ${{ inputs.fetch-depth }}
+    - uses: ./.github/actions/workspace-sanitize

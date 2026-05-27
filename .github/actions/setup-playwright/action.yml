@@ -1,0 +1,83 @@
+name: Setup Playwright
+description: Restore Playwright browser cache and install browser binaries.
+inputs:
+  install-browsers:
+    description: Whether to install Playwright browser binaries.
+    required: false
+    default: "true"
+  lockfile-path:
+    description: Lockfile path used in cache key.
+    required: false
+    default: pnpm-lock.yaml
+  cache-key-suffix:
+    description: Cache key suffix to isolate project scope.
+    required: false
+    default: root
+  browser:
+    description: Browser channel to install.
+    required: false
+    default: chromium
+  install-deps:
+    description: Whether to install browser system dependencies.
+    required: false
+    default: "true"
+  working-directory:
+    description: Working directory for playwright install.
+    required: false
+    default: .
+runs:
+  using: composite
+  steps:
+    - name: Configure Playwright browser cache directory
+      shell: bash
+      run: |
+        set -euo pipefail
+        write_env_var() {
+          local key="$1"
+          local value="$2"
+          local marker="EOF_${key}_$(date +%s%N)"
+          {
+            printf '%s<<%s\n' "$key" "$marker"
+            printf '%s\n' "$value"
+            printf '%s\n' "$marker"
+          } >> "$GITHUB_ENV"
+        }
+        mkdir -p "${RUNNER_TEMP}/ms-playwright"
+        write_env_var "PLAYWRIGHT_BROWSERS_PATH" "${RUNNER_TEMP}/ms-playwright"
+    - name: Restore Playwright browser cache
+      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+      with:
+        path: ${{ runner.temp }}/ms-playwright
+        key: ${{ runner.os }}-playwright-${{ inputs.cache-key-suffix }}-${{ hashFiles(inputs.lockfile-path) }}
+        restore-keys: |
+          ${{ runner.os }}-playwright-${{ inputs.cache-key-suffix }}-
+          ${{ runner.os }}-playwright-
+    - name: Install Playwright browser
+      if: ${{ inputs.install-browsers == 'true' }}
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/ms-playwright
+        INPUT_PLAYWRIGHT_BROWSER: ${{ inputs.browser }}
+        INPUT_INSTALL_DEPS: ${{ inputs.install-deps }}
+      run: |
+        install_args=("$INPUT_PLAYWRIGHT_BROWSER")
+        if [[ "$INPUT_INSTALL_DEPS" == "true" ]]; then
+          install_args=(--with-deps "${install_args[@]}")
+        fi
+
+        attempt=1
+        max_attempts=3
+        while true; do
+          if pnpm exec playwright install "${install_args[@]}"; then
+            break
+          else
+            rc=$?
+          fi
+          if [[ "$INPUT_INSTALL_DEPS" != "true" ]] || (( attempt >= max_attempts )); then
+            exit "$rc"
+          fi
+          echo "playwright install attempt ${attempt} failed with rc=${rc}; waiting for apt/dpkg locks to clear before retry" >&2
+          sleep $(( attempt * 15 ))
+          attempt=$(( attempt + 1 ))
+        done

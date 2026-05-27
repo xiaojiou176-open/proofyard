@@ -1,0 +1,18 @@
+{
+  "name": "uiq-devcontainer",
+  "dockerComposeFile": [
+    "../docker-compose.yml"
+  ],
+  "service": "backend",
+  "runServices": [
+    "postgres",
+    "redis",
+    "backend"
+  ],
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/${localWorkspaceFolderBasename},type=bind",
+  "overrideCommand": true,
+  "shutdownAction": "stopCompose",
+  "remoteUser": "appuser",
+  "postCreateCommand": "python -m pip install --no-cache-dir -e . && corepack enable && pnpm install --frozen-lockfile"
+}

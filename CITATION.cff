@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+title: Proofyard
+message: "If you use this project, please cite it using this metadata."
+authors:
+  - family-names: Team
+    given-names: Automation
+version: 0.1.0
+date-released: 2026-02-17

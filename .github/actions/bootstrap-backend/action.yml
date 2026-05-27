@@ -1,0 +1,122 @@
+name: Bootstrap Backend
+description: Apply optional migrations, start backend server, and wait for readiness with exponential backoff + jitter.
+inputs:
+  database-url:
+    description: Database URL for migration and server process.
+    required: true
+  log-file:
+    description: Log file path for backend server output.
+    required: false
+    default: ".runtime-cache/logs/backend.ci.log"
+  host:
+    description: Backend host.
+    required: false
+    default: "127.0.0.1"
+  port:
+    description: Backend port.
+    required: false
+    default: "17380"
+  app-module:
+    description: ASGI app module for uvicorn.
+    required: false
+    default: "apps.api.app.main:app"
+  health-url:
+    description: Health check URL. Defaults to http://{host}:{port}/health/ when empty.
+    required: false
+    default: ""
+  run-migrations:
+    description: Whether to run alembic upgrade heads.
+    required: false
+    default: "true"
+  start-server:
+    description: Whether to start uvicorn.
+    required: false
+    default: "true"
+  wait-for-ready:
+    description: Whether to wait for health readiness.
+    required: false
+    default: "true"
+  ready-timeout-sec:
+    description: Readiness timeout in seconds.
+    required: false
+    default: ""
+  ready-initial-delay-sec:
+    description: Initial backoff delay in seconds.
+    required: false
+    default: ""
+  ready-max-delay-sec:
+    description: Max backoff delay in seconds.
+    required: false
+    default: ""
+  ready-jitter-ratio:
+    description: Jitter ratio for backoff delay.
+    required: false
+    default: ""
+runs:
+  using: composite
+  steps:
+    - name: Bootstrap backend
+      shell: bash
+      env:
+        INPUT_DATABASE_URL: ${{ inputs.database-url }}
+        INPUT_LOG_FILE: ${{ inputs.log-file }}
+        INPUT_HOST: ${{ inputs.host }}
+        INPUT_PORT: ${{ inputs.port }}
+        INPUT_APP_MODULE: ${{ inputs.app-module }}
+        INPUT_HEALTH_URL: ${{ inputs.health-url }}
+        INPUT_RUN_MIGRATIONS: ${{ inputs.run-migrations }}
+        INPUT_START_SERVER: ${{ inputs.start-server }}
+        INPUT_WAIT_FOR_READY: ${{ inputs.wait-for-ready }}
+        INPUT_READY_TIMEOUT_SEC: ${{ inputs.ready-timeout-sec }}
+        INPUT_READY_INITIAL_DELAY_SEC: ${{ inputs.ready-initial-delay-sec }}
+        INPUT_READY_MAX_DELAY_SEC: ${{ inputs.ready-max-delay-sec }}
+        INPUT_READY_JITTER_RATIO: ${{ inputs.ready-jitter-ratio }}
+      run: |
+        set -euo pipefail
+        . scripts/lib/python-runtime.sh
+        ensure_project_python_env_exports
+        mkdir -p .runtime-cache/logs .runtime-cache/artifacts/ci/test-output .runtime-cache/automation
+
+        if [[ "${INPUT_RUN_MIGRATIONS}" == "true" ]]; then
+          DATABASE_URL="${INPUT_DATABASE_URL}" uv run alembic -c apps/api/alembic.ini upgrade heads
+        fi
+
+        if [[ "${INPUT_START_SERVER}" == "true" ]]; then
+          mkdir -p "$(dirname "${INPUT_LOG_FILE}")"
+          launcher=()
+          if [[ -x "$(project_uvicorn_bin)" ]] && "$(project_uvicorn_bin)" --version >/dev/null 2>&1; then
+            launcher=("$(project_uvicorn_bin)")
+          elif command -v uv >/dev/null 2>&1; then
+            launcher=("uv" "run" "uvicorn")
+          elif command -v uvicorn >/dev/null 2>&1; then
+            launcher=("$(command -v uvicorn)")
+          else
+            echo "[bootstrap-backend] uvicorn launcher unavailable: expected managed python env uvicorn, uvicorn, or uv" >&2
+            exit 1
+          fi
+          stale_pids="$(lsof -ti tcp:${INPUT_PORT} -sTCP:LISTEN 2>/dev/null || true)"
+          if [[ -n "${stale_pids}" ]]; then
+            echo "[bootstrap-backend] reclaiming occupied port ${INPUT_PORT} from stale pid(s): ${stale_pids}"
+            while IFS= read -r stale_pid; do
+              [[ -z "${stale_pid}" ]] && continue
+              kill "${stale_pid}" >/dev/null 2>&1 || true
+            done <<< "${stale_pids}"
+            sleep 1
+          fi
+          echo "[bootstrap-backend] backend launcher: ${launcher[*]}"
+          APP_ENV="${APP_ENV:-test}" \
+          AUTOMATION_ALLOW_LOCAL_NO_TOKEN="true" \
+          AUTOMATION_REQUIRE_TOKEN="false" \
+          DATABASE_URL="${INPUT_DATABASE_URL}" \
+          nohup "${launcher[@]}" "${INPUT_APP_MODULE}" --host "${INPUT_HOST}" --port "${INPUT_PORT}" > "${INPUT_LOG_FILE}" 2>&1 &
+        fi
+
+        if [[ "${INPUT_WAIT_FOR_READY}" == "true" ]]; then
+          if ! python3 scripts/ci/wait-http-ready.py; then
+            if [[ -f "${INPUT_LOG_FILE}" ]]; then
+              echo "[bootstrap-backend] backend log tail (${INPUT_LOG_FILE})" >&2
+              tail -n 120 "${INPUT_LOG_FILE}" >&2 || true
+            fi
+            exit 1
+          fi
+        fi

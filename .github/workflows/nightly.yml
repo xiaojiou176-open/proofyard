@@ -1,0 +1,592 @@
+name: Nightly Gate
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nightly-gate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build_ci_image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image_ref: ${{ steps.build.outputs.image_ref }}
+    steps:
+      - uses: ./.github/actions/repo-checkout
+      - name: Login to GHCR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUNNER_TEMP: ${{ runner.temp }}
+        run: |
+          set -euo pipefail
+          export HOME="${RUNNER_TEMP}/docker-home"
+          export DOCKER_CONFIG="${HOME}/.docker"
+          mkdir -p "${HOME}"
+          mkdir -p "${DOCKER_CONFIG}"
+          printf '%s\n' '{"auths":{},"credsStore":"","credHelpers":{}}' > "${DOCKER_CONFIG}/config.json"
+          printf '%s' "$GITHUB_TOKEN" | docker login ghcr.io -u "${GITHUB_ACTOR}" --password-stdin
+      - name: Build repo-owned CI image
+        id: build
+        env:
+          RUNNER_TEMP: ${{ runner.temp }}
+        run: |
+          set -euo pipefail
+          export HOME="${RUNNER_TEMP}/docker-home"
+          export DOCKER_CONFIG="${HOME}/.docker"
+          image_ref="$(bash scripts/ci/build-ci-image.sh --push | tail -n 1)"
+          echo "image_ref=${image_ref}" >> "$GITHUB_OUTPUT"
+
+  frontend-e2e-sharded:
+    needs: build_ci_image
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard_index: [1, 2, 3]
+        shard_total: [3]
+    steps:
+      - uses: ./.github/actions/repo-checkout
+      - name: frontend-e2e-shard
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+          UIQ_NIGHTLY_FRONTEND_E2E_SHARD_INDEX: ${{ matrix.shard_index }}
+          UIQ_NIGHTLY_FRONTEND_E2E_SHARD_TOTAL: ${{ matrix.shard_total }}
+        run: bash scripts/ci/run-in-container.sh --task nightly-frontend-e2e-shard --gate nightly-frontend-e2e-shard
+
+  backend-tests-sharded:
+    needs: build_ci_image
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard_index: [1, 2, 3, 4]
+        shard_total: [4]
+    steps:
+      - uses: ./.github/actions/repo-checkout
+      - name: backend-tests-shard
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+          UIQ_NIGHTLY_BACKEND_TESTS_SHARD_INDEX: ${{ matrix.shard_index }}
+          UIQ_NIGHTLY_BACKEND_TESTS_SHARD_TOTAL: ${{ matrix.shard_total }}
+        run: bash scripts/ci/run-in-container.sh --task nightly-backend-tests-shard --gate nightly-backend-tests-shard
+      - name: Upload backend shard artifacts (always)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: uiq-nightly-backend-tests-shard-${{ matrix.shard_index }}
+          path: |
+            .runtime-cache/artifacts/ci/test-output/backend-tests-nightly-shard-${{ matrix.shard_index }}.txt
+            .runtime-cache/artifacts/ci/test-output/backend-tests-nightly-shard-${{ matrix.shard_index }}-coverage.xml
+          retention-days: 7
+          if-no-files-found: error
+
+  nightly-integration-full:
+    needs: build_ci_image
+    runs-on: ubuntu-latest
+    environment: owner-approved-sensitive
+    steps:
+      - uses: ./.github/actions/repo-checkout
+      - name: Integration marker full gate (nightly)
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+        run: bash scripts/ci/run-in-container.sh --task nightly-integration-full --gate nightly-integration-full
+
+  nightly-trend-signals:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/actions/repo-checkout
+      - uses: ./.github/actions/setup-deps
+        with:
+          enable-python: "false"
+          enable-playwright: "false"
+          node-version: "20"
+      - name: ENV governance trend check (non-blocking)
+        id: env_governance_trend
+        continue-on-error: true
+        run: pnpm env:governance:check
+      - name: Validate gate scripts syntax (non-blocking trend)
+        id: script_syntax_trend
+        continue-on-error: true
+        run: |
+          bash -n scripts/release/check-workflow-pnpm-version-guard.sh scripts/release/generate-release-notes.sh
+          node --check scripts/ci/uiq-test-truth-gate.mjs
+          node --check scripts/ci/uiq-mcp-stress-gate.mjs
+          node --check scripts/ci/uiq-flake-budget.mjs
+          node --check scripts/ci/uiq-failure-ticketing.mjs
+          node --check scripts/ci/uiq-ai-review.mjs
+          node --check scripts/ci/uiq-gemini-live-smoke-gate.mjs
+          node --check scripts/ci/uiq-gemini-accuracy-gate.mjs
+          node --check scripts/ci/uiq-gemini-concurrency-gate.mjs
+          node --check scripts/ci/uiq-cross-target-benchmark.mjs
+          node --check scripts/ci/uiq-sla-and-clusters.mjs
+          node --check scripts/ci/verify-run-evidence.mjs
+          node --check scripts/ci/check-button-inventory.mjs
+          node --check scripts/ci/check-engine-runtime.mjs
+          node --check scripts/perf/perf-regression-guard.mjs
+          node --check scripts/api/check-breaking-contract.mjs
+      - name: MCP command parity + perfect-mode guard tests (non-blocking trend)
+        id: mcp_parity_trend
+        continue-on-error: true
+        run: node --import tsx --test apps/mcp-server/tests/mcp-command-parity.test.ts apps/mcp-server/tests/mcp-perfect-mode.test.ts
+      - name: Aggregate nightly pre-run non-blocking trend signals
+        if: ${{ always() }}
+        env:
+          ENV_GOVERNANCE_RESULT: ${{ steps.env_governance_trend.outcome }}
+          SCRIPT_SYNTAX_RESULT: ${{ steps.script_syntax_trend.outcome }}
+          MCP_PARITY_RESULT: ${{ steps.mcp_parity_trend.outcome }}
+        run: |
+          set -euo pipefail
+          warn_count=0
+          check_signal() {
+            local name="$1"
+            local result="$2"
+            case "$result" in
+              success|skipped)
+                echo "[nightly-trend] ${name}: ${result}"
+                ;;
+              failure)
+                echo "::warning::[nightly-trend] ${name} failed (non-blocking)"
+                warn_count=$((warn_count + 1))
+                ;;
+              *)
+                echo "::error::[nightly-trend] ${name} returned unexpected result: ${result}"
+                exit 1
+                ;;
+            esac
+          }
+          check_signal "env-governance" "${ENV_GOVERNANCE_RESULT}"
+          check_signal "script-syntax" "${SCRIPT_SYNTAX_RESULT}"
+          check_signal "mcp-parity" "${MCP_PARITY_RESULT}"
+          echo "[nightly-trend] pre-run non-blocking warning count=${warn_count}"
+
+  nightly-core-run:
+    runs-on: ubuntu-latest
+    needs:
+      - build_ci_image
+      - frontend-e2e-sharded
+      - backend-tests-sharded
+      - nightly-integration-full
+    environment: owner-approved-sensitive
+    steps:
+      - uses: ./.github/actions/repo-checkout
+      - name: Run Nightly Core Gate
+        id: midscene_primary
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+          UIQ_ORCHESTRATOR_PARALLEL: "1"
+          UIQ_ORCHESTRATOR_MAX_PARALLEL_TASKS: "6"
+        run: bash scripts/ci/run-in-container.sh --task nightly-core-run --gate nightly-core-run
+      - name: Midscene fallback marker
+        id: midscene_fallback
+        if: ${{ vars.UIQ_ENABLE_NIGHTLY_FALLBACK == 'true' }}
+        run: echo "nightly fallback path not invoked"
+      - name: Write nightly fallback status evidence
+        env:
+          PRIMARY_OUTCOME: ${{ steps.midscene_primary.outcome }}
+          FALLBACK_OUTCOME: ${{ steps.midscene_fallback.outcome }}
+          STRICT_FAILURE_ENFORCED: ${{ steps.midscene_primary.outcome != 'success' }}
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          pointer = Path('.runtime-cache/automation/latest-session.json')
+          session_dir = ""
+          generated_at = ""
+          if pointer.exists():
+            try:
+              payload = json.loads(pointer.read_text(encoding='utf-8'))
+              if isinstance(payload, dict):
+                session_dir = str(payload.get('sessionDir') or "")
+                generated_at = str(payload.get('generatedAt') or "")
+            except Exception:
+              pass
+          Path('.runtime-cache/automation').mkdir(parents=True, exist_ok=True)
+          Path('.runtime-cache/automation/nightly-fallback-hints.json').write_text(
+            json.dumps({"session_dir": session_dir, "generated_at": generated_at}, ensure_ascii=False, indent=2),
+            encoding='utf-8',
+          )
+          PY
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          status = {
+            "primary_outcome": os.environ.get("PRIMARY_OUTCOME", "unknown"),
+            "fallback_outcome": os.environ.get("FALLBACK_OUTCOME", "skipped"),
+            "strict_failure_enforced": os.environ.get("STRICT_FAILURE_ENFORCED", "false").lower() == "true",
+            "session_dir": os.environ.get("SESSION_DIR", ""),
+            "generated_at": os.environ.get("GENERATED_AT", ""),
+          }
+          Path('.runtime-cache/automation').mkdir(parents=True, exist_ok=True)
+          Path('.runtime-cache/automation/nightly-fallback-status.json').write_text(
+            json.dumps(status, ensure_ascii=False, indent=2),
+            encoding='utf-8',
+          )
+          PY
+      - name: Verify run evidence (hard gate)
+        run: node scripts/ci/verify-run-evidence.mjs --profile nightly-core
+
+  nightly-trend-post-run:
+    runs-on: ubuntu-latest
+    needs: nightly-core-run
+    steps:
+      - uses: ./.github/actions/repo-checkout
+      - uses: ./.github/actions/setup-deps
+        with:
+          enable-python: "false"
+          enable-playwright: "false"
+          node-version: "20"
+      - name: Gemini accuracy gate (nightly trend, non-blocking)
+        id: gemini_accuracy_trend
+        continue-on-error: true
+        run: node scripts/ci/uiq-gemini-accuracy-gate.mjs --profile nightly --strict true
+      - name: Gemini concurrency gate (nightly trend, non-blocking)
+        id: gemini_concurrency_trend
+        continue-on-error: true
+        run: node scripts/ci/uiq-gemini-concurrency-gate.mjs --profile nightly --strict true
+      - name: AI review (nightly trend, non-blocking)
+        id: ai_review_trend
+        continue-on-error: true
+        run: node --import tsx scripts/ci/uiq-ai-review.mjs --profile nightly --strict true --severity-threshold high --max-artifacts 40 --emit-issue false --emit-pr-comment false
+      - name: Upload AI review artifacts (always)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: uiq-nightly-ai-review
+          path: |
+            .runtime-cache/artifacts/ci/uiq-ai-review-nightly.json
+            .runtime-cache/artifacts/ci/uiq-ai-review-nightly.md
+          retention-days: 7
+          if-no-files-found: warn
+      - name: Aggregate nightly post-run non-blocking trend signals
+        if: ${{ always() }}
+        env:
+          GEMINI_ACCURACY_RESULT: ${{ steps.gemini_accuracy_trend.outcome }}
+          GEMINI_CONCURRENCY_RESULT: ${{ steps.gemini_concurrency_trend.outcome }}
+          AI_REVIEW_RESULT: ${{ steps.ai_review_trend.outcome }}
+        run: |
+          set -euo pipefail
+          warn_count=0
+          check_signal() {
+            local name="$1"
+            local result="$2"
+            case "$result" in
+              success|skipped)
+                echo "[nightly-trend] ${name}: ${result}"
+                ;;
+              failure)
+                echo "::warning::[nightly-trend] ${name} failed (non-blocking)"
+                warn_count=$((warn_count + 1))
+                ;;
+              *)
+                echo "::error::[nightly-trend] ${name} returned unexpected result: ${result}"
+                exit 1
+                ;;
+            esac
+          }
+          check_signal "gemini-accuracy" "${GEMINI_ACCURACY_RESULT}"
+          check_signal "gemini-concurrency" "${GEMINI_CONCURRENCY_RESULT}"
+          check_signal "ai-review" "${AI_REVIEW_RESULT}"
+          echo "[nightly-trend] post-run non-blocking warning count=${warn_count}"
+
+  nightly-hard-gates:
+    runs-on: ubuntu-latest
+    needs: [build_ci_image, nightly-core-run]
+    steps:
+      - uses: ./.github/actions/repo-checkout
+      - name: Nightly hard gates (Linux/Web required, containerized)
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+          UIQ_AUTO_TICKETING: ${{ env.UIQ_AUTO_TICKETING || vars.UIQ_AUTO_TICKETING || 'false' }}
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/ci/run-in-container.sh --task nightly-hard-gates --gate nightly-hard-gates
+      - name: Build failure bundle
+        if: ${{ failure() || cancelled() }}
+        run: bash scripts/ci/make-failure-bundle.sh || true
+      - name: Upload failure bundle artifact
+        if: ${{ failure() || cancelled() }}
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: uiq-nightly-failure-bundles
+          path: |
+            .runtime-cache/artifacts/ci/failure-bundles/
+          retention-days: 7
+
+  nightly-upload-artifacts:
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs:
+      - nightly-core-run
+      - nightly-hard-gates
+      - nightly-trend-post-run
+    steps:
+      - uses: ./.github/actions/repo-checkout
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: uiq-nightly-run
+          path: |
+            .runtime-cache/artifacts/runs/
+            .runtime-cache/artifacts/ci/
+            .runtime-cache/artifacts/perf/
+            .runtime-cache/artifacts/api/
+          retention-days: 7
+
+  desktop-regression-macos:
+    if: ${{ vars.UIQ_ENABLE_DESKTOP_REGRESSION == 'true' }}
+    runs-on: macos-latest
+    environment: owner-approved-sensitive
+    # The only host-specific public exception uses GitHub-hosted macOS because Xcode,
+    # tauri-driver, bundle IDs, and the native app runtime cannot be expressed as linux/amd64 CI image tasks.
+    env:
+      UIQ_TAURI_APP_PATH: ${{ vars.UIQ_TAURI_APP_PATH || secrets.UIQ_TAURI_APP_PATH || '' }}
+      UIQ_SWIFT_BUNDLE_ID: ${{ vars.UIQ_SWIFT_BUNDLE_ID || secrets.UIQ_SWIFT_BUNDLE_ID || '' }}
+      UIQ_DESKTOP_AUTOMATION_MODE: operator-manual
+      UIQ_DESKTOP_AUTOMATION_REASON: github-workflow-nightly-desktop-regression
+    steps:
+      - uses: ./.github/actions/repo-checkout
+      - uses: ./.github/actions/setup-deps
+        with:
+          enable-python: "false"
+          enable-playwright: "false"
+          node-version: "20"
+      - name: Verify desktop regression prerequisites
+        run: |
+          set -euo pipefail
+          xcodebuild -version
+          if [[ -z "${UIQ_TAURI_APP_PATH}" ]]; then
+            echo "UIQ_TAURI_APP_PATH is required for tauri.regression" >&2
+            exit 1
+          fi
+          if [[ -z "${UIQ_SWIFT_BUNDLE_ID}" ]]; then
+            echo "UIQ_SWIFT_BUNDLE_ID is required for swift.regression" >&2
+            exit 1
+          fi
+          if ! command -v tauri-driver >/dev/null 2>&1; then
+            if ! command -v cargo >/dev/null 2>&1; then
+              echo "cargo is required to install tauri-driver on macOS runners" >&2
+              exit 1
+            fi
+            cargo install tauri-driver --locked
+            echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+            export PATH="$HOME/.cargo/bin:$PATH"
+          fi
+          tauri-driver --help >/dev/null
+      - name: Run Tauri Regression Profile
+        run: pnpm uiq run --profile tauri.regression --target tauri.macos --app "${UIQ_TAURI_APP_PATH}"
+      - name: Verify Tauri regression evidence (hard gate)
+        run: node scripts/ci/verify-run-evidence.mjs --profile tauri.regression
+      - name: Run Swift Regression Profile
+        run: pnpm uiq run --profile swift.regression --target swift.macos --bundle-id "${UIQ_SWIFT_BUNDLE_ID}"
+      - name: Verify Swift regression evidence (hard gate)
+        run: node scripts/ci/verify-run-evidence.mjs --profile swift.regression
+      - name: Upload Desktop Regression Artifacts
+        if: ${{ always() }}
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: uiq-nightly-desktop-regression
+          path: |
+            .runtime-cache/artifacts/runs/
+          retention-days: 7
+
+  nightly-summary-gate:
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs:
+      - frontend-e2e-sharded
+      - backend-tests-sharded
+      - nightly-integration-full
+      - nightly-trend-signals
+      - nightly-core-run
+      - nightly-trend-post-run
+      - nightly-hard-gates
+      - nightly-upload-artifacts
+      - desktop-regression-macos
+    steps:
+      - uses: ./.github/actions/repo-checkout
+      - name: Aggregate nightly job graph hard gates
+        env:
+          FRONTEND_E2E_SHARDED_RESULT: ${{ needs.frontend-e2e-sharded.result }}
+          BACKEND_TESTS_SHARDED_RESULT: ${{ needs.backend-tests-sharded.result }}
+          NIGHTLY_INTEGRATION_FULL_RESULT: ${{ needs.nightly-integration-full.result }}
+          NIGHTLY_TREND_SIGNALS_RESULT: ${{ needs.nightly-trend-signals.result }}
+          NIGHTLY_CORE_RUN_RESULT: ${{ needs.nightly-core-run.result }}
+          NIGHTLY_TREND_POST_RUN_RESULT: ${{ needs.nightly-trend-post-run.result }}
+          NIGHTLY_HARD_GATES_RESULT: ${{ needs.nightly-hard-gates.result }}
+          NIGHTLY_UPLOAD_ARTIFACTS_RESULT: ${{ needs.nightly-upload-artifacts.result }}
+          DESKTOP_REGRESSION_MACOS_RESULT: ${{ needs.desktop-regression-macos.result }}
+          DESKTOP_REGRESSION_REQUIRED: ${{ vars.UIQ_ENABLE_DESKTOP_REGRESSION || 'false' }}
+        run: |
+          set -euo pipefail
+          hard_fail=0
+          warn_count=0
+
+          check_hard_gate() {
+            local name="$1"
+            local result="$2"
+            case "$result" in
+              success)
+                echo "[nightly-summary] hard gate ${name}: ${result}"
+                ;;
+              *)
+                echo "::error::[nightly-summary] hard gate ${name} is ${result}"
+                hard_fail=1
+                ;;
+            esac
+          }
+
+          check_trend_or_optional() {
+            local name="$1"
+            local result="$2"
+            case "$result" in
+              success|skipped)
+                echo "[nightly-summary] non-blocking ${name}: ${result}"
+                ;;
+              failure|cancelled)
+                echo "::warning::[nightly-summary] non-blocking ${name}: ${result}"
+                warn_count=$((warn_count + 1))
+                ;;
+              *)
+                echo "::error::[nightly-summary] non-blocking ${name} returned unexpected result: ${result}"
+                hard_fail=1
+                ;;
+            esac
+          }
+
+          check_desktop_gate() {
+            local result="$1"
+            if [[ "${DESKTOP_REGRESSION_REQUIRED}" == "true" ]]; then
+              check_hard_gate "desktop-regression-macos" "$result"
+            else
+              check_trend_or_optional "desktop-regression-macos(optional)" "$result"
+            fi
+          }
+
+          check_hard_gate "frontend-e2e-sharded" "${FRONTEND_E2E_SHARDED_RESULT}"
+          check_hard_gate "backend-tests-sharded" "${BACKEND_TESTS_SHARDED_RESULT}"
+          check_hard_gate "nightly-integration-full" "${NIGHTLY_INTEGRATION_FULL_RESULT}"
+          check_hard_gate "nightly-core-run" "${NIGHTLY_CORE_RUN_RESULT}"
+          check_hard_gate "nightly-hard-gates" "${NIGHTLY_HARD_GATES_RESULT}"
+          check_hard_gate "nightly-upload-artifacts" "${NIGHTLY_UPLOAD_ARTIFACTS_RESULT}"
+          check_desktop_gate "${DESKTOP_REGRESSION_MACOS_RESULT}"
+
+          check_trend_or_optional "nightly-trend-signals" "${NIGHTLY_TREND_SIGNALS_RESULT}"
+          check_trend_or_optional "nightly-trend-post-run" "${NIGHTLY_TREND_POST_RUN_RESULT}"
+
+          echo "[nightly-summary] non-blocking warning count=${warn_count}"
+          if [[ "$hard_fail" -ne 0 ]]; then
+            echo "::error::Nightly hard gates failed in job graph"
+            exit 1
+          fi
+      - name: generate-true-green-manifest (nightly)
+        run: |
+          node scripts/ci/generate-true-green-manifest.mjs \
+            --layer nightly \
+            --run-id "${{ github.run_id }}-${{ github.run_attempt }}-nightly-summary-gate" \
+            --out .runtime-cache/artifacts/ci/true-green-manifest-nightly.json \
+            --decision passed \
+            --reason-codes gate.true_green.passed.nightly.summary_gate
+      - name: validate-true-green-manifest (nightly)
+        run: |
+          node scripts/ci/validate-true-green-manifest.mjs \
+            --schema contracts/true-green-manifest.schema.json \
+            --input .runtime-cache/artifacts/ci/true-green-manifest-nightly.json
+      - name: Upload true-green manifest (nightly)
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: uiq-nightly-true-green-manifest
+          path: .runtime-cache/artifacts/ci/true-green-manifest-nightly.json
+          retention-days: 7
+          if-no-files-found: error
+
+  nightly-consecutive-anomaly-gate:
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs:
+      - nightly-trend-signals
+      - nightly-trend-post-run
+      - nightly-summary-gate
+    steps:
+      - uses: ./.github/actions/repo-checkout
+      - uses: ./.github/actions/setup-deps
+        with:
+          enable-python: "false"
+          enable-playwright: "false"
+          node-version: "20"
+      - name: Restore nightly trend history cache
+        uses: actions/cache/restore@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.0
+        with:
+          path: .runtime-cache/artifacts/nightly
+          key: nightly-trend-history-${{ github.ref_name }}-${{ github.run_id }}
+          restore-keys: |
+            nightly-trend-history-${{ github.ref_name }}-
+            nightly-trend-history-
+      - name: Record current nightly signal
+        env:
+          NIGHTLY_TREND_SIGNALS_RESULT: ${{ needs.nightly-trend-signals.result }}
+          NIGHTLY_TREND_POST_RUN_RESULT: ${{ needs.nightly-trend-post-run.result }}
+          NIGHTLY_SUMMARY_GATE_RESULT: ${{ needs.nightly-summary-gate.result }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_WORKFLOW: ${{ github.workflow }}
+        run: |
+          node <<NODE
+          const fs = require("node:fs");
+          const path = require("node:path");
+          const now = new Date();
+          const day = now.toISOString().slice(0, 10);
+          const signalDir = path.resolve(".runtime-cache/artifacts/nightly");
+          fs.mkdirSync(signalDir, { recursive: true });
+          const results = {
+            nightly_trend_signals: process.env.NIGHTLY_TREND_SIGNALS_RESULT || "unknown",
+            nightly_trend_post_run: process.env.NIGHTLY_TREND_POST_RUN_RESULT || "unknown",
+            nightly_summary_gate: process.env.NIGHTLY_SUMMARY_GATE_RESULT || "unknown"
+          };
+          const anomalyReasons = Object.entries(results)
+            .filter(([, value]) => value !== "success" && value !== "skipped")
+            .map(([key, value]) => key + ":" + value);
+          const payload = {
+            date: day,
+            recordedAt: now.toISOString(),
+            workflow: process.env.GITHUB_WORKFLOW || "",
+            ref: process.env.GITHUB_REF_NAME || "",
+            runId: process.env.GITHUB_RUN_ID || "",
+            runAttempt: process.env.GITHUB_RUN_ATTEMPT || "",
+            anomalous: anomalyReasons.length > 0,
+            anomalyReasons,
+            signals: results
+          };
+          const output = path.join(signalDir, day + ".json");
+          fs.writeFileSync(output, JSON.stringify(payload, null, 2) + "\n", "utf8");
+          console.log("[nightly-trend] wrote daily signal: " + output);
+          NODE
+      - name: Aggregate nightly trend signals (D7)
+        run: node scripts/ci/nightly-trend-aggregate.mjs --input-dir .runtime-cache/artifacts/nightly --lookback-days 7 --output .runtime-cache/artifacts/ci/nightly-trend-aggregate.json
+      - name: Gate consecutive anomalies (N=3)
+        run: node scripts/ci/nightly-consecutive-anomaly-gate.mjs --days 3 --input .runtime-cache/artifacts/ci/nightly-trend-aggregate.json
+      - name: Upload nightly trend gate artifacts (D7)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: uiq-nightly-consecutive-anomaly-gate
+          path: |
+            .runtime-cache/artifacts/nightly/
+            .runtime-cache/artifacts/ci/nightly-trend-aggregate.json
+          retention-days: 7
+          if-no-files-found: error
+      - name: Save nightly trend history cache
+        if: ${{ always() }}
+        uses: actions/cache/save@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.0
+        with:
+          path: .runtime-cache/artifacts/nightly
+          key: nightly-trend-history-${{ github.ref_name }}-${{ github.run_id }}

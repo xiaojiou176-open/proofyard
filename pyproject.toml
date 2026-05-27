@@ -1,0 +1,97 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "proofyard"
+version = "0.1.1"
+description = "Evidence-first browser automation platform with auditable and replayable workflows"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi==0.135.3",
+  "pydantic-settings==2.13.1",
+  "redis==7.4.0",
+  "sqlalchemy==2.0.46",
+  "psycopg[binary]==3.3.3",
+  "uvicorn[standard]==0.41.0"
+]
+
+[project.optional-dependencies]
+dev = [
+  "alembic==1.18.4",
+  "google-genai==1.42.0",
+  "httpx==0.28.1",
+  "mutmut==3.5.0",
+  "pygments==2.20.0",
+  "pytest==9.0.2",
+  "pytest-cov==7.0.0",
+  "pytest-xdist==3.8.0",
+  "ruff==0.15.2"
+]
+
+[tool.pytest.ini_options]
+testpaths = ["apps/api/tests"]
+minversion = "8.0"
+addopts = "--cov=apps/api/app --cov-branch --cov-report=term-missing --cov-fail-under=80 --strict-config --strict-markers --maxfail=1 -o cache_dir=.runtime-cache/cache/pytest --basetemp=.runtime-cache/temp/pytest"
+cache_dir = ".runtime-cache/cache/pytest"
+markers = [
+  "integration: backend integration suite",
+  "integration_smoke: PR smoke subset of integration tests",
+  "integration_full: Nightly full integration tests",
+]
+xfail_strict = true
+
+[tool.coverage.run]
+branch = true
+source = ["apps/api/app"]
+data_file = ".runtime-cache/cache/coverage/.coverage"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+cache-dir = ".runtime-cache/cache/ruff"
+extend-exclude = [
+  "mutants",
+  ".runtime-cache",
+  "apps/web/src/api-gen",
+  "apps/automation-runner/tests/generated",
+  "apps/web/tests/ct/template/.cache",
+  "*.tsbuildinfo",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"apps/api/tests/**/*.py" = ["S101"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["apps*", "configs*"]
+namespaces = false
+
+[tool.mutmut]
+also_copy = [
+  "apps/api/app",
+  "apps/api/config",
+  "apps/api/tests",
+  "scripts",
+  "packages",
+  "configs",
+  ".github",
+]
+tests_dir = [
+  "apps/api/tests/test_vonage_integration_api.py",
+  "apps/api/tests/test_register.py",
+]
+paths_to_mutate = [
+  "apps/api/app/api/integrations_vonage.py",
+  "apps/api/app/api/register.py"
+]
+do_not_mutate = [
+  "**/__init__.py",
+  "**/conftest.py",
+]
+runner = "python -m pytest -n 0 -o addopts= apps/api/tests/test_vonage_integration_api.py apps/api/tests/test_register.py"

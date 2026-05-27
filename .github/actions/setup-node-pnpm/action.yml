@@ -1,0 +1,66 @@
+name: Setup Node + pnpm
+description: Setup pnpm and Node.js with pnpm cache.
+inputs:
+  node-version:
+    description: Node.js version.
+    required: false
+    default: "20"
+  enable-cache:
+    description: Enable setup-node pnpm cache restore/save.
+    required: false
+    default: "true"
+  cache-dependency-path:
+    description: Path to lockfile used for pnpm cache.
+    required: false
+    default: pnpm-lock.yaml
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      with:
+        node-version: ${{ inputs.node-version }}
+    - name: Activate pnpm from packageManager via corepack
+      shell: bash
+      run: |
+        set -euo pipefail
+        package_manager="$(node -e "const fs=require('node:fs');const pkg=JSON.parse(fs.readFileSync('package.json','utf8'));if(!pkg.packageManager){process.stderr.write('packageManager is missing in package.json\\n');process.exit(1)};process.stdout.write(String(pkg.packageManager));")"
+        if [[ "$package_manager" != pnpm@* ]]; then
+          echo "packageManager must pin pnpm, got: ${package_manager}" >&2
+          exit 1
+        fi
+        pnpm_version="${package_manager#pnpm@}"
+        corepack enable
+        corepack prepare "$package_manager" --activate || true
+        if ! command -v pnpm >/dev/null 2>&1; then
+          echo "corepack did not expose pnpm; fallback to npm -g install pnpm@${pnpm_version}"
+          npm install -g "pnpm@${pnpm_version}"
+        fi
+        pnpm --version
+    - name: Configure isolated pnpm store
+      shell: bash
+      run: |
+        set -euo pipefail
+        write_env_var() {
+          local key="$1"
+          local value="$2"
+          local marker="EOF_${key}_$(date +%s%N)"
+          {
+            printf '%s<<%s\n' "$key" "$marker"
+            printf '%s\n' "$value"
+            printf '%s\n' "$marker"
+          } >> "$GITHUB_ENV"
+        }
+        store_dir="${RUNNER_TEMP}/pnpm-store"
+        mkdir -p "$store_dir"
+        pnpm config set store-dir "$store_dir"
+        write_env_var "PNPM_STORE_DIR" "$store_dir"
+    - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: pnpm
+        cache-dependency-path: ${{ inputs.cache-dependency-path }}
+      if: ${{ inputs.enable-cache == 'true' }}
+    - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      with:
+        node-version: ${{ inputs.node-version }}
+      if: ${{ inputs.enable-cache != 'true' }}

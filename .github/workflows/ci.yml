@@ -1,0 +1,1635 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+    inputs:
+      run_automation_profile:
+        description: "Run optional automation dependency profile jobs"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+# Contract anchors for apps/api/tests/test_nightly_ci_contracts.py
+# bash scripts/ci/make-failure-bundle.sh || true
+# .runtime-cache/artifacts/ci/failure-bundles/
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+      automation: ${{ steps.filter.outputs.automation }}
+      docs: ${{ steps.filter.outputs.docs }}
+      ci_gatechain: ${{ steps.filter.outputs.ci_gatechain }}
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/workspace-sanitize
+      - name: Detect changed scopes
+        id: filter
+        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3
+        with:
+          filters: |
+            backend:
+              - 'apps/api/**'
+              - 'pyproject.toml'
+              - 'uv.lock'
+              - 'apps/api/alembic.ini'
+              - 'scripts/check-openapi-doc-contract.py'
+              - 'scripts/run-contract-scan.sh'
+              - 'scripts/run-load-k6-smoke.sh'
+            frontend:
+              - 'apps/web/**'
+              - 'apps/**'
+              - 'packages/**'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+              - 'playwright.config.*'
+              - 'scripts/**'
+            automation:
+              - 'apps/automation-runner/**'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+              - 'uv.lock'
+            docs:
+              - 'docs/**'
+              - '**/*.md'
+              - '.env.example'
+              - 'scripts/docs-gate.sh'
+            ci_gatechain:
+              - '.github/workflows/ci.yml'
+              - '.github/workflows/nightly.yml'
+              - '.github/workflows/manual.yml'
+              - '.github/workflows/pre-commit.yml'
+              - 'scripts/ci/*gate*'
+              - 'scripts/ci/*truth*'
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  build_ci_image:
+    needs: [changes]
+    if: ${{ github.repository_owner != 'xiaojiou176-open' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image_ref: ${{ steps.build.outputs.image_ref }}
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      - name: Login to GHCR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUNNER_TEMP: ${{ runner.temp }}
+        run: |
+          set -euo pipefail
+          export HOME="${RUNNER_TEMP}/docker-home"
+          export DOCKER_CONFIG="${HOME}/.docker"
+          mkdir -p "${HOME}"
+          mkdir -p "${DOCKER_CONFIG}"
+          printf '%s\n' '{"auths":{},"credsStore":"","credHelpers":{}}' > "${DOCKER_CONFIG}/config.json"
+          printf '%s' "$GITHUB_TOKEN" | docker login ghcr.io -u "${GITHUB_ACTOR}" --password-stdin
+      - name: Build repo-owned CI image
+        id: build
+        run: |
+          set -euo pipefail
+          export HOME="${RUNNER_TEMP}/docker-home"
+          export DOCKER_CONFIG="${HOME}/.docker"
+          image_ref="$(bash scripts/ci/build-ci-image.sh --push | tail -n 1)"
+          echo "image_ref=${image_ref}" >> "$GITHUB_OUTPUT"
+
+  openai_residue_gate:
+    needs: [changes]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/workspace-sanitize
+      - name: OpenAI residue hard gate
+        run: bash scripts/ci/gate-openai-residue.sh
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  docs:
+    needs: [changes]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.changes.outputs.docs == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      - uses: ./.github/actions/workspace-sanitize
+      - uses: ./.github/actions/setup-node-pnpm
+        with:
+          node-version: "20"
+          enable-cache: "false"
+      - name: Enforce pnpm action policy
+        run: ./scripts/release/check-workflow-pnpm-version-guard.sh
+      - name: Doc baseline check
+        run: ./scripts/docs-gate.sh
+      - name: Upload failure bundle artifact
+        if: ${{ failure() || cancelled() }}
+        uses: ./.github/actions/failure-bundle
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  hooks_equivalence_gate:
+    needs: [changes]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.automation == 'true' || needs.changes.outputs.ci_gatechain == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/workspace-sanitize
+      - uses: ./.github/actions/setup-deps
+        with:
+          pnpm-cache: "false"
+          node-version: "20"
+          python-version: "3.11"
+          enable-playwright: "false"
+          uv-sync-command: uv sync --frozen --extra dev
+      - name: Ensure docker compose plugin (Linux hosted strict gate prerequisite)
+        if: ${{ runner.os == 'Linux' }}
+        run: |
+          set -euo pipefail
+          if docker compose version >/dev/null 2>&1; then
+            exit 0
+          fi
+          sudo apt-get update
+          if sudo apt-get install -y docker-compose-plugin; then
+            docker compose version
+            exit 0
+          fi
+          sudo apt-get install -y docker-compose
+          docker-compose version
+      - name: Hooks equivalence hard gate (lint + test-truth + docs-link)
+        env:
+          UIQ_DOCS_LINK_BASE_REF: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || github.event.before }}
+          UIQ_DOCS_LINK_HEAD_REF: ${{ github.sha }}
+          GITHUB_EVENT_BEFORE: ${{ github.event.before }}
+        run: bash scripts/ci/hooks-equivalence-gate.sh
+      - name: Upload hooks equivalence artifact
+        if: ${{ always() }}
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: hooks-equivalence-gate
+          path: |
+            .runtime-cache/artifacts/ci/hooks-equivalence-gate.json
+            .runtime-cache/artifacts/ci/hooks-equivalence-gate.md
+            .runtime-cache/artifacts/ci/uiq-test-truth-gate-ci-equivalence.json
+            .runtime-cache/artifacts/ci/uiq-test-truth-gate-ci-equivalence.md
+          retention-days: 7
+      - name: Upload failure bundle artifact
+        if: ${{ failure() || cancelled() }}
+        uses: ./.github/actions/failure-bundle
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  trivy_fs:
+    needs: [changes]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.automation == 'true' || needs.changes.outputs.ci_gatechain == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/workspace-sanitize
+      - name: Trivy filesystem scan
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # v0.35.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: table
+          exit-code: "1"
+          ignore-unfixed: true
+          vuln-type: library
+          severity: HIGH,CRITICAL
+      - name: Upload failure bundle artifact
+        if: ${{ failure() || cancelled() }}
+        uses: ./.github/actions/failure-bundle
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  security:
+    needs: [changes]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/workspace-sanitize
+      - name: Secret scan (history audit, repo-owned gate)
+        run: bash scripts/ci/gitleaks-history-gate.sh
+      - name: Upload failure bundle artifact
+        if: ${{ failure() || cancelled() }}
+        uses: ./.github/actions/failure-bundle
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  strict_invariants_gate:
+    needs: [changes]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.automation == 'true' || needs.changes.outputs.ci_gatechain == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      - uses: ./.github/actions/workspace-sanitize
+      - uses: ./.github/actions/setup-deps
+        with:
+          pnpm-cache: "false"
+          node-version: "20"
+          python-version: "3.11"
+          enable-playwright: "false"
+          uv-sync-command: uv sync --frozen --extra dev
+      - name: Workflow hygiene hard gate
+        run: bash scripts/ci/check-workflow-hygiene.sh
+      - name: Gemini-only policy hard gate
+        run: pnpm gemini-only-policy
+      - name: Lockfile sync hard gate
+        run: pnpm lockfile:sync:check
+      - name: Config drift hard gate
+        run: pnpm check:config-drift
+      - name: Evidence validator self-check hard gate
+        run: pnpm test:ci:verify-run-evidence
+      - name: Upload failure bundle artifact
+        if: ${{ failure() || cancelled() }}
+        uses: ./.github/actions/failure-bundle
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  security_scan_script:
+    needs: [changes, build_ci_image]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.automation == 'true' || needs.changes.outputs.ci_gatechain == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/workspace-sanitize
+      - name: Security scan script gate (required)
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+        run: bash scripts/ci/run-in-container.sh --task security-scan --gate ci-security-scan
+      - name: Upload failure bundle artifact
+        if: ${{ failure() || cancelled() }}
+        uses: ./.github/actions/failure-bundle
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  preflight_minimal:
+    needs: [changes, build_ci_image]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.automation == 'true' || needs.changes.outputs.ci_gatechain == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/workspace-sanitize
+      - name: Preflight minimal gate (required)
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+        run: bash scripts/ci/run-in-container.sh --task preflight-minimal --gate ci-preflight-minimal
+      - name: Upload failure bundle artifact
+        if: ${{ failure() || cancelled() }}
+        uses: ./.github/actions/failure-bundle
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  backend:
+    needs: [changes, build_ci_image]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.ci_gatechain == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      - uses: ./.github/actions/workspace-sanitize
+      - name: Backend smoke gate
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+        run: bash scripts/ci/run-in-container.sh --task backend-smoke --gate ci-backend-smoke
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  backend_full:
+    needs: [changes, build_ci_image]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.ci_gatechain == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      - uses: ./.github/actions/workspace-sanitize
+      - name: Backend full gate
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+        run: bash scripts/ci/run-in-container.sh --task backend-full --gate ci-backend-full
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  core_contract_load:
+    needs: [changes, build_ci_image]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.automation == 'true' || needs.changes.outputs.ci_gatechain == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      - uses: ./.github/actions/workspace-sanitize
+      - name: Core static gates
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+        run: bash scripts/ci/run-in-container.sh --task core-static-gates --gate ci-core-static-gates
+      - name: Runtime cache cleanup (lightweight)
+        if: ${{ always() }}
+        run: |
+          ./scripts/runtime-gc.sh --scope logs --max-delete-per-run 100
+          ./scripts/runtime-gc.sh --scope runs --keep-runs 20 --max-delete-per-run 100
+          ./scripts/runtime-gc.sh --scope cache --max-delete-per-run 200
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  manual_live_audits:
+    needs: [changes, build_ci_image, core_contract_load]
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run_automation_profile == 'true' }}
+    runs-on: ubuntu-latest
+    environment: owner-approved-sensitive
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: ./.github/actions/repo-checkout
+        with:
+          fetch-depth: 0
+      - name: Enforce live API key and external base URL contract
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || secrets.GOOGLE_API_KEY || '' }}
+          UIQ_BASE_URL: ${{ vars.UIQ_BASE_URL || secrets.UIQ_BASE_URL || vars.BASE_URL || secrets.BASE_URL || '' }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${GEMINI_API_KEY}" ]]; then
+            echo "missing GEMINI_API_KEY/GOOGLE_API_KEY for manual live audits" >&2
+            exit 1
+          fi
+          if [[ -z "${UIQ_BASE_URL}" ]]; then
+            echo "missing UIQ_BASE_URL/BASE_URL for manual live audits" >&2
+            exit 1
+          fi
+      - name: Gemini live API smoke gate
+        continue-on-error: true
+        env:
+          UIQ_GEMINI_LIVE_SMOKE_REQUIRED: "true"
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || secrets.GOOGLE_API_KEY || '' }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY || '' }}
+          UIQ_BASE_URL: ${{ vars.UIQ_BASE_URL || secrets.UIQ_BASE_URL || vars.BASE_URL || secrets.BASE_URL || '' }}
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+        run: bash scripts/ci/run-in-container.sh --task live-smoke --gate ci-live-smoke
+      - name: Gemini web audit gate
+        continue-on-error: true
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || secrets.GOOGLE_API_KEY || '' }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY || '' }}
+          UIQ_BASE_URL: ${{ vars.UIQ_BASE_URL || secrets.UIQ_BASE_URL || vars.BASE_URL || secrets.BASE_URL || '' }}
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+        run: bash scripts/ci/run-in-container.sh --task gemini-web-audit --gate ci-gemini-web-audit
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  root_web_typecheck:
+    needs: [changes, build_ci_image]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.ci_gatechain == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      - uses: ./.github/actions/workspace-sanitize
+      - name: Root web typecheck gate
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+        run: bash scripts/ci/run-in-container.sh --task root-web-typecheck --gate ci-root-web-typecheck
+      - name: Upload failure bundle artifact
+        if: ${{ failure() || cancelled() }}
+        uses: ./.github/actions/failure-bundle
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  root_web_unit:
+    needs: [changes, build_ci_image]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.ci_gatechain == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      - uses: ./.github/actions/workspace-sanitize
+      - name: Root web unit gate
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+        run: bash scripts/ci/run-in-container.sh --task root-web-unit --gate ci-root-web-unit
+      - name: Upload failure bundle artifact
+        if: ${{ failure() || cancelled() }}
+        uses: ./.github/actions/failure-bundle
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  root_web_ct:
+    needs: [changes, build_ci_image]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.ci_gatechain == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      - uses: ./.github/actions/workspace-sanitize
+      - name: Root web ct gate
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+        run: bash scripts/ci/run-in-container.sh --task root-web-ct --gate ci-root-web-ct
+      - name: Upload failure bundle artifact
+        if: ${{ failure() || cancelled() }}
+        uses: ./.github/actions/failure-bundle
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  root_web_e2e:
+    needs: [changes, build_ci_image]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.ci_gatechain == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      - uses: ./.github/actions/workspace-sanitize
+      - name: Root web e2e gate
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+        run: bash scripts/ci/run-in-container.sh --task root-web-e2e --gate ci-root-web-e2e
+      - name: Upload failure bundle artifact
+        if: ${{ failure() || cancelled() }}
+        uses: ./.github/actions/failure-bundle
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  frontend_e2e_required:
+    needs: [changes, build_ci_image]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.ci_gatechain == 'true' }}
+    runs-on: ubuntu-latest
+    env:
+      BACKEND_PORT: "17382"
+      BACKEND_BASE_URL: "http://127.0.0.1:17382"
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      - uses: ./.github/actions/workspace-sanitize
+      - name: Frontend authenticity gate (required)
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+        run: bash scripts/ci/run-in-container.sh --task frontend-authenticity --gate ci-frontend-authenticity
+      - name: Frontend non-stub gate (required)
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+        run: bash scripts/ci/run-in-container.sh --task frontend-nonstub --gate ci-frontend-nonstub
+      - name: Frontend critical e2e gate (required)
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+        run: bash scripts/ci/run-in-container.sh --task frontend-critical --gate ci-frontend-critical
+      - name: Upload failure bundle artifact
+        if: ${{ failure() || cancelled() }}
+        uses: ./.github/actions/failure-bundle
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  functional_regression_gate:
+    needs: [changes, build_ci_image]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.automation == 'true' || needs.changes.outputs.ci_gatechain == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      - uses: ./.github/actions/workspace-sanitize
+      - name: Functional regression matrix (serial, full profile, required)
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+        run: bash scripts/ci/run-in-container.sh --task functional-regression-matrix --gate ci-functional-regression-matrix
+      - name: Targeted functional regressions (required)
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+        run: bash scripts/ci/run-in-container.sh --task functional-regression-targeted --gate ci-functional-regression-targeted
+      - name: Upload failure bundle artifact
+        if: ${{ failure() || cancelled() }}
+        uses: ./.github/actions/failure-bundle
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  root_web_gate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    needs: [changes, root_web_typecheck, root_web_unit, root_web_ct, root_web_e2e]
+    if: ${{ always() }}
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      - uses: ./.github/actions/workspace-sanitize
+      - name: Aggregate root web gate
+        run: |
+          set -euo pipefail
+          check_gate() {
+            local gate="$1"
+            local result="$2"
+            if [[ "$result" == "failure" || "$result" == "cancelled" ]]; then
+              echo "::error::root_web_gate dependency '$gate' concluded as '$result'"
+              exit 1
+            fi
+          }
+          check_gate "root_web_typecheck" "${{ needs.root_web_typecheck.result }}"
+          check_gate "root_web_unit" "${{ needs.root_web_unit.result }}"
+          check_gate "root_web_ct" "${{ needs.root_web_ct.result }}"
+          check_gate "root_web_e2e" "${{ needs.root_web_e2e.result }}"
+      - name: Collect required gate durations
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p .runtime-cache/ci .runtime-cache/artifacts/ci
+          export API_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/jobs?per_page=100"
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.request
+          from pathlib import Path
+
+          repo = os.environ["GITHUB_REPOSITORY"]
+          run_id = os.environ["GITHUB_RUN_ID"]
+          token = os.environ.get("GITHUB_TOKEN", "")
+          url = os.environ.get("API_URL") or f"https://api.github.com/repos/{repo}/actions/runs/{run_id}/jobs?per_page=100"
+          req = urllib.request.Request(
+              url,
+              headers={
+                  "Authorization": f"Bearer {token}",
+                  "Accept": "application/vnd.github+json",
+                  "User-Agent": "uiq-ci-gate-durations",
+              },
+          )
+          payload = {"jobs": []}
+          api_warning = None
+          try:
+              with urllib.request.urlopen(req, timeout=30) as resp:
+                  payload = json.loads(resp.read().decode("utf-8"))
+          except Exception as exc:
+              api_warning = f"Collect required gate durations skipped API fetch: {exc}"
+              print(f"::warning::{api_warning}")
+
+          required_gates = [
+              "backend",
+              "backend_full",
+              "core_contract_load",
+              "strict_invariants_gate",
+              "frontend",
+              "frontend_e2e_required",
+              "functional_regression_gate",
+              "root_web_gate",
+              "root_web_e2e",
+              "root_web_typecheck",
+              "root_web_unit",
+              "root_web_ct",
+              "openai_residue_gate",
+              "mutation_report",
+          ]
+
+          jobs = {job.get("name"): job for job in payload.get("jobs", []) if isinstance(job, dict)}
+          rows = []
+          for gate in required_gates:
+              job = jobs.get(gate, {})
+              rows.append(
+                  {
+                      "name": gate,
+                      "status": job.get("status", "missing"),
+                      "conclusion": job.get("conclusion"),
+                      "started_at": job.get("started_at"),
+                      "completed_at": job.get("completed_at"),
+                  }
+              )
+
+          report_path = Path(".runtime-cache/artifacts/ci/gate-duration-report.json")
+          report = {"required_gates": rows}
+          if api_warning:
+              report["warning"] = api_warning
+          report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+
+          summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+          if summary_path:
+              with open(summary_path, "a", encoding="utf-8") as f:
+                  f.write("## Required Gate Durations\n")
+                  if api_warning:
+                      f.write(f"> :warning: {api_warning}\n")
+                  for row in rows:
+                      f.write(
+                          f"- `{row['name']}`: status={row['status']} conclusion={row['conclusion'] or 'n/a'} "
+                          f"start={row['started_at'] or 'n/a'} end={row['completed_at'] or 'n/a'}\n"
+                      )
+          PY
+      - name: Upload failure bundle artifact
+        if: ${{ failure() || cancelled() }}
+        uses: ./.github/actions/failure-bundle
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  frontend:
+    needs: [changes, build_ci_image]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.ci_gatechain == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      - uses: ./.github/actions/workspace-sanitize
+      - name: Frontend full gate
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+        run: bash scripts/ci/run-in-container.sh --task frontend-full --gate ci-frontend-full
+      - name: Runtime cache cleanup (lightweight)
+        if: ${{ always() }}
+        working-directory: .
+        run: |
+          ./scripts/runtime-gc.sh --scope logs --max-delete-per-run 100
+          ./scripts/runtime-gc.sh --scope runs --keep-runs 20 --max-delete-per-run 100
+          ./scripts/runtime-gc.sh --scope cache --max-delete-per-run 200
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  automation:
+    needs: [changes]
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run_automation_profile == 'true' && (github.event_name != 'pull_request' || needs.changes.outputs.automation == 'true') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      - uses: ./.github/actions/workspace-sanitize
+      - uses: ./.github/actions/setup-deps
+        with:
+          node-version: "20"
+          python-version: "3.11"
+          pnpm-cache-dependency-path: pnpm-lock.yaml
+          pnpm-install-command: cd apps/automation-runner && pnpm install --frozen-lockfile
+          uv-sync-command: uv sync --frozen --extra dev
+          enable-playwright: "true"
+          playwright-lockfile-path: pnpm-lock.yaml
+          playwright-cache-key-suffix: automation
+          playwright-working-directory: automation
+      - name: Apply Alembic migrations (automation backend db)
+        run: |
+          mkdir -p .runtime-cache/automation
+          DATABASE_URL="sqlite+pysqlite:///./.runtime-cache/automation/tasks.db" uv run alembic -c apps/api/alembic.ini upgrade heads
+      - name: Lint and dependency audit automation (parallel)
+        run: |
+          set -euo pipefail
+          (cd apps/automation-runner && pnpm lint) &
+          lint_pid=$!
+          (cd apps/automation-runner && pnpm audit --audit-level=high) &
+          audit_pid=$!
+          wait "$lint_pid"
+          wait "$audit_pid"
+      - name: Run automation checks
+        run: cd apps/automation-runner && pnpm check
+      - name: Bootstrap backend
+        uses: ./.github/actions/bootstrap-backend
+        with:
+          database-url: "sqlite+pysqlite:///./.runtime-cache/automation/tasks.db"
+          log-file: ".runtime-cache/logs/backend.ci.log"
+          port: "8000"
+          run-migrations: "false"
+      - name: Run automation tests
+        run: cd apps/automation-runner && pnpm test
+      - name: Runtime cache cleanup (lightweight)
+        if: ${{ always() }}
+        run: |
+          ./scripts/runtime-gc.sh --scope logs --max-delete-per-run 100
+          ./scripts/runtime-gc.sh --scope runs --keep-runs 20 --max-delete-per-run 100
+          ./scripts/runtime-gc.sh --scope cache --max-delete-per-run 200
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  experimental_reconstruction:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run_automation_profile == 'true' }}
+    runs-on: ubuntu-latest
+    needs: [changes, automation]
+    continue-on-error: true
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      - uses: ./.github/actions/workspace-sanitize
+      - uses: ./.github/actions/setup-deps
+        with:
+          enable-python: "false"
+          enable-playwright: "false"
+          node-version: "20"
+          pnpm-cache-dependency-path: pnpm-lock.yaml
+          pnpm-install-command: cd apps/automation-runner && pnpm install --frozen-lockfile
+      - name: Experimental reconstruction comparison (warning only)
+        run: |
+          cd apps/automation-runner
+          pnpm run extract:video || true
+          pnpm run generate:reconstruction -- --preview=.runtime-cache/non-existent.json || true
+      - name: Upload failure bundle artifact
+        if: ${{ failure() || cancelled() }}
+        uses: ./.github/actions/failure-bundle
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  mutation_report:
+    needs: [changes, build_ci_image]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.automation == 'true' || needs.changes.outputs.ci_gatechain == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      - uses: ./.github/actions/workspace-sanitize
+      - name: Run TS mutation strict execution
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+        run: bash scripts/ci/run-in-container.sh --task mutation-ts --gate ci-mutation-ts-strict
+      - name: Run Python mutation strict execution
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+        run: bash scripts/ci/run-in-container.sh --task mutation-py --gate ci-mutation-py-strict
+      - name: Run mutation gate (effective coverage blocking)
+        env:
+          UIQ_CI_IMAGE_REF: ${{ needs.build_ci_image.outputs.image_ref }}
+          UIQ_MUTATION_REQUIRED_CONTEXT: "true"
+          UIQ_MUTATION_PY_MAX_SURVIVED: "0"
+          UIQ_MUTATION_TS_MIN_TOTAL: "50"
+          UIQ_MUTATION_PY_MIN_TOTAL: "249"
+        run: bash scripts/ci/run-in-container.sh --task mutation-effective --gate ci-mutation-effective
+      - name: Upload mutation reports
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        if: ${{ always() }}
+        with:
+          name: mutation-reports
+          path: |
+            .runtime-cache/reports/mutation/
+            .mutmut-cache/
+          retention-days: 7
+      - name: Upload failure bundle artifact
+        if: ${{ failure() || cancelled() }}
+        uses: ./.github/actions/failure-bundle
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  internal_governance_control_plane_gate:
+    name: control-plane green (internal governance)
+    needs: [changes]
+    if: ${{ github.repository_owner != 'xiaojiou176-open' && (github.event_name == 'workflow_dispatch' || needs.changes.outputs.docs == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.automation == 'true' || needs.changes.outputs.ci_gatechain == 'true') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/workspace-sanitize
+      - uses: ./.github/actions/setup-node-pnpm
+        with:
+          node-version: "20"
+      - name: Install root deps for governance gate
+        run: pnpm install --frozen-lockfile
+      - name: Internal governance control-plane gate
+        run: pnpm governance:control-plane:check
+      - name: Upload governance score report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: governance-score-report
+          path: |
+            .runtime-cache/artifacts/ci/*/governance-score-report.json
+            .runtime-cache/artifacts/ci/*/governance-score-report.md
+          retention-days: 7
+          if-no-files-found: warn
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post
+
+  repo_truth_required_gate:
+    name: repo truth deterministic gate (aggregate)
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs:
+      - changes
+      - openai_residue_gate
+      - docs
+      - hooks_equivalence_gate
+      - security
+      - security_scan_script
+      - preflight_minimal
+      - strict_invariants_gate
+      - backend
+      - backend_full
+      - core_contract_load
+      - frontend
+      - frontend_e2e_required
+      - functional_regression_gate
+      - internal_governance_control_plane_gate
+      - root_web_gate
+      - mutation_report
+    steps:
+      - name: Pre-checkout workspace sanitize
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is required}"
+          home_dir="${HOME:-}"
+          case "$workspace" in
+            /|/.|/..|"")
+              echo "::error::refusing dangerous workspace path: $workspace"
+              exit 1
+              ;;
+          esac
+          if [[ -n "$home_dir" && "$workspace" == "$home_dir" ]]; then
+            echo "::error::refusing workspace equal to HOME: $workspace"
+            exit 1
+          fi
+          if [[ -d "$workspace" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$workspace" || true
+              sudo bash -lc 'shopt -s dotglob nullglob; rm -rf -- "$1"/* "$1"/.[!.]* "$1"/..?*' _ "$workspace" || true
+              sudo mkdir -p "$workspace" || true
+              sudo chown "$(id -u):$(id -g)" "$workspace" || true
+            else
+              chmod -R u+rwX "$workspace" || true
+              find "$workspace" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} + || true
+            fi
+          fi
+      - uses: actions/checkout@64ffef1ea610c4052efefeb955034987fb104bc4 # v4
+      - uses: ./.github/actions/workspace-sanitize
+      - uses: ./.github/actions/setup-node-pnpm
+        with:
+          node-version: "20"
+      - name: Install root deps for manifest validators
+        run: pnpm install --frozen-lockfile
+      - name: Aggregate deterministic repo-truth CI gates
+        run: |
+          set -euo pipefail
+          require_success() {
+            local gate="$1"
+            local result="$2"
+            if [[ "$result" != "success" ]]; then
+              echo "::error::repo_truth_required_gate dependency '$gate' must be success, got '$result'"
+              exit 1
+            fi
+          }
+          require_when_present() {
+            local gate="$1"
+            local result="$2"
+            if [[ "$result" == "skipped" ]]; then
+              return 0
+            fi
+            require_success "$gate" "$result"
+          }
+          allow_skipped() {
+            local gate="$1"
+            local result="$2"
+            if [[ "$result" != "success" && "$result" != "skipped" ]]; then
+              echo "::error::repo_truth_required_gate optional dependency '$gate' invalid result '$result' (allowed: success/skipped)"
+              exit 1
+            fi
+          }
+          require_success "changes" "${{ needs.changes.result }}"
+          allow_skipped "openai_residue_gate" "${{ needs.openai_residue_gate.result }}"
+          core_required="${{ (github.event_name == 'workflow_dispatch' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.automation == 'true') && '1' || '0' }}"
+          if [[ "$core_required" == "1" ]]; then
+            require_when_present "hooks_equivalence_gate" "${{ needs.hooks_equivalence_gate.result }}"
+            require_when_present "security_scan_script" "${{ needs.security_scan_script.result }}"
+            require_when_present "preflight_minimal" "${{ needs.preflight_minimal.result }}"
+            require_when_present "core_contract_load" "${{ needs.core_contract_load.result }}"
+            require_when_present "strict_invariants_gate" "${{ needs.strict_invariants_gate.result }}"
+            require_when_present "internal_governance_control_plane_gate" "${{ needs.internal_governance_control_plane_gate.result }}"
+            require_when_present "root_web_gate" "${{ needs.root_web_gate.result }}"
+            require_when_present "mutation_report" "${{ needs.mutation_report.result }}"
+          else
+            allow_skipped "hooks_equivalence_gate" "${{ needs.hooks_equivalence_gate.result }}"
+            allow_skipped "security_scan_script" "${{ needs.security_scan_script.result }}"
+            allow_skipped "preflight_minimal" "${{ needs.preflight_minimal.result }}"
+            allow_skipped "core_contract_load" "${{ needs.core_contract_load.result }}"
+            allow_skipped "strict_invariants_gate" "${{ needs.strict_invariants_gate.result }}"
+            allow_skipped "internal_governance_control_plane_gate" "${{ needs.internal_governance_control_plane_gate.result }}"
+            allow_skipped "root_web_gate" "${{ needs.root_web_gate.result }}"
+            allow_skipped "mutation_report" "${{ needs.mutation_report.result }}"
+          fi
+
+          docs_required="${{ (github.event_name == 'workflow_dispatch' || needs.changes.outputs.docs == 'true') && '1' || '0' }}"
+          backend_required="${{ (github.event_name == 'workflow_dispatch' || needs.changes.outputs.backend == 'true') && '1' || '0' }}"
+          frontend_required="${{ (github.event_name == 'workflow_dispatch' || needs.changes.outputs.frontend == 'true') && '1' || '0' }}"
+          functional_required="${{ (github.event_name == 'workflow_dispatch' || needs.changes.outputs.backend == 'true' || needs.changes.outputs.frontend == 'true' || needs.changes.outputs.automation == 'true') && '1' || '0' }}"
+
+          if [[ "$docs_required" == "1" ]]; then
+            require_when_present "docs" "${{ needs.docs.result }}"
+          else
+            allow_skipped "docs" "${{ needs.docs.result }}"
+          fi
+
+          if [[ "$backend_required" == "1" ]]; then
+            require_when_present "backend" "${{ needs.backend.result }}"
+            require_when_present "backend_full" "${{ needs.backend_full.result }}"
+          else
+            allow_skipped "backend" "${{ needs.backend.result }}"
+            allow_skipped "backend_full" "${{ needs.backend_full.result }}"
+          fi
+
+          if [[ "$frontend_required" == "1" ]]; then
+            require_when_present "frontend" "${{ needs.frontend.result }}"
+            require_when_present "frontend_e2e_required" "${{ needs.frontend_e2e_required.result }}"
+          else
+            allow_skipped "frontend" "${{ needs.frontend.result }}"
+            allow_skipped "frontend_e2e_required" "${{ needs.frontend_e2e_required.result }}"
+          fi
+
+          if [[ "$functional_required" == "1" ]]; then
+            require_when_present "functional_regression_gate" "${{ needs.functional_regression_gate.result }}"
+          else
+            allow_skipped "functional_regression_gate" "${{ needs.functional_regression_gate.result }}"
+          fi
+
+          allow_skipped "security" "${{ needs.security.result }}"
+      - name: Generate repo-truth true-green manifest (ci)
+        run: |
+          node scripts/ci/generate-true-green-manifest.mjs \
+            --layer ci \
+            --run-id "${{ github.run_id }}-${{ github.run_attempt }}-repo-truth-required-gate" \
+            --out .runtime-cache/artifacts/ci/true-green-manifest-ci.json \
+            --decision passed \
+            --reason-codes gate.true_green.passed.ci.repo_truth_required_gate
+      - name: Validate repo-truth true-green manifest (ci)
+        run: |
+          node scripts/ci/validate-true-green-manifest.mjs \
+            --schema contracts/true-green-manifest.schema.json \
+            --input .runtime-cache/artifacts/ci/true-green-manifest-ci.json
+      - name: Upload repo-truth true-green manifest (ci)
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: uiq-ci-true-green-manifest
+          path: .runtime-cache/artifacts/ci/true-green-manifest-ci.json
+          retention-days: 7
+          if-no-files-found: error
+      - uses: ./.github/actions/workspace-sanitize
+        if: ${{ always() }}
+        with:
+          mode: post

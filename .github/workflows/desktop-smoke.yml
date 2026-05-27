@@ -1,0 +1,67 @@
+name: Desktop Smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      tauri_app_path:
+        description: "Optional absolute macOS .app path for tauri profiles"
+        required: false
+        type: string
+      swift_bundle_id:
+        description: "Optional macOS bundle id for swift profiles"
+        required: false
+        type: string
+permissions:
+  contents: read
+
+jobs:
+  desktop-smoke:
+    if: ${{ vars.UIQ_ENABLE_DESKTOP_SMOKE == 'true' || (github.event_name == 'workflow_dispatch' && (github.event.inputs.tauri_app_path != '' || github.event.inputs.swift_bundle_id != '')) }}
+    runs-on: macos-latest
+    environment: owner-approved-sensitive
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [tauri, swift]
+        profile: [smoke, soak]
+    env:
+      TAURI_APP_PATH_INPUT: ${{ github.event.inputs.tauri_app_path }}
+      SWIFT_BUNDLE_ID_INPUT: ${{ github.event.inputs.swift_bundle_id }}
+      MATRIX_TARGET: ${{ matrix.target }}
+      MATRIX_PROFILE: ${{ matrix.profile }}
+      UIQ_DESKTOP_AUTOMATION_MODE: operator-manual
+      UIQ_DESKTOP_AUTOMATION_REASON: github-workflow-desktop-smoke
+    steps:
+      - uses: ./.github/actions/repo-checkout
+      - uses: ./.github/actions/setup-deps
+        with:
+          node-version: "20"
+          enable-python: "false"
+          enable-playwright: "false"
+      - name: Run Desktop Profile (matrix)
+        run: |
+          set -euo pipefail
+          profile_name="${MATRIX_TARGET}.${MATRIX_PROFILE}"
+          if [ "${MATRIX_TARGET}" = "tauri" ]; then
+            echo "${profile_name} app_path=${TAURI_APP_PATH_INPUT:-<empty>}"
+            if [ -n "${TAURI_APP_PATH_INPUT}" ]; then
+              pnpm uiq run --profile "${profile_name}" --target tauri.macos --app "${TAURI_APP_PATH_INPUT}"
+            else
+              pnpm uiq run --profile "${profile_name}" --target tauri.macos
+            fi
+          else
+            echo "${profile_name} bundle_id=${SWIFT_BUNDLE_ID_INPUT:-<empty>}"
+            if [ -n "${SWIFT_BUNDLE_ID_INPUT}" ]; then
+              pnpm uiq run --profile "${profile_name}" --target swift.macos --bundle-id "${SWIFT_BUNDLE_ID_INPUT}"
+            else
+              pnpm uiq run --profile "${profile_name}" --target swift.macos
+            fi
+          fi
+      - name: Verify run evidence (hard gate)
+        run: node scripts/ci/verify-run-evidence.mjs --profile "${MATRIX_TARGET}.${MATRIX_PROFILE}" --runs-dir .runtime-cache/artifacts/runs
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: uiq-desktop-${{ matrix.target }}-${{ matrix.profile }}-run
+          path: .runtime-cache/artifacts/runs/
+          retention-days: 14

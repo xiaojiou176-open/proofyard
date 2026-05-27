@@ -1,0 +1,243 @@
+name: Setup Dependency Prewarm
+
+description: >-
+  Unified dependency prewarm layer for Node+pnpm, Python+uv, and Playwright.
+  Supports selective setup/install to avoid repeated installation logic in workflows.
+
+inputs:
+  runtime-lock-path:
+    description: Runtime lock file used to derive pinned toolchain versions.
+    required: false
+    default: configs/ci/runtime.lock.json
+  enable-node:
+    description: Enable Node.js + pnpm setup.
+    required: false
+    default: "true"
+  node-version:
+    description: Node.js version passed to setup-node-pnpm action.
+    required: false
+    default: ""
+  pnpm-cache-dependency-path:
+    description: Lockfile path used to key pnpm cache.
+    required: false
+    default: pnpm-lock.yaml
+  pnpm-cache:
+    description: Enable pnpm cache restore/save in setup-node-pnpm action.
+    required: false
+    default: "true"
+  pnpm-install:
+    description: Run pnpm install after setup.
+    required: false
+    default: "true"
+  pnpm-install-command:
+    description: Command used when pnpm-install is true.
+    required: false
+    default: pnpm install --frozen-lockfile
+
+  enable-python:
+    description: Enable Python + uv setup.
+    required: false
+    default: "true"
+  python-version:
+    description: Python version passed to setup-python-uv action.
+    required: false
+    default: ""
+  uv-cache:
+    description: Enable uv cache restore/save in setup-python-uv action.
+    required: false
+    default: "true"
+  uv-cache-dependency-glob:
+    description: Files used to key uv cache.
+    required: false
+    default: |
+      uv.lock
+      pyproject.toml
+  uv-sync:
+    description: Run uv sync after setup.
+    required: false
+    default: "true"
+  uv-sync-command:
+    description: Command used when uv-sync is true.
+    required: false
+    default: uv sync --frozen
+
+  enable-playwright:
+    description: Enable Playwright browser cache and install.
+    required: false
+    default: "true"
+  playwright-lockfile-path:
+    description: Lockfile path used by Playwright cache key.
+    required: false
+    default: pnpm-lock.yaml
+  playwright-cache-key-suffix:
+    description: Cache key suffix for Playwright browser cache.
+    required: false
+    default: root
+  playwright-browser:
+    description: Browser channel to install.
+    required: false
+    default: chromium
+  playwright-install-deps:
+    description: Install Playwright system dependencies.
+    required: false
+    default: "true"
+  playwright-working-directory:
+    description: Working directory for Playwright install.
+    required: false
+    default: .
+  playwright-install:
+    description: Run Playwright browser installation step.
+    required: false
+    default: "true"
+
+runs:
+  using: composite
+  steps:
+    - name: Resolve toolchain versions from runtime lock
+      env:
+        INPUT_NODE_VERSION: ${{ inputs.node-version }}
+        INPUT_PYTHON_VERSION: ${{ inputs.python-version }}
+        INPUT_RUNTIME_LOCK_PATH: ${{ inputs.runtime-lock-path }}
+      shell: bash
+      run: |
+        set -euo pipefail
+        write_env_var() {
+          local key="$1"
+          local value="$2"
+          local marker="EOF_${key}_$(date +%s%N)"
+          {
+            printf '%s<<%s\n' "$key" "$marker"
+            printf '%s\n' "$value"
+            printf '%s\n' "$marker"
+          } >> "$GITHUB_ENV"
+        }
+
+        node_version="$INPUT_NODE_VERSION"
+        python_version="$INPUT_PYTHON_VERSION"
+        if [[ -f "$INPUT_RUNTIME_LOCK_PATH" ]]; then
+          if [[ -z "$node_version" ]]; then
+            node_version="$(INPUT_RUNTIME_LOCK_PATH="$INPUT_RUNTIME_LOCK_PATH" python3 -c 'import json, os, pathlib; path = pathlib.Path(os.environ["INPUT_RUNTIME_LOCK_PATH"]); payload = json.loads(path.read_text(encoding="utf-8")); print(str(payload.get("toolchain", {}).get("node", "")).strip())')"
+          fi
+          if [[ -z "$python_version" ]]; then
+            python_version="$(INPUT_RUNTIME_LOCK_PATH="$INPUT_RUNTIME_LOCK_PATH" python3 -c 'import json, os, pathlib; path = pathlib.Path(os.environ["INPUT_RUNTIME_LOCK_PATH"]); payload = json.loads(path.read_text(encoding="utf-8")); print(str(payload.get("toolchain", {}).get("python", "")).strip())')"
+          fi
+        fi
+        if [[ -z "$node_version" ]]; then
+          node_version="20.20.1"
+        fi
+        if [[ -z "$python_version" ]]; then
+          python_version="3.11.15"
+        fi
+        write_env_var "UIQ_SETUP_NODE_VERSION" "$node_version"
+        write_env_var "UIQ_SETUP_PYTHON_VERSION" "$python_version"
+
+    - name: Setup Node + pnpm
+      if: ${{ inputs.enable-node == 'true' }}
+      uses: ./.github/actions/setup-node-pnpm
+      with:
+        node-version: ${{ env.UIQ_SETUP_NODE_VERSION }}
+        enable-cache: ${{ inputs.pnpm-cache }}
+        cache-dependency-path: ${{ inputs.pnpm-cache-dependency-path }}
+
+    - name: Install Node dependencies
+      if: ${{ inputs.enable-node == 'true' && inputs.pnpm-install == 'true' }}
+      env:
+        INPUT_PNPM_INSTALL_COMMAND: ${{ inputs.pnpm-install-command }}
+      shell: bash
+      run: |
+        set -euo pipefail
+        cd "$GITHUB_WORKSPACE"
+        install_log="$(mktemp)"
+        set +e
+        bash -lc "$INPUT_PNPM_INSTALL_COMMAND" >"$install_log" 2>&1
+        install_status=$?
+        set -e
+        if [[ "$install_status" -ne 0 ]]; then
+          cat "$install_log"
+          if grep -Eq 'ERR_PNPM_ENOENT|ENOENT: no such file or directory, copyfile' "$install_log"; then
+            echo "[setup-deps] pnpm store appears corrupted or stale; rebuilding isolated store once..."
+            rm -rf node_modules apps/web/node_modules apps/web/node_modules apps/mcp-server/node_modules apps/automation-runner/node_modules
+            if [[ -n "${PNPM_STORE_DIR:-}" ]]; then
+              rm -rf "${PNPM_STORE_DIR}"
+              mkdir -p "${PNPM_STORE_DIR}"
+              pnpm config set store-dir "${PNPM_STORE_DIR}"
+            fi
+            bash -lc "$INPUT_PNPM_INSTALL_COMMAND"
+          else
+            rm -f "$install_log"
+            exit "$install_status"
+          fi
+        fi
+        rm -f "$install_log"
+
+    - name: Setup Python + uv
+      if: ${{ inputs.enable-python == 'true' }}
+      uses: ./.github/actions/setup-python-uv
+      with:
+        runtime-lock-path: ${{ inputs.runtime-lock-path }}
+        python-version: ${{ env.UIQ_SETUP_PYTHON_VERSION }}
+        uv-cache: ${{ inputs.uv-cache }}
+        uv-cache-dependency-glob: ${{ inputs.uv-cache-dependency-glob }}
+
+    - name: Sync Python dependencies
+      if: ${{ inputs.enable-python == 'true' && inputs.uv-sync == 'true' }}
+      env:
+        INPUT_UV_SYNC_COMMAND: ${{ inputs.uv-sync-command }}
+      shell: bash
+      run: |
+        set -euo pipefail
+        write_env_var() {
+          local key="$1"
+          local value="$2"
+          local marker="EOF_${key}_$(date +%s%N)"
+          {
+            printf '%s<<%s\n' "$key" "$marker"
+            printf '%s\n' "$value"
+            printf '%s\n' "$marker"
+          } >> "$GITHUB_ENV"
+        }
+        cd "$GITHUB_WORKSPACE"
+        requested_python_version="${UIQ_SETUP_PYTHON_VERSION}"
+        managed_python_env="${PROJECT_PYTHON_ENV:-${UV_PROJECT_ENVIRONMENT:-.runtime-cache/toolchains/python/.venv}}"
+        managed_python_bin="${managed_python_env}/bin/python"
+        if [[ -d "$managed_python_env" ]]; then
+          broken_venv=0
+          if [[ -L "${managed_python_env}/bin/python3" ]] && [[ ! -e "${managed_python_env}/bin/python3" ]]; then
+            broken_venv=1
+          fi
+          if [[ -x "$managed_python_bin" ]]; then
+            existing_python_version="$("$managed_python_bin" -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')"
+            if [[ "$existing_python_version" != "$requested_python_version" ]]; then
+              echo "[setup-deps] removing drifted managed python env: expected Python $requested_python_version, found $existing_python_version"
+              broken_venv=1
+            fi
+          fi
+          if [[ ! -w "$managed_python_env" ]] || [[ -d "${managed_python_env}/lib64" && ! -w "${managed_python_env}/lib64" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo chown -R "$(id -u):$(id -g)" "$managed_python_env" || true
+            fi
+          fi
+          if [[ "$broken_venv" -eq 1 ]] || [[ ! -w "$managed_python_env" ]] || [[ -d "${managed_python_env}/lib64" && ! -w "${managed_python_env}/lib64" ]]; then
+            if command -v sudo >/dev/null 2>&1; then
+              sudo rm -rf "$managed_python_env" || rm -rf "$managed_python_env"
+            else
+              rm -rf "$managed_python_env"
+            fi
+          fi
+        fi
+        export PROJECT_PYTHON_ENV="$managed_python_env"
+        export UV_PROJECT_ENVIRONMENT="$managed_python_env"
+        write_env_var "PROJECT_PYTHON_ENV" "$managed_python_env"
+        write_env_var "UV_PROJECT_ENVIRONMENT" "$managed_python_env"
+        bash -lc "$INPUT_UV_SYNC_COMMAND"
+
+    - name: Setup Playwright
+      if: ${{ inputs.enable-playwright == 'true' }}
+      uses: ./.github/actions/setup-playwright
+      with:
+        install-browsers: ${{ inputs.playwright-install }}
+        lockfile-path: ${{ inputs.playwright-lockfile-path }}
+        cache-key-suffix: ${{ inputs.playwright-cache-key-suffix }}
+        browser: ${{ inputs.playwright-browser }}
+        install-deps: ${{ inputs.playwright-install-deps }}
+        working-directory: ${{ inputs.playwright-working-directory }}

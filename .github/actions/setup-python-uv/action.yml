@@ -1,0 +1,96 @@
+name: Setup Python + uv
+description: Setup Python and uv with uv cache priming.
+inputs:
+  runtime-lock-path:
+    description: Runtime lock file used to derive the Python version when python-version is unset.
+    required: false
+    default: configs/ci/runtime.lock.json
+  python-version:
+    description: Python version.
+    required: false
+    default: ""
+  uv-cache:
+    description: Enable uv cache restore/save.
+    required: false
+    default: "true"
+  uv-cache-dependency-glob:
+    description: Files used to key uv cache.
+    required: false
+    default: |
+      uv.lock
+      pyproject.toml
+runs:
+  using: composite
+  steps:
+    - name: Resolve Python version from runtime lock
+      env:
+        INPUT_PYTHON_VERSION: ${{ inputs.python-version }}
+        INPUT_RUNTIME_LOCK_PATH: ${{ inputs.runtime-lock-path }}
+      shell: bash
+      run: |
+        set -euo pipefail
+        write_env_var() {
+          local key="$1"
+          local value="$2"
+          local marker="EOF_${key}_$(date +%s%N)"
+          {
+            printf '%s<<%s\n' "$key" "$marker"
+            printf '%s\n' "$value"
+            printf '%s\n' "$marker"
+          } >> "$GITHUB_ENV"
+        }
+
+        requested_python_version="$INPUT_PYTHON_VERSION"
+        requested_uv_version="$(INPUT_RUNTIME_LOCK_PATH="$INPUT_RUNTIME_LOCK_PATH" python3 -c 'import json, os, pathlib; path = pathlib.Path(os.environ["INPUT_RUNTIME_LOCK_PATH"]); print(str(json.loads(path.read_text(encoding="utf-8")).get("toolchain", {}).get("uv", "")).strip() if path.exists() else "")')"
+        if [[ -z "$requested_python_version" ]]; then
+          requested_python_version="$(INPUT_RUNTIME_LOCK_PATH="$INPUT_RUNTIME_LOCK_PATH" python3 -c 'import json, os, pathlib; path = pathlib.Path(os.environ["INPUT_RUNTIME_LOCK_PATH"]); print(str(json.loads(path.read_text(encoding="utf-8")).get("toolchain", {}).get("python", "")).strip() if path.exists() else "")')"
+        fi
+        if [[ -z "$requested_python_version" ]]; then
+          requested_python_version="3.11.15"
+        fi
+        if [[ -z "$requested_uv_version" ]]; then
+          requested_uv_version="0.8.15"
+        fi
+        write_env_var "UIQ_SETUP_PYTHON_VERSION" "$requested_python_version"
+        write_env_var "UIQ_SETUP_UV_VERSION" "$requested_uv_version"
+    - name: Configure uv cache directory and lock timeout
+      shell: bash
+      run: |
+        set -euo pipefail
+        write_env_var() {
+          local key="$1"
+          local value="$2"
+          local marker="EOF_${key}_$(date +%s%N)"
+          {
+            printf '%s<<%s\n' "$key" "$marker"
+            printf '%s\n' "$value"
+            printf '%s\n' "$marker"
+          } >> "$GITHUB_ENV"
+        }
+        uv_cache_dir="${RUNNER_TEMP}/uv-cache"
+        mkdir -p "$uv_cache_dir"
+        write_env_var "UV_CACHE_DIR" "$uv_cache_dir"
+        write_env_var "UV_LOCK_TIMEOUT" "1200"
+    - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+      with:
+        version: 0.8.15
+        enable-cache: ${{ inputs.uv-cache }}
+        cache-dependency-glob: ${{ inputs.uv-cache-dependency-glob }}
+    - name: Install and activate Python via uv
+      shell: bash
+      run: |
+        set -euo pipefail
+        write_env_var() {
+          local key="$1"
+          local value="$2"
+          local marker="EOF_${key}_$(date +%s%N)"
+          {
+            printf '%s<<%s\n' "$key" "$marker"
+            printf '%s\n' "$value"
+            printf '%s\n' "$marker"
+          } >> "$GITHUB_ENV"
+        }
+
+        uv python install "${UIQ_SETUP_PYTHON_VERSION}"
+        PY_BIN="$(uv python find "${UIQ_SETUP_PYTHON_VERSION}")"
+        write_env_var "UV_PYTHON" "$PY_BIN"
