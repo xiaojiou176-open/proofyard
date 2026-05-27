@@ -6,7 +6,7 @@ exists:
 > keep the evidence bundle, use recovery before guesswork, and build one
 > review-ready packet before you widen handoff or promotion.
 
-That is where Proofyard feels different from a pile of browser scripts or a
+That is where Webaudit feels different from a pile of browser scripts or a
 single replay log.
 
 ## Use this page when
@@ -25,7 +25,7 @@ If you do **not** have a retained run yet, go back first:
 
 ## The product promise in one sentence
 
-Proofyard does not stop at "the automation ran."
+Webaudit does not stop at "the automation ran."
 
 It keeps three layers attached to the same run:
 
@@ -137,11 +137,11 @@ keeps evidence, judgment, and handoff connected.
 
 Use the current public matrix in this order:
 
-1. [Proofyard for AI Agents](proofyard-for-ai-agents.md) for audience fit
-2. [Proofyard for Coding Agents and Agent Ecosystems](proofyard-for-coding-agents.md) for coding-agent fit
+1. [Webaudit for AI Agents](webaudit-for-ai-agents.md) for audience fit
+2. [Webaudit for Coding Agents and Agent Ecosystems](webaudit-for-coding-agents.md) for coding-agent fit
 3. [MCP for Browser Automation](mcp-quickstart-1pager.md) for the governed tool road
 4. [AI Reconstruction Side Road](ai-reconstruction-side-road.md) for the downstream AI helper lane
-5. [Proofyard vs Generic Browser Agents](../compare/proofyard-vs-generic-browser-agents.md) for category fit
+5. [Webaudit vs Generic Browser Agents](../compare/webaudit-vs-generic-browser-agents.md) for category fit
 6. this page for the deepest current product proof after a run already exists
 
 If you only need the shortest evidence-and-handoff route, use this tighter

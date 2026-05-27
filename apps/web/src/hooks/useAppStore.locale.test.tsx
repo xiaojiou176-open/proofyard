@@ -39,7 +39,7 @@ describe("useAppStore locale", () => {
     })
 
     expect(container.textContent).toContain("en")
-    expect(localStorage.getItem("proofyard_locale")).toBe("en")
+    expect(localStorage.getItem("webaudit_locale")).toBe("en")
 
     const button = container.querySelector("button")
     act(() => {
@@ -47,11 +47,11 @@ describe("useAppStore locale", () => {
     })
 
     expect(container.textContent).toContain("zh-CN")
-    expect(localStorage.getItem("proofyard_locale")).toBe("zh-CN")
+    expect(localStorage.getItem("webaudit_locale")).toBe("zh-CN")
   })
 
   it("restores a supported stored locale", function () {
-    localStorage.setItem("proofyard_locale", "zh-CN")
+    localStorage.setItem("webaudit_locale", "zh-CN")
 
     act(() => {
       root.render(<LocaleProbe />)

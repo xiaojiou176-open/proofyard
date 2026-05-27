@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Proofyard Platform API
+  title: Webaudit Platform API
   version: 0.2.0
   description: "Evidence-first browser automation platform API for canonical runs, operator workflows, retained evidence, recovery, and governed side roads."
 servers:

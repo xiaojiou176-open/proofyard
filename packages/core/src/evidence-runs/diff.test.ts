@@ -63,7 +63,7 @@ function writeRun(
 }
 
 test("compareEvidenceRuns returns gate, summary and artifact deltas", () => {
-  const rootDir = mkdtempSync(join(tmpdir(), "proofyard-evidence-compare-"))
+  const rootDir = mkdtempSync(join(tmpdir(), "webaudit-evidence-compare-"))
   writeRun(rootDir, "run-a", { gateStatus: "passed", durationMs: 1000, failed: 0 })
   writeRun(rootDir, "run-b", { gateStatus: "failed", durationMs: 1600, failed: 2 })
 

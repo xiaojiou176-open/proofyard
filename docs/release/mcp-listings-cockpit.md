@@ -1,6 +1,6 @@
-# Proofyard MCP Listings Cockpit
+# Webaudit MCP Listings Cockpit
 
-This page is the honest outer-lane cockpit for Proofyard's MCP surface.
+This page is the honest outer-lane cockpit for Webaudit's MCP surface.
 
 It separates:
 
@@ -15,8 +15,8 @@ It separates:
 - `Official MCP Registry`
   - status: `exact blocker`
   - exact blocker:
-    `npm publish` for `@proofyard/mcp-server@0.1.1` returned
-    `404 Not Found - PUT https://registry.npmjs.org/@proofyard%2fmcp-server`.
+    `npm publish` for `@webaudit/mcp-server@0.1.1` returned
+    `404 Not Found - PUT https://registry.npmjs.org/@webaudit%2fmcp-server`.
     The narrow blocker is npm scope/package ownership under the active
     `xiaojiou176` account.
 - `Cline MCP Marketplace`
@@ -52,7 +52,7 @@ It separates:
 ## Live Packet Receipts
 
 - ClawHub discovery page:
-  - `https://clawhub.ai/skills/proofyard-mcp`
+  - `https://clawhub.ai/skills/webaudit-mcp`
 - repo-native MCP install docs:
   - `llms-install.md`
   - `apps/mcp-server/README.md`
@@ -61,9 +61,9 @@ It separates:
 ## Cline Packet
 
 - repo URL:
-  - `https://github.com/xiaojiou176-open/proofyard`
+  - `https://github.com/xiaojiou176-open/webaudit`
 - logo URL:
-  - `https://raw.githubusercontent.com/xiaojiou176-open/proofyard/docs/proofyard-publication-receipt-bundle/assets/storefront/proofyard-social-preview.png`
+  - `https://raw.githubusercontent.com/xiaojiou176-open/webaudit/docs/webaudit-publication-receipt-bundle/assets/storefront/webaudit-social-preview.png`
 - install doc:
   - `llms-install.md`
 - tested repo-owned path:
@@ -84,27 +84,27 @@ It separates:
 ### mcpservers.org
 
 - `Title / Project Name`
-  - `Proofyard MCP`
+  - `Webaudit MCP`
 - `Link to GitHub Repository`
-  - `https://github.com/xiaojiou176-open/proofyard`
+  - `https://github.com/xiaojiou176-open/webaudit`
 - `Short Description`
-  - Governed stdio MCP surface for Proofyard browser-evidence,
+  - Governed stdio MCP surface for Webaudit browser-evidence,
     retained proof, and recovery workflows.
 - `Full Description`
-  - Proofyard MCP gives coding-agent shells a governed bridge into
+  - Webaudit MCP gives coding-agent shells a governed bridge into
     browser-evidence runs, retained proof bundles, and recovery workflows.
   - The current supported road is local checkout + stdio, with optional
     live-backend forwarding.
   - It does not claim a hosted HTTP MCP endpoint or a live npm-installed
     registry package today.
 - `Project Homepage`
-  - `https://xiaojiou176-open.github.io/proofyard/`
+  - `https://xiaojiou176-open.github.io/webaudit/`
 - `Documentation URL`
-  - `https://xiaojiou176-open.github.io/proofyard/`
+  - `https://xiaojiou176-open.github.io/webaudit/`
 - `Listing Category`
   - `Developer Tools`
 - `Tags`
-  - `mcp, proofyard, browser-automation, evidence, recovery, coding-agents`
+  - `mcp, webaudit, browser-automation, evidence, recovery, coding-agents`
 - `Platform`
   - `macOS, Linux`
 - `Programming Language`
@@ -119,19 +119,19 @@ It separates:
 - `Type`
   - `MCP Server`
 - `Name`
-  - `Proofyard MCP`
+  - `Webaudit MCP`
 - `URL`
-  - `https://github.com/xiaojiou176-open/proofyard`
+  - `https://github.com/xiaojiou176-open/webaudit`
 - `Server Config`
   - see the JSON snippet below
 
 ```json
 {
   "mcpServers": {
-    "proofyard": {
+    "webaudit": {
       "command": "pnpm",
       "args": ["mcp:start"],
-      "cwd": "/absolute/path/to/proofyard"
+      "cwd": "/absolute/path/to/webaudit"
     }
   }
 }
@@ -140,25 +140,25 @@ It separates:
 ### LobeHub MCP Marketplace
 
 - `GitHub Repository URL`
-  - `https://github.com/xiaojiou176-open/proofyard`
+  - `https://github.com/xiaojiou176-open/webaudit`
 - `Title`
-  - `Proofyard MCP`
+  - `Webaudit MCP`
 - `One-liner`
   - Governed stdio MCP surface for browser-evidence, retained proof,
     and recovery workflows.
 - `Long description`
-  - Proofyard MCP helps coding-agent shells inspect retained run evidence,
-    launch governed workflow tools, and operate on Proofyard's recovery
+  - Webaudit MCP helps coding-agent shells inspect retained run evidence,
+    launch governed workflow tools, and operate on Webaudit's recovery
     surfaces through a local stdio bridge.
   - The honest install road today is repo checkout + stdio, with optional
     local backend forwarding; it is not a hosted HTTP MCP runtime.
 - `Docs / homepage`
-  - `https://xiaojiou176-open.github.io/proofyard/`
+  - `https://xiaojiou176-open.github.io/webaudit/`
 - `Suggested logo`
-  - `assets/storefront/proofyard-social-preview.png`
+  - `assets/storefront/webaudit-social-preview.png`
 - `Suggested screenshots`
-  - `assets/storefront/proofyard-studio-preview.svg`
-  - `assets/storefront/proofyard-hero.png`
+  - `assets/storefront/webaudit-studio-preview.svg`
+  - `assets/storefront/webaudit-hero.png`
 
 ## Owner Last Click
 

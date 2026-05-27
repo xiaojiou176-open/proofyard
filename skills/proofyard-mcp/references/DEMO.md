@@ -2,7 +2,7 @@
 
 ## Demo prompt
 
-Use Proofyard as a governed browser-evidence layer. Start with `uiq_catalog`
+Use Webaudit as a governed browser-evidence layer. Start with `uiq_catalog`
 to confirm the MCP surface is attached. Then use `uiq_read` or
 `uiq_quality_read` to inspect one existing run or failure surface. If a real run
 is already present, follow with `uiq_proof` or `uiq_run_and_report` to show the

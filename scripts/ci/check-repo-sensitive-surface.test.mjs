@@ -6,7 +6,7 @@ import {
 } from "./lib/tracked-sensitive-rules.mjs"
 
 test("flags absolute macOS home paths", () => {
-  const fakePath = ["", "Users", "alice", "Documents", "proofyard"].join("/")
+  const fakePath = ["", "Users", "alice", "Documents", "webaudit"].join("/")
   const match = findTrackedSensitiveContentMatch(
     `legacyRoot = "${fakePath}"`
   )

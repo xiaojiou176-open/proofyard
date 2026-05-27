@@ -10,7 +10,7 @@ SCANCODE_STRICT_TOTAL_TIMEOUT_SECONDS="${UIQ_OSS_AUDIT_SCANCODE_STRICT_TIMEOUT_S
 PRESIDIO_TOTAL_TIMEOUT_SECONDS="${UIQ_OSS_AUDIT_PRESIDIO_TIMEOUT_SEC:-60}"
 SCANCODE_SNAPSHOT_PATH="${UIQ_SCANCODE_SNAPSHOT_PATH:-reports/licenses-scan.json}"
 SCANCODE_SNAPSHOT_META_PATH="${UIQ_SCANCODE_SNAPSHOT_META_PATH:-reports/licenses-scan.meta.json}"
-tmpdir="$(mktemp -d "${TMPDIR:-/tmp}/proofyard-oss-audit.XXXXXX")"
+tmpdir="$(mktemp -d "${TMPDIR:-/tmp}/webaudit-oss-audit.XXXXXX")"
 trap 'rm -rf "$tmpdir"' EXIT
 
 failures=0

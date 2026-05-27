@@ -16,7 +16,7 @@ Use [../DISTRIBUTION.md](../DISTRIBUTION.md) when you need the current
 distribution and publication truth.
 Use [../INTEGRATIONS.md](../INTEGRATIONS.md) when you need the current
 integration boundary and "not an official plugin" truth.
-Use [../skills/proofyard-mcp/SKILL.md](../skills/proofyard-mcp/SKILL.md)
+Use [../skills/webaudit-mcp/SKILL.md](../skills/webaudit-mcp/SKILL.md)
 when you need the repo-owned generic install skill for agent shells.
 Use [docs/archive/README.md](archive/README.md) to understand what stays
 outside the live public route.
@@ -63,11 +63,11 @@ current outward matrix:
 
 1. [README.md](../README.md)
 2. [docs/index.md](index.md)
-3. [docs/how-to/proofyard-for-ai-agents.md](how-to/proofyard-for-ai-agents.md)
-4. [docs/how-to/proofyard-for-coding-agents.md](how-to/proofyard-for-coding-agents.md)
+3. [docs/how-to/webaudit-for-ai-agents.md](how-to/webaudit-for-ai-agents.md)
+4. [docs/how-to/webaudit-for-coding-agents.md](how-to/webaudit-for-coding-agents.md)
 5. [docs/how-to/mcp-quickstart-1pager.md](how-to/mcp-quickstart-1pager.md)
 6. [docs/how-to/ai-reconstruction-side-road.md](how-to/ai-reconstruction-side-road.md)
-7. [docs/compare/proofyard-vs-generic-browser-agents.md](compare/proofyard-vs-generic-browser-agents.md)
+7. [docs/compare/webaudit-vs-generic-browser-agents.md](compare/webaudit-vs-generic-browser-agents.md)
 8. [docs/how-to/evidence-recovery-review-workspace.md](how-to/evidence-recovery-review-workspace.md)
 9. [docs/how-to/api-builder-quickstart.md](how-to/api-builder-quickstart.md)
 10. [docs/reference/universal-api.md](reference/universal-api.md)
@@ -77,10 +77,10 @@ That sequence keeps the public story honest:
 - start with the category line and first evaluation path
 - move into the AI-agent and coding-agent bridge before contract-level builder entry
 - then explain AI and MCP as governed side roads instead of replacement mainlines
-- only then use the alternatives page to explain where Proofyard fits and
+- only then use the alternatives page to explain where Webaudit fits and
   where generic browser agents still win
 - use the API builder quickstart and universal API pages only when the reader
-  is integrating Proofyard into another toolchain instead of evaluating the
+  is integrating Webaudit into another toolchain instead of evaluating the
   operator story first
 
 For the current Wave 5 closeout and bounded-bet story, continue with:

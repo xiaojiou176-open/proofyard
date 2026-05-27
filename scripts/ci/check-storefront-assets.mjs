@@ -12,13 +12,13 @@ for (const file of REQUIRED_STOREFRONT_ASSETS) {
 }
 
 const readme = fs.existsSync("README.md") ? fs.readFileSync("README.md", "utf8") : ""
-if (!readme.includes("assets/storefront/proofyard-hero.png")) {
+if (!readme.includes("assets/storefront/webaudit-hero.png")) {
   failures.push("README.md missing storefront hero reference")
 }
-if (!readme.includes("assets/storefront/proofyard-readme-hero.svg")) {
+if (!readme.includes("assets/storefront/webaudit-readme-hero.svg")) {
   failures.push("README.md missing proof-loop storefront visual reference")
 }
-if (!readme.includes("assets/storefront/proofyard-agent-ecosystem-map.svg")) {
+if (!readme.includes("assets/storefront/webaudit-agent-ecosystem-map.svg")) {
   failures.push("README.md missing storefront ecosystem-fit map reference")
 }
 

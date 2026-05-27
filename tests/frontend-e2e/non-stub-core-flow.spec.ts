@@ -37,7 +37,7 @@ pwTest(
 
     await page.goto("/")
 
-    await expect(page.getByRole("heading", { level: 1, name: "Proofyard" })).toBeVisible()
+    await expect(page.getByRole("heading", { level: 1, name: "Webaudit" })).toBeVisible()
     const commandId = await pickCommandForRun(apiOrigin, authHeaders)
 
     const runResponse = await page.request.post(`${apiOrigin}/api/automation/run`, {

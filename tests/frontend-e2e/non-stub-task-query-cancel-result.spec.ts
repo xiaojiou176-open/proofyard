@@ -116,7 +116,7 @@ pwTest(
     })
 
     await page.goto("/")
-    await expect(page.getByRole("heading", { level: 1, name: "Proofyard" })).toBeVisible()
+    await expect(page.getByRole("heading", { level: 1, name: "Webaudit" })).toBeVisible()
 
     const quickLaunchTab = page.getByTestId(CONSOLE_TAB_QUICK_LAUNCH_TEST_ID)
     await expect(quickLaunchTab).toHaveAttribute("aria-selected", "true")

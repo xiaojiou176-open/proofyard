@@ -19,7 +19,7 @@
 - Pinned transitive `picomatch` to `4.0.4` via root `pnpm.overrides` so the default-branch lockfile no longer carries the two open GitHub Dependabot advisories.
 - Hardened automation security and task isolation.
 - Added docs governance baseline and docs CI gate.
-- Standardized the public product identity around `Proofyard` and moved older naming drift into legacy/internal mapping docs.
+- Standardized the public product identity around `Webaudit` and moved older naming drift into legacy/internal mapping docs.
 - Added reconstruction pipeline: profile resolve, preview, generate, and orchestrate-from-artifacts endpoints.
 - Added video/HAR/HTML reconstruction services with compliance `manual_gate` behavior.
 - Added MCP tool packaging for reconstruction (`recon_profile_resolve`, `recon_preview`, `recon_generate`, `recon_orchestrate_from_artifacts`).

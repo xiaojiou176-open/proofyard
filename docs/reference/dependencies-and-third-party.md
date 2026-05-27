@@ -1,6 +1,6 @@
 # Dependencies and Third-Party Notes
 
-Proofyard depends on Python and Node.js packages, plus a small set of external developer tools used in CI and local verification.
+Webaudit depends on Python and Node.js packages, plus a small set of external developer tools used in CI and local verification.
 
 ## Current Repository License
 

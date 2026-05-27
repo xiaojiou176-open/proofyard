@@ -1,6 +1,6 @@
-# Proofyard MCP Capabilities
+# Webaudit MCP Capabilities
 
-These are the current tool families surfaced by Proofyard's governed MCP
+These are the current tool families surfaced by Webaudit's governed MCP
 server.
 
 ## Best first tools

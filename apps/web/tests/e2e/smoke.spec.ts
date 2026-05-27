@@ -155,7 +155,7 @@ pwTest("@smoke frontend shell and primary navigation", async ({ page }) => {
   const primaryNavigation = page.getByRole("navigation", {
     name: "Primary navigation",
   })
-  await expect(page.getByRole("heading", { level: 1, name: "Proofyard" })).toBeVisible()
+  await expect(page.getByRole("heading", { level: 1, name: "Webaudit" })).toBeVisible()
   await expect(primaryNavigation).toBeVisible()
   await expect(primaryNavigation.getByRole("tablist")).toBeVisible()
   await expect(page.getByRole("tab", { name: "Quick Launch" })).toHaveAttribute(

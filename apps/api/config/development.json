@@ -1,5 +1,5 @@
 {
-  "app_name": "proofyard",
+  "app_name": "webaudit",
   "environment": "development",
   "backend": {
     "host": "127.0.0.1",

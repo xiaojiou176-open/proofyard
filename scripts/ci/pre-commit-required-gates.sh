@@ -155,7 +155,7 @@ run_gate_with_container_toggle() {
 
 run_lint_gate_with_container_fallback() {
   local log_file
-  log_file="$(mktemp "${TMPDIR:-/tmp}/proofyard-precommit-lint.XXXXXX")"
+  log_file="$(mktemp "${TMPDIR:-/tmp}/webaudit-precommit-lint.XXXXXX")"
   trap 'rm -f "$log_file"' RETURN
 
   echo "[pre-commit-required] lint-all-container"

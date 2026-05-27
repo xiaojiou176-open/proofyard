@@ -17,7 +17,7 @@ print_line() {
 print_header() {
   clear || true
   print_line
-  printf '%s\n' "Dev Menu - Proofyard"
+  printf '%s\n' "Dev Menu - Webaudit"
   print_line
 }
 

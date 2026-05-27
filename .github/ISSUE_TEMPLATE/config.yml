@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Security reports
-    url: https://github.com/xiaojiou176-open/proofyard/security/advisories/new
+    url: https://github.com/xiaojiou176-open/webaudit/security/advisories/new
     about: Use private security advisories for vulnerabilities and leaked credentials.
   - name: Usage and support
-    url: https://github.com/xiaojiou176-open/proofyard/discussions
+    url: https://github.com/xiaojiou176-open/webaudit/discussions
     about: Use GitHub Discussions for usage questions, evaluation, and workflow direction.

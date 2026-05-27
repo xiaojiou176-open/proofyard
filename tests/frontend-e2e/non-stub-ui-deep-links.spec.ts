@@ -137,7 +137,7 @@ pwTest(
     const startUrl = "https://example.com/register"
 
     await page.goto("/")
-    await expect(page.getByRole("heading", { level: 1, name: "Proofyard" })).toBeVisible()
+    await expect(page.getByRole("heading", { level: 1, name: "Webaudit" })).toBeVisible()
 
     const setup = await page.evaluate(
       async ({
@@ -209,7 +209,7 @@ pwTest(
 
     writeFlowDraftRuntimeArtifacts(setup.sessionId, startUrl)
     await page.reload()
-    await expect(page.getByRole("heading", { level: 1, name: "Proofyard" })).toBeVisible()
+    await expect(page.getByRole("heading", { level: 1, name: "Webaudit" })).toBeVisible()
 
     await page.getByRole("tab", { name: "Task Center" }).click()
     await page.getByRole("tab", { name: /Run Records \(Template\)/ }).click()

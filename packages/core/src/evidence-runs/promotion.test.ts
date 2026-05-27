@@ -62,7 +62,7 @@ function writeRun(
 }
 
 test("buildPromotionCandidate reads persisted review state and release references", () => {
-  const rootDir = mkdtempSync(join(tmpdir(), "proofyard-promotion-"))
+  const rootDir = mkdtempSync(join(tmpdir(), "webaudit-promotion-"))
   writeRun(rootDir, "run-a")
   const candidateDir = resolve(rootDir, ".runtime-cache", "artifacts", "release", "promotion-candidates")
   mkdirSync(candidateDir, { recursive: true })
@@ -83,7 +83,7 @@ test("buildPromotionCandidate reads persisted review state and release reference
 })
 
 test("writePromotionCandidateArtifacts materializes candidate and share-pack files", () => {
-  const rootDir = mkdtempSync(join(tmpdir(), "proofyard-promotion-write-"))
+  const rootDir = mkdtempSync(join(tmpdir(), "webaudit-promotion-write-"))
   writeRun(rootDir, "run-a")
   writeRun(rootDir, "run-b")
 
@@ -107,7 +107,7 @@ test("writePromotionCandidateArtifacts materializes candidate and share-pack fil
 })
 
 test("buildPromotionCandidate refuses review escalation when eligibility failed", () => {
-  const rootDir = mkdtempSync(join(tmpdir(), "proofyard-promotion-ineligible-"))
+  const rootDir = mkdtempSync(join(tmpdir(), "webaudit-promotion-ineligible-"))
   writeRun(rootDir, "run-a", { includeProof: true, writeProofFile: false })
   assert.throws(
     () => buildPromotionCandidate("run-a", { rootDir, reviewState: "approved" }),

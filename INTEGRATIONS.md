@@ -1,6 +1,6 @@
 # Integration Boundaries
 
-Proofyard is a **browser-evidence and recovery layer**.
+Webaudit is a **browser-evidence and recovery layer**.
 
 It can sit behind coding-agent or operator workflows, but this repository does
 **not** currently claim:
@@ -20,18 +20,18 @@ It can sit behind coding-agent or operator workflows, but this repository does
 | HTTP API | yes | repo-native | The canonical API contract lives in `docs/reference/universal-api.md` and the checked-in generated client stays repo-local. |
 | MCP server | yes | repo-native | `apps/mcp-server/` provides the governed MCP surface for local or self-managed use. |
 | AI prompt contracts | yes | repo-native | `packages/ai-prompts/` exists as a private workspace package, not as a published registry surface. |
-| Proofyard MCP install skill | yes | repo-native guidance | `skills/proofyard-mcp/` explains how agent shells should install and use the current stdio surface without pretending a registry package is already live. |
+| Webaudit MCP install skill | yes | repo-native guidance | `skills/webaudit-mcp/` explains how agent shells should install and use the current stdio surface without pretending a registry package is already live. |
 | GitHub Pages storefront | yes | public-facing | Pages explains product fit and routes people into docs, but it is not a plugin or marketplace listing. |
 
 ## Ecosystem Fit, Truthfully
 
 | Ecosystem | Current truthful fit | Best first path | Official plugin or listing today |
 | --- | --- | --- | --- |
-| Codex | API-first or hybrid browser-evidence layer | `docs/how-to/proofyard-for-coding-agents.md` -> `docs/how-to/api-builder-quickstart.md` | no |
-| Claude Code | MCP-first browser-evidence side road | `docs/how-to/proofyard-for-coding-agents.md` -> `docs/how-to/mcp-quickstart-1pager.md` | no |
-| OpenHands | browser subsystem behind a larger runtime | `docs/how-to/proofyard-for-ai-agents.md` -> `docs/how-to/api-builder-quickstart.md` | no |
-| OpenCode | governed MCP browser surface | `docs/how-to/proofyard-for-coding-agents.md` -> `docs/how-to/mcp-quickstart-1pager.md` | no |
-| OpenClaw | browser workflow backend behind a tool router | `docs/how-to/proofyard-for-coding-agents.md` -> `docs/how-to/api-builder-quickstart.md` | no |
+| Codex | API-first or hybrid browser-evidence layer | `docs/how-to/webaudit-for-coding-agents.md` -> `docs/how-to/api-builder-quickstart.md` | no |
+| Claude Code | MCP-first browser-evidence side road | `docs/how-to/webaudit-for-coding-agents.md` -> `docs/how-to/mcp-quickstart-1pager.md` | no |
+| OpenHands | browser subsystem behind a larger runtime | `docs/how-to/webaudit-for-ai-agents.md` -> `docs/how-to/api-builder-quickstart.md` | no |
+| OpenCode | governed MCP browser surface | `docs/how-to/webaudit-for-coding-agents.md` -> `docs/how-to/mcp-quickstart-1pager.md` | no |
+| OpenClaw | browser workflow backend behind a tool router | `docs/how-to/webaudit-for-coding-agents.md` -> `docs/how-to/api-builder-quickstart.md` | no |
 
 ## What Is Not Materialized Here Yet
 
@@ -46,7 +46,7 @@ integration products in this repo:
 
 ## What The Skill Does
 
-The Proofyard MCP skill is an **installation and usage guide**, not a plugin.
+The Webaudit MCP skill is an **installation and usage guide**, not a plugin.
 
 Its job is to help Codex-, Claude Code-, OpenHands-, OpenCode-, and
 OpenClaw-style shells understand:
@@ -64,7 +64,7 @@ It must stay aligned with:
 
 ## How To Read The Current Repo
 
-If you are evaluating Proofyard for an external toolchain, the truthful order
+If you are evaluating Webaudit for an external toolchain, the truthful order
 is:
 
 1. decide whether you need API-first or MCP-first control

@@ -1,18 +1,18 @@
-# Proofyard vs Generic Browser Agents
+# Webaudit vs Generic Browser Agents
 
 This page is for people asking a high-intent question:
 
-> when should I use Proofyard instead of a generic browser agent?
+> when should I use Webaudit instead of a generic browser agent?
 
 The short answer is:
 
-Proofyard fits best when you care about **retained evidence, guided recovery,
+Webaudit fits best when you care about **retained evidence, guided recovery,
 review-ready handoff, and governed side roads** more than open-ended browser
 autonomy.
 
 ## Decision in one minute
 
-Choose **Proofyard** when you want a browser workflow that is easier to prove,
+Choose **Webaudit** when you want a browser workflow that is easier to prove,
 inspect, recover, compare, and hand off after the first run.
 
 Choose a **generic browser agent** when you primarily want open-ended autonomy
@@ -34,13 +34,13 @@ Generic browser agents may be a better fit when you want:
 
 - open-ended browsing autonomy with less structure
 - fast demo loops where retained evidence is not the main goal
-- hosted or agent-native ecosystems that Proofyard does not currently provide
+- hosted or agent-native ecosystems that Webaudit does not currently provide
 
 Those are real strengths. This page is not trying to pretend otherwise.
 
-## When Proofyard is the wrong fit
+## When Webaudit is the wrong fit
 
-Do not choose Proofyard first when your actual requirement is:
+Do not choose Webaudit first when your actual requirement is:
 
 - a hosted agent platform with broad built-in ecosystems
 - unconstrained autonomous exploration as the main product value
@@ -48,9 +48,9 @@ Do not choose Proofyard first when your actual requirement is:
 
 Those are category boundaries, not temporary copywriting issues.
 
-## Where Proofyard wins
+## Where Webaudit wins
 
-Proofyard is stronger when you need:
+Webaudit is stronger when you need:
 
 - one canonical path instead of many unofficial entrypoints
 - retained evidence bundles you can inspect later
@@ -62,7 +62,7 @@ Proofyard is stronger when you need:
 
 ## Comparison frame
 
-| Need | Generic browser agents | Proofyard |
+| Need | Generic browser agents | Webaudit |
 |:---|:---|:---|
 | Open-ended browser autonomy | often stronger | not the primary focus |
 | Canonical run path | varies | built around `just run` |
@@ -76,7 +76,7 @@ Proofyard is stronger when you need:
 
 ## What makes this an alternatives page instead of a marketing page
 
-The point is not "Proofyard beats every browser agent."
+The point is not "Webaudit beats every browser agent."
 
 The point is that the product makes a different trade:
 
@@ -100,7 +100,7 @@ today, not in imagined future positioning.
 
 ## Reading path after this page
 
-- go to [Proofyard for AI Agents](../how-to/proofyard-for-ai-agents.md) if you are still testing audience fit
+- go to [Webaudit for AI Agents](../how-to/webaudit-for-ai-agents.md) if you are still testing audience fit
 - go to [MCP for Browser Automation](../how-to/mcp-quickstart-1pager.md) if your next question is AI-client tool integration
 - go to [AI Reconstruction Side Road](../how-to/ai-reconstruction-side-road.md) if your next question is artifact-driven AI help
 - go to [Evidence, Recovery, and Review Workspace](../how-to/evidence-recovery-review-workspace.md) if you want the deepest current product proof

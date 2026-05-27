@@ -2,16 +2,16 @@
   <img src="https://em-content.zobj.net/source/apple/391/magnifying-glass-tilted-left_1f50d.png" width="120" alt="magnifying glass" />
 </p>
 
-<h1 align="center">proofyard</h1>
+<h1 align="center">webaudit</h1>
 
 <p align="center">
   <strong>every claim ships with its receipt</strong>
 </p>
 
 <p align="center">
-  <a href="https://github.com/xiaojiou176-open/proofyard/stargazers"><img src="https://img.shields.io/github/stars/xiaojiou176-open/proofyard?style=flat&color=yellow" alt="Stars"></a>
-  <a href="https://github.com/xiaojiou176-open/proofyard/commits/main"><img src="https://img.shields.io/github/last-commit/xiaojiou176-open/proofyard?style=flat" alt="Last Commit"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/xiaojiou176-open/proofyard?style=flat" alt="License"></a>
+  <a href="https://github.com/xiaojiou176-open/webaudit/stargazers"><img src="https://img.shields.io/github/stars/xiaojiou176-open/webaudit?style=flat&color=yellow" alt="Stars"></a>
+  <a href="https://github.com/xiaojiou176-open/webaudit/commits/main"><img src="https://img.shields.io/github/last-commit/xiaojiou176-open/webaudit?style=flat" alt="Last Commit"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/xiaojiou176-open/webaudit?style=flat" alt="License"></a>
 </p>
 
 <p align="center">
@@ -23,7 +23,7 @@
 
 ---
 
-proofyard turns long, messy AI outputs into auditable workflows. Every step gets a hash, every claim gets a source, every replay matches byte-for-byte.
+webaudit turns long, messy AI outputs into auditable workflows. Every step gets a hash, every claim gets a source, every replay matches byte-for-byte.
 
 ```
 ┌──────────────────────────────────────┐
@@ -41,7 +41,7 @@ proofyard turns long, messy AI outputs into auditable workflows. Every step gets
 
 | Surface | What |
 |---|---|
-| `proofyard apps` | Workshop, quick-launch, task center. Authored output, traced. |
+| `webaudit apps` | Workshop, quick-launch, task center. Authored output, traced. |
 | `packages` | Shared evidence primitives — hashing, tracing, snapshotting. |
 | `mcp skills` | Hand a flow to any agent. Get a flow plus the receipt. |
 | `contracts` | Versioned proof schemas. Diffable. Replayable. |
@@ -53,14 +53,14 @@ proofyard turns long, messy AI outputs into auditable workflows. Every step gets
 ## Install
 
 ```bash
-git clone https://github.com/xiaojiou176-open/proofyard.git
-cd proofyard
+git clone https://github.com/xiaojiou176-open/webaudit.git
+cd webaudit
 # follow the per-stack quickstart in INSTALL.md or docs/
 ```
 
 Three commands. No `curl | sh`. No login. Read what you run.
 
-Install break? Open your favorite agent and say *"Read AGENTS.md and bootstrap proofyard for me."* Agent fix own brain. Long version: [`docs/`](./docs/).
+Install break? Open your favorite agent and say *"Read AGENTS.md and bootstrap webaudit for me."* Agent fix own brain. Long version: [`docs/`](./docs/).
 
 ## How It Work
 
@@ -69,7 +69,7 @@ The repo is seven layers — exactly the seven commits in `git log`. New work go
 | Layer | What |
 |---|---|
 | `chore: scaffold` | License, governance, hygiene gates, CI scaffolding. |
-| `feat(core)` | The primary engine. The reason proofyard exists. |
+| `feat(core)` | The primary engine. The reason webaudit exists. |
 | `feat(modules)` | Packages, adapters, services, plugins. The second floor. |
 | `feat(contracts)` | Schemas, configs, public boundaries. Other code talks here. |
 | `test:` | Receipts. Everything in this layer must run. |
@@ -80,7 +80,7 @@ The repo is seven layers — exactly the seven commits in `git log`. New work go
 
 ## Ecosystem
 
-proofyard lives in the **yard family**: seven yards. one philosophy: structured input, structured output, structured proof.
+webaudit lives in the **yard family**: seven yards. one philosophy: structured input, structured output, structured proof.
 
 | Repo | What |
 |---|---|
@@ -90,19 +90,19 @@ proofyard lives in the **yard family**: seven yards. one philosophy: structured 
 | [**dealyard**](https://github.com/xiaojiou176-open/dealyard) | let prices fight, you sit and watch |
 | [**docyard**](https://github.com/xiaojiou176-open/docyard) | docs site in, markdown out, no scraping by hand |
 | [**fileyard**](https://github.com/xiaojiou176-open/fileyard) | messy folders in, organized library out |
-| [**proofyard**](https://github.com/xiaojiou176-open/proofyard) *(you here)* | every claim ships with its receipt |
+| [**webaudit**](https://github.com/xiaojiou176-open/webaudit) *(you here)* | every claim ships with its receipt |
 
 Cross-family taste:
 [**BeamMe**](https://github.com/xiaojiou176-open/BeamMe) ·
 [**BrewMe**](https://github.com/xiaojiou176-open/BrewMe) ·
 [**OpenVibeCoding**](https://github.com/xiaojiou176-open/OpenVibeCoding) ·
-[**proofyard**](https://github.com/xiaojiou176-open/proofyard).
+[**webaudit**](https://github.com/xiaojiou176-open/webaudit).
 
 ## Star This Repo
 
-If proofyard saves you a click, an hour, or a headache — star costs zero. Fair trade. ⭐
+If webaudit saves you a click, an hour, or a headache — star costs zero. Fair trade. ⭐
 
-[![Star History Chart](https://api.star-history.com/svg?repos=xiaojiou176-open/proofyard&type=Date)](https://star-history.com/#xiaojiou176-open/proofyard&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=xiaojiou176-open/webaudit&type=Date)](https://star-history.com/#xiaojiou176-open/webaudit&Date)
 
 ## Also by Yifeng[Terry] Yu
 

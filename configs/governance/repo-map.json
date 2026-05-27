@@ -38,7 +38,7 @@
       "displayName": "MCP server",
       "kind": "module",
       "entrypoints": [
-        "pnpm --filter @proofyard/mcp-server start",
+        "pnpm --filter @webaudit/mcp-server start",
         "pnpm mcp:test"
       ]
     },

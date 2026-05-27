@@ -1,7 +1,7 @@
 {
-  "name": "@proofyard/web",
+  "name": "@webaudit/web",
   "version": "0.1.0",
-  "description": "Proofyard command center for evidence-first browser automation, recovery, and guided operator workflows",
+  "description": "Webaudit command center for evidence-first browser automation, recovery, and guided operator workflows",
   "private": true,
   "type": "module",
   "scripts": {

@@ -1,6 +1,6 @@
 # Quality Gates
 
-Proofyard keeps storefront truth and engineering truth separate on purpose.
+Webaudit keeps storefront truth and engineering truth separate on purpose.
 
 Generated governance references:
 
@@ -9,7 +9,7 @@ Generated governance references:
 
 ## Governance Layers
 
-Proofyard's current governance model uses five layers on purpose:
+Webaudit's current governance model uses five layers on purpose:
 
 - `pre-commit`: local-fast commit gate
 - `pre-push`: stronger local pre-push gate

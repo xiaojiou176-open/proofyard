@@ -13,7 +13,7 @@ if [[ -z "$IMAGE_REPO" ]]; then
   if [[ -n "${GITHUB_REPOSITORY:-}" ]]; then
     IMAGE_REPO="ghcr.io/${GITHUB_REPOSITORY,,}/ci"
   else
-    IMAGE_REPO="ghcr.io/local/proofyard/ci"
+    IMAGE_REPO="ghcr.io/local/webaudit/ci"
   fi
 fi
 

@@ -1,12 +1,12 @@
 # Minimal Success Case
 
-Proofyard's minimum public promise is not "an AI agent can click around."
+Webaudit's minimum public promise is not "an AI agent can click around."
 It is: one canonical run, one retained evidence bundle, and one recovery-ready
 story a human can inspect later.
 
 If you need the higher-level category framing first, start at [README.md](../../README.md).
 If you need the comparison story next, continue to
-[Proofyard vs generic browser agents](../compare/proofyard-vs-generic-browser-agents.md).
+[Webaudit vs generic browser agents](../compare/webaudit-vs-generic-browser-agents.md).
 
 ## What is the smallest real thing this repository can do end-to-end?
 
@@ -107,4 +107,4 @@ For a first evaluator pass, keep the product path short:
 5. only then ask whether the run is ready to become a **Promotion Candidate**
 
 If you are still deciding whether this product category fits your problem, read
-[Proofyard vs generic browser agents](../compare/proofyard-vs-generic-browser-agents.md).
+[Webaudit vs generic browser agents](../compare/webaudit-vs-generic-browser-agents.md).

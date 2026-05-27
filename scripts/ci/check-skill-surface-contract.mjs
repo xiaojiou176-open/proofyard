@@ -7,7 +7,7 @@ import yaml from "yaml"
 const repoRoot = resolve(".")
 const rootPackage = JSON.parse(fs.readFileSync(resolve(repoRoot, "package.json"), "utf8"))
 
-const skillDir = resolve(repoRoot, "skills/proofyard-mcp")
+const skillDir = resolve(repoRoot, "skills/webaudit-mcp")
 const skillPath = resolve(skillDir, "SKILL.md")
 const manifestPath = resolve(skillDir, "manifest.yaml")
 
@@ -33,8 +33,8 @@ if (manifest) {
     }
   }
 
-  if (manifest.name !== "proofyard-mcp") {
-    failures.push(`manifest name must be proofyard-mcp, got: ${JSON.stringify(manifest.name)}`)
+  if (manifest.name !== "webaudit-mcp") {
+    failures.push(`manifest name must be webaudit-mcp, got: ${JSON.stringify(manifest.name)}`)
   }
   if (manifest.version !== rootPackage.version) {
     failures.push(
@@ -60,12 +60,12 @@ if (manifest) {
 
 if (skillText) {
   const requiredPhrases = [
-    "Proofyard",
+    "Webaudit",
     "stdio",
     "local-with-optional-backend-token",
     "Current / usable today",
     "Publish-ready but not yet published",
-    "@proofyard/mcp-server",
+    "@webaudit/mcp-server",
     "pnpm mcp:start",
     "not an official plugin",
     "not a hosted service",

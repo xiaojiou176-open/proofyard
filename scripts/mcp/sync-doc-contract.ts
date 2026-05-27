@@ -134,7 +134,7 @@ function checkQuickstartDoc(docPath: string, docText: string): DocDrift {
   if (!docText.includes('"command": "pnpm"') || !docText.includes('"args": ["mcp:start"]')) {
     issues.push("quickstart must document the current local stdio install example")
   }
-  if (!docText.includes("@proofyard/mcp-server") || !/not yet published/i.test(docText)) {
+  if (!docText.includes("@webaudit/mcp-server") || !/not yet published/i.test(docText)) {
     issues.push("quickstart must describe the future package surface as not yet published")
   }
   if (
@@ -150,8 +150,8 @@ function checkQuickstartDoc(docPath: string, docText: string): DocDrift {
 function checkDistributionContractDoc(docPath: string, docText: string): DocDrift {
   const issues: string[] = []
   const requiredPhrases = [
-    "@proofyard/mcp-server",
-    "ghcr.io/xiaojiou176-open/proofyard-mcp-server:0.1.1",
+    "@webaudit/mcp-server",
+    "ghcr.io/xiaojiou176-open/webaudit-mcp-server:0.1.1",
     "protocol",
     "stdio",
     "auth boundary",

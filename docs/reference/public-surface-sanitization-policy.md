@@ -1,6 +1,6 @@
 # Public Surface Sanitization Policy
 
-Proofyard keeps a governed public surface on purpose.
+Webaudit keeps a governed public surface on purpose.
 
 ## Public Surface
 

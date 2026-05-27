@@ -1,6 +1,6 @@
-name: proofyard-mcp
+name: webaudit-mcp
 version: 0.1.1
-description: Portable public skill packet for Proofyard's governed stdio MCP browser-evidence surface.
+description: Portable public skill packet for Webaudit's governed stdio MCP browser-evidence surface.
 protocol: stdio
 transport: stdio
 auth: local-with-optional-backend-token
@@ -10,15 +10,15 @@ registry_targets:
   clawhub:
     status: listed-live
     package_shape: skill-folder
-    listing_url: https://www.clawhub.ai/skills/proofyard-mcp
+    listing_url: https://www.clawhub.ai/skills/webaudit-mcp
     note: Fresh 2026-04-08 America/Los_Angeles read-back confirmed this listing is live.
-    submit_via: clawhub publish . --slug proofyard-mcp --name "Proofyard MCP Skill" --version 0.1.1 --tags browser-evidence,mcp,recovery,proofyard
+    submit_via: clawhub publish . --slug webaudit-mcp --name "Webaudit MCP Skill" --version 0.1.1 --tags browser-evidence,mcp,recovery,webaudit
   openhands-extensions:
     status: review-pending
     package_shape: skill-folder
     submission_url: https://github.com/OpenHands/extensions/pull/161
     note: Fresh read-back confirms PR #161 is open; treat this as external review receipt, not a live listing.
-    submit_via: submit this folder as skills/proofyard-mcp/ in OpenHands/extensions
+    submit_via: submit this folder as skills/webaudit-mcp/ in OpenHands/extensions
 surfaces:
   - repo-native MCP package
   - repo-owned install skill

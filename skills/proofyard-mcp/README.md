@@ -1,13 +1,13 @@
-# Proofyard MCP Public Skill
+# Webaudit MCP Public Skill
 
-This folder is the public, self-contained skill packet for Proofyard's
+This folder is the public, self-contained skill packet for Webaudit's
 governed MCP surface.
 
 ## Purpose
 
 Use it when you want one portable skill folder that teaches:
 
-- what Proofyard helps an outer agent shell do
+- what Webaudit helps an outer agent shell do
 - how to attach the current repo-native stdio MCP server
 - which tool families are safest first
 - what one concrete first-success path looks like
@@ -50,11 +50,11 @@ Use it when you want one portable skill folder that teaches:
   it is not `review-pending`, and the maintainer pointed contributors to a
   custom `marketplace.json` distribution instead
 - the GHCR Docker image
-  `ghcr.io/xiaojiou176-open/proofyard-mcp-server:0.1.1` is part of the
+  `ghcr.io/xiaojiou176-open/webaudit-mcp-server:0.1.1` is part of the
   repo-defined container contract, but today
-  `https://github.com/orgs/xiaojiou176-open/packages/container/package/proofyard-mcp-server`
+  `https://github.com/orgs/xiaojiou176-open/packages/container/package/webaudit-mcp-server`
   returns `404` and
-  `https://github.com/orgs/xiaojiou176-open/packages?repo_name=proofyard`
+  `https://github.com/orgs/xiaojiou176-open/packages?repo_name=webaudit`
   reports `0 packages`
 - npm is still not published, and Official MCP Registry is still not live
   because it depends on that missing npm package
@@ -67,4 +67,4 @@ Use it when you want one portable skill folder that teaches:
 - no published npm package claim without fresh proof
 - no claim that a repo-defined Docker contract means Docker-live or
   registry-live; those are different counters
-- no hosted Proofyard SaaS or hosted MCP endpoint
+- no hosted Webaudit SaaS or hosted MCP endpoint

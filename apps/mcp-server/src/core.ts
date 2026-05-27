@@ -3,7 +3,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { registerMcpResources, registerMcpTools } from "./tools/register-tools.js"
 
 export const server = new McpServer({
-  name: "@proofyard/mcp-server",
+  name: "@webaudit/mcp-server",
   version: "0.1.1",
 })
 
